@@ -99,8 +99,8 @@ void Stage::SetLayerInfo()
 				if (!propertyMap.empty())
 				{
 					// É^ÉCÉãèÓïÒÇÃìoò^
-					//m_tileInfo.push_back(TileInfo{ propertyValue.asInt(), Vec2(j * SIZE_TILE, (NUM_ROW - i) * SIZE_TILE - SIZE_TILE) });
-					Vec2 pos = Vec2(j * SIZE_TILE, (NUM_ROW - i) * SIZE_TILE - SIZE_TILE);
+					m_tileInfo.push_back(TileInfo{ propertyMap, Vec2(j * SIZE_TILE, (NUM_ROW - i) * SIZE_TILE - SIZE_TILE) });
+					/*Vec2 pos = Vec2(j * SIZE_TILE, (NUM_ROW - i) * SIZE_TILE - SIZE_TILE);
 					if (propertyMap["collision"].asString() == "block")
 					{
 						int id = static_cast<int>(TILE::BLOCK);
@@ -110,7 +110,7 @@ void Stage::SetLayerInfo()
 					{
 						int id = static_cast<int>(TILE::WATER);
 						m_tileInfo.push_back(TileInfo{ id, pos });
-					}
+					}*/
 
 					// ëçÉ^ÉCÉãêîâ¡éZ
 					m_numTiles++;
