@@ -37,6 +37,7 @@ public:
 	CREATE_FUNC(Stage);
 	virtual bool init();
 
+	void ReSetLayerInfo();											// タイル情報の初期化
 	void SetLayerInfo();											// レイヤー情報の設定
 	void SetTileInfoWithProperty(uint32_t gid, int row, int col);	// プロパティからタイル情報を設定
 

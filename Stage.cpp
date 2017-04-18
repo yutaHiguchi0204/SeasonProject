@@ -76,6 +76,22 @@ bool Stage::init()
 }
 
 /* =====================================================================
+//! 内　容		タイル情報の再設定
+//! 引　数		なし
+//! 戻り値		なし
+===================================================================== */
+void Stage::ReSetLayerInfo()
+{
+	while (!m_tileInfo.empty())
+	{
+		m_tileInfo.pop_back();
+	}
+
+	// タイル情報の設定
+	SetLayerInfo();
+}
+
+/* =====================================================================
 //! 内　容		レイヤー情報の設定
 //! 引　数		なし
 //! 戻り値		なし
@@ -86,10 +102,12 @@ void Stage::SetLayerInfo()
 	{
 		for (int j = 0; j < NUM_COLUMN; j++)
 		{
-			auto gid = m_pMapTileLayer[m_season]->getTileGIDAt(Vec2(j, i));
+			auto gidTile = m_pMapTileLayer[m_season]->getTileGIDAt(Vec2(j, i));
+			auto gidGimmick = m_pMapGimmickLayer[m_season]->getTileGIDAt(Vec2(j, i));
 
 			// タイル情報の設定
-			SetTileInfoWithProperty(gid, i, j);
+			SetTileInfoWithProperty(gidTile, i, j);
+			SetTileInfoWithProperty(gidGimmick, i, j);
 		}
 	}
 }
@@ -152,6 +170,9 @@ void Stage::ChangeSeason()
 	// 背景を変える
 	m_pBack->Change(m_season);
 
+	// レイヤー情報の再設定
+	ReSetLayerInfo();
+
 	// レイヤーを表示する
 	m_pMapTileLayer[m_season]->setVisible(true);
 	m_pMapGimmickLayer[m_season]->setVisible(true);
@@ -201,14 +222,14 @@ void Stage::CheckCollision(Player* player)
 	for (int i = 0; i < Stage::m_numTiles; i++)
 	{
 		// 当たり判定チェック
-		if (GameManager::isCollision(Stage::m_tileInfo[i].pos, player->getPosition()))
+		if (GameManager::isCollision(m_tileInfo[i].pos, player->getPosition()))
 		{
 			switch (Stage::m_tileInfo[i].ID)
 			{
 			case static_cast<int>(TILE::BLOCK) :			// ブロック
 
 				// 調整
-				player->setPositionY(Stage::m_tileInfo[i].pos.y + SIZE_TILE + SIZE_PLAYER / 2);
+				player->setPositionY(m_tileInfo[i].pos.y + SIZE_TILE + SIZE_PLAYER / 2);
 
 				player->Fall(static_cast<int>(TILE::BLOCK), m_season);
 
