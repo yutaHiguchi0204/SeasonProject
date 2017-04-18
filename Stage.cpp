@@ -88,34 +88,8 @@ void Stage::SetLayerInfo()
 		{
 			auto gid = m_pMapTileLayer[m_season]->getTileGIDAt(Vec2(j, i));
 
-			// プロパティ情報を取得
-			Value propertyValue = m_pMap->getPropertiesForGID(gid);
-
-			if (!propertyValue.isNull())
-			{
-				// プロパティをマップ配列として保持
-				ValueMap propertyMap = propertyValue.asValueMap();
-
-				if (!propertyMap.empty())
-				{
-					// タイル情報の登録
-					m_tileInfo.push_back(TileInfo{ propertyMap, Vec2(j * SIZE_TILE, (NUM_ROW - i) * SIZE_TILE - SIZE_TILE) });
-					/*Vec2 pos = Vec2(j * SIZE_TILE, (NUM_ROW - i) * SIZE_TILE - SIZE_TILE);
-					if (propertyMap["collision"].asString() == "block")
-					{
-						int id = static_cast<int>(TILE::BLOCK);
-						m_tileInfo.push_back(TileInfo{ id, pos });
-					}
-					else if (propertyMap["collision"].asString() == "water")
-					{
-						int id = static_cast<int>(TILE::WATER);
-						m_tileInfo.push_back(TileInfo{ id, pos });
-					}*/
-
-					// 総タイル数加算
-					m_numTiles++;
-				}
-			}
+			// タイル情報の設定
+			SetTileInfoWithProperty(gid, i, j);
 		}
 	}
 }
@@ -138,23 +112,21 @@ void Stage::SetTileInfoWithProperty(uint32_t gid, int row, int col)
 		if (!propertyMap.empty())
 		{
 			// タイル情報の登録
+			// asInt関数が使えれば一行で済むが、バグるため保留
 			//m_tileInfo.push_back(TileInfo{ propertyValue.asInt(), Vec2(j * SIZE_TILE, (NUM_ROW - i) * SIZE_TILE - SIZE_TILE) });
+
+			// 座標設定
 			Vec2 pos = Vec2(col * SIZE_TILE, (NUM_ROW - row) * SIZE_TILE - SIZE_TILE);
-			if (propertyMap["collision"].asString() == "block")
-			{
-				int id = static_cast<int>(TILE::BLOCK);
-				m_tileInfo.push_back(TileInfo{ id, pos });
-			}
-			else if (propertyMap["collision"].asString() == "water")
-			{
-				int id = static_cast<int>(TILE::WATER);
-				m_tileInfo.push_back(TileInfo{ id, pos });
-			}
-			else
-			{
-				int id = static_cast<int>(TILE::NONE);
-				m_tileInfo.push_back(TileInfo{ id, pos });
-			}
+
+			int id;
+
+			// タイルIDの取得
+			if		(propertyMap["collision"].asString() == "block")	id = static_cast<int>(TILE::BLOCK);
+			else if (propertyMap["collision"].asString() == "water")	id = static_cast<int>(TILE::WATER);
+			else if (propertyMap["tree"].asString() == "block")			id = static_cast<int>(TILE::BLOCK);
+
+			// タイルIDの設定
+			m_tileInfo.push_back(TileInfo{ id, pos });
 
 			// 総タイル数加算
 			m_numTiles++;
@@ -235,7 +207,7 @@ void Stage::CheckCollision(Player* player)
 			{
 			case static_cast<int>(TILE::BLOCK) :			// ブロック
 
-															// 調整
+				// 調整
 				player->setPositionY(Stage::m_tileInfo[i].pos.y + SIZE_TILE + SIZE_PLAYER / 2);
 
 				player->Fall(static_cast<int>(TILE::BLOCK), m_season);
