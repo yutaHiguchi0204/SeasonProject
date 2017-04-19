@@ -49,7 +49,8 @@ enum class TILE				// タイル
 {
 	NONE = -1,
 	BLOCK,
-	WATER
+	WATER,
+	SIGN_BOARD
 };
 
 enum class OBJECT			// オブジェクト

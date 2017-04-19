@@ -82,9 +82,22 @@ bool Stage::init()
 ===================================================================== */
 void Stage::ReSetLayerInfo()
 {
+	// タイル情報の初期化
 	while (!m_tileInfo.empty())
 	{
 		m_tileInfo.pop_back();
+	}
+
+	// オブジェクト情報の初期化
+	while (!m_objectInfo.empty())
+	{
+		m_objectInfo.pop_back();
+	}
+
+	// ギミック情報の初期化
+	while (!m_gimmickInfo.empty())
+	{
+		m_gimmickInfo.pop_back();
 	}
 
 	// タイル情報の設定
@@ -159,6 +172,7 @@ void Stage::SetTileInfoWithProperty(ValueMap map, int row, int col, KIND_TILE ti
 		// 各タイル設定
 		if		(map["collision"].asString() == "block")	id = static_cast<int>(TILE::BLOCK);
 		else if (map["collision"].asString() == "water")	id = static_cast<int>(TILE::WATER);
+		else												id = static_cast<int>(TILE::NONE);
 
 		// タイル数加算
 		m_numTiles++;
@@ -171,8 +185,8 @@ void Stage::SetTileInfoWithProperty(ValueMap map, int row, int col, KIND_TILE ti
 	case KIND_TILE::OBJECT:		// オブジェクト
 
 		// 各オブジェクト設定
-		if		(map["object"].asString() == "signBoard")	id = static_cast<int>(OBJECT::SIGN_BOARD);
-		else if (map["object"].asString() == "seasonBook")	id = static_cast<int>(OBJECT::SIGN_BOARD);
+		if		(map["object"].asString() == "seasonBook")	id = static_cast<int>(TILE::SIGN_BOARD);
+		else												id = static_cast<int>(TILE::NONE);
 
 		// オブジェクト数加算
 		m_numObjects++;
@@ -186,6 +200,7 @@ void Stage::SetTileInfoWithProperty(ValueMap map, int row, int col, KIND_TILE ti
 
 		// 各ギミック設定
 		if		(map["tree"].asString() == "block")			id = static_cast<int>(TILE::BLOCK);
+		else												id = static_cast<int>(TILE::NONE);
 
 		// ギミック数加算
 		m_numGimmicks++;
@@ -216,7 +231,7 @@ void Stage::ChangeSeason()
 	m_pBack->Change(m_season);
 
 	// レイヤー情報の再設定
-	//ReSetLayerInfo();
+	ReSetLayerInfo();
 
 	// レイヤーを表示する
 	m_pMapTileLayer[m_season]->setVisible(true);
