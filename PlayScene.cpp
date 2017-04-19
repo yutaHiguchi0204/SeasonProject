@@ -11,10 +11,6 @@
 USING_NS_CC;
 using namespace std;
 
-// 静的メンバ
-vector<TileInfo> Stage::m_tileInfo;				// タイル情報
-int Stage::m_numTiles;							// 総タイル数
-
 // メンバ関数の定義
 
 // シーン管理

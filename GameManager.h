@@ -52,6 +52,12 @@ enum class TILE				// タイル
 	WATER
 };
 
+enum class OBJECT			// オブジェクト
+{
+	SIGN_BOARD,
+	SEASON_BOOK
+};
+
 // 共通関数をまとめたクラス
 class GameManager
 {

@@ -132,6 +132,34 @@ void Player::Jump()
 }
 
 /* =====================================================================
+//! 内　容		タイルに対しての行動
+//! 引　数		タイルID（int）、タイル座標（Vec2）、季節（int）
+//! 戻り値		なし
+===================================================================== */
+void Player::Action(int tileID, Vec2 tileVec, int season)
+{
+	switch (tileID)
+	{
+	case static_cast<int>(TILE::BLOCK):		// ブロック
+
+		// 調整
+		setPositionY(tileVec.y + SIZE_TILE + SIZE_PLAYER / 2);
+
+		// 落下処理
+		Fall(static_cast<int>(TILE::BLOCK), season);
+
+		break;
+
+	case static_cast<int>(TILE::WATER):		// 水
+
+		// 落下処理
+		Fall(static_cast<int>(TILE::WATER), season);
+
+		break;
+	}
+}
+
+/* =====================================================================
 //! 内　容		プレイヤーアニメーション
 //! 引　数		なし
 //! 戻り値		なし

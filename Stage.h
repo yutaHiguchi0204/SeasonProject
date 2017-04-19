@@ -12,8 +12,16 @@
 #include "Player.h"
 #include "ui/CocosGUI.h"
 
+// 列挙型
+enum class KIND_TILE
+{
+	TILE,
+	OBJECT,
+	GIMMICK
+};
+
 // 構造体
-struct TileInfo
+struct StageInfo
 {
 	int ID;					// タイルID
 	cocos2d::Vec2 pos;		// 矩形座標
@@ -24,6 +32,9 @@ class Stage : public cocos2d::Node
 {
 private:
 	int m_season;										// 季節
+	int m_numTiles;										// 総タイル数
+	int m_numObjects;									// 総オブジェクト数
+	int m_numGimmicks;									// 総ギミック数
 
 	Background* m_pBack;								// 背景
 
@@ -32,25 +43,26 @@ private:
 	cocos2d::TMXLayer* m_pMapGimmickLayer[NUM_SEASON];	// マップレイヤー（ギミック）
 	cocos2d::TMXLayer* m_pMapObjectLayer;				// マップレイヤー（オブジェクト）
 
+	std::vector<StageInfo> m_tileInfo;					// タイル情報
+	std::vector<StageInfo> m_objectInfo;				// タイル情報
+	std::vector<StageInfo> m_gimmickInfo;				// タイル情報
+
 public:
 
 	CREATE_FUNC(Stage);
 	virtual bool init();
 
-	void ReSetLayerInfo();											// タイル情報の初期化
-	void SetLayerInfo();											// レイヤー情報の設定
-	void SetTileInfoWithProperty(uint32_t gid, int row, int col);	// プロパティからタイル情報を設定
+	void ReSetLayerInfo();																		// タイル情報の初期化
+	void SetLayerInfo();																		// レイヤー情報の設定
+	void SetTileInfoWithLayer(cocos2d::TMXLayer* layer, KIND_TILE tile);						// レイヤーからタイル情報を設定
+	void SetTileInfoWithProperty(cocos2d::ValueMap map, int row, int col, KIND_TILE tile);		// プロパティからタイル情報を設定
 
-	void ChangeSeason();											// 季節の変更
+	void ChangeSeason();																		// 季節の変更
 
-	void Scroll(float playerX, cocos2d::ui::Button* button[]);		// マップのスクロール
+	void Scroll(float playerX, cocos2d::ui::Button* button[]);									// マップのスクロール
 
-	void CheckCollision(Player* player);							// 当たり判定チェック
+	void CheckCollision(Player* player);														// 当たり判定チェック
 
 	// タッチ判定
 	bool onTouchBegan(cocos2d::Touch* touch, cocos2d::Event* unused_event);
-
-	// 静的メンバ
-	static std::vector<TileInfo> m_tileInfo;						// タイル情報
-	static int m_numTiles;											// 総タイル数
 };

@@ -98,57 +98,102 @@ void Stage::ReSetLayerInfo()
 ===================================================================== */
 void Stage::SetLayerInfo()
 {
+	// タイル情報の設定
+	SetTileInfoWithLayer(m_pMapTileLayer[m_season], KIND_TILE::TILE);
+
+	// オブジェクト情報の設定
+	SetTileInfoWithLayer(m_pMapObjectLayer, KIND_TILE::OBJECT);
+
+	// ギミック情報の設定
+	SetTileInfoWithLayer(m_pMapGimmickLayer[m_season], KIND_TILE::GIMMICK);
+}
+
+/* =====================================================================
+//! 内　容		レイヤーからタイル情報を設定
+//! 引　数		レイヤー（TMXLayer）、タイルの種類（KIND_TILE）
+//! 戻り値		なし
+===================================================================== */
+void Stage::SetTileInfoWithLayer(TMXLayer* layer, KIND_TILE tile)
+{
 	for (int i = 0; i < NUM_ROW; i++)
 	{
 		for (int j = 0; j < NUM_COLUMN; j++)
 		{
-			auto gidTile = m_pMapTileLayer[m_season]->getTileGIDAt(Vec2(j, i));
-			auto gidGimmick = m_pMapGimmickLayer[m_season]->getTileGIDAt(Vec2(j, i));
+			auto gid = layer->getTileGIDAt(Vec2(j, i));
 
-			// タイル情報の設定
-			SetTileInfoWithProperty(gidTile, i, j);
-			SetTileInfoWithProperty(gidGimmick, i, j);
+			// プロパティ情報を取得
+			Value propertyValue = m_pMap->getPropertiesForGID(gid);
+
+			if (!propertyValue.isNull())
+			{
+				// プロパティをマップ配列として保持
+				ValueMap propertyMap = propertyValue.asValueMap();
+
+				if (!propertyMap.empty())
+				{
+					// プロパティからタイル情報を設定
+					SetTileInfoWithProperty(propertyMap, i, j, tile);
+				}
+			}
 		}
 	}
 }
 
 /* =====================================================================
 //! 内　容		プロパティからタイル情報を設定
-//! 引　数		GID（uint32_t）、行（int）、列（int）
+//! 引　数		GID（uint32_t）、行（int）、列（int）、タイルの種類（KIND_TILE）
 //! 戻り値		なし
 ===================================================================== */
-void Stage::SetTileInfoWithProperty(uint32_t gid, int row, int col)
-{
-	// プロパティ情報を取得
-	Value propertyValue = m_pMap->getPropertiesForGID(gid);
+void Stage::SetTileInfoWithProperty(ValueMap map, int row, int col, KIND_TILE tile)
+{		
+	// 座標設定
+	Vec2 pos = Vec2(col * SIZE_TILE, (NUM_ROW - row) * SIZE_TILE - SIZE_TILE);
 
-	if (!propertyValue.isNull())
+	int id;
+
+	// タイル情報の登録
+	switch (tile)
 	{
-		// プロパティをマップ配列として保持
-		ValueMap propertyMap = propertyValue.asValueMap();
+	case KIND_TILE::TILE:		// タイル
 
-		if (!propertyMap.empty())
-		{
-			// タイル情報の登録
-			// asInt関数が使えれば一行で済むが、バグるため保留
-			//m_tileInfo.push_back(TileInfo{ propertyValue.asInt(), Vec2(j * SIZE_TILE, (NUM_ROW - i) * SIZE_TILE - SIZE_TILE) });
+		// 各タイル設定
+		if		(map["collision"].asString() == "block")	id = static_cast<int>(TILE::BLOCK);
+		else if (map["collision"].asString() == "water")	id = static_cast<int>(TILE::WATER);
 
-			// 座標設定
-			Vec2 pos = Vec2(col * SIZE_TILE, (NUM_ROW - row) * SIZE_TILE - SIZE_TILE);
+		// タイル数加算
+		m_numTiles++;
 
-			int id;
+		// タイルIDの設定
+		m_tileInfo.push_back(StageInfo{ id, pos });
 
-			// タイルIDの取得
-			if		(propertyMap["collision"].asString() == "block")	id = static_cast<int>(TILE::BLOCK);
-			else if (propertyMap["collision"].asString() == "water")	id = static_cast<int>(TILE::WATER);
-			else if (propertyMap["tree"].asString() == "block")			id = static_cast<int>(TILE::BLOCK);
+		break;
 
-			// タイルIDの設定
-			m_tileInfo.push_back(TileInfo{ id, pos });
+	case KIND_TILE::OBJECT:		// オブジェクト
 
-			// 総タイル数加算
-			m_numTiles++;
-		}
+		// 各オブジェクト設定
+		if		(map["object"].asString() == "signBoard")	id = static_cast<int>(OBJECT::SIGN_BOARD);
+		else if (map["object"].asString() == "seasonBook")	id = static_cast<int>(OBJECT::SIGN_BOARD);
+
+		// オブジェクト数加算
+		m_numObjects++;
+
+		// オブジェクトIDの設定
+		m_objectInfo.push_back(StageInfo{ id, pos });
+
+		break;
+
+	case KIND_TILE::GIMMICK:	// ギミック
+
+		// 各ギミック設定
+		if		(map["tree"].asString() == "block")			id = static_cast<int>(TILE::BLOCK);
+
+		// ギミック数加算
+		m_numGimmicks++;
+
+		// ギミックIDの設定
+		m_gimmickInfo.push_back(StageInfo{ id, pos });
+
+		break;
 	}
 }
 
@@ -171,7 +216,7 @@ void Stage::ChangeSeason()
 	m_pBack->Change(m_season);
 
 	// レイヤー情報の再設定
-	ReSetLayerInfo();
+	//ReSetLayerInfo();
 
 	// レイヤーを表示する
 	m_pMapTileLayer[m_season]->setVisible(true);
@@ -219,27 +264,33 @@ void Stage::Scroll(float playerX, cocos2d::ui::Button* button[])
 ===================================================================== */
 void Stage::CheckCollision(Player* player)
 {
-	for (int i = 0; i < Stage::m_numTiles; i++)
+	// タイルとの当たり判定
+	for (int i = 0; i < m_numTiles; i++)
 	{
-		// 当たり判定チェック
 		if (GameManager::isCollision(m_tileInfo[i].pos, player->getPosition()))
 		{
-			switch (Stage::m_tileInfo[i].ID)
-			{
-			case static_cast<int>(TILE::BLOCK) :			// ブロック
+			// タイルに応じて処理
+			player->Action(m_tileInfo[i].ID, m_tileInfo[i].pos, m_season);
+		}
+	}
 
-				// 調整
-				player->setPositionY(m_tileInfo[i].pos.y + SIZE_TILE + SIZE_PLAYER / 2);
+	// オブジェクトとの当たり判定
+	for (int i = 0; i < m_numObjects; i++)
+	{
+		if (GameManager::isCollision(m_objectInfo[i].pos, player->getPosition()))
+		{
+			// オブジェクトに応じて処理
+			player->Action(m_objectInfo[i].ID, m_objectInfo[i].pos, m_season);
+		}
+	}
 
-				player->Fall(static_cast<int>(TILE::BLOCK), m_season);
-
-				break;
-
-			case static_cast<int>(TILE::WATER) :			// 水
-
-				player->Fall(static_cast<int>(TILE::WATER), m_season);
-				break;
-			}
+	// ギミックとの当たり判定
+	for (int i = 0; i < m_numGimmicks; i++)
+	{
+		if (GameManager::isCollision(m_gimmickInfo[i].pos, player->getPosition()))
+		{
+			// ギミックに応じて処理
+			player->Action(m_gimmickInfo[i].ID, m_gimmickInfo[i].pos, m_season);
 		}
 	}
 }
