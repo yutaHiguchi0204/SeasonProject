@@ -14,4 +14,5 @@ class SeasonBook : public cocos2d::Sprite
 public:
 	CREATE_FUNC(SeasonBook);
 	virtual bool init();
+	void Setbookflag();
 };
