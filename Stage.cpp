@@ -231,7 +231,7 @@ void Stage::ChangeSeason()
 	m_pBack->Change(m_season);
 
 	// レイヤー情報の再設定
-	ReSetLayerInfo();
+	//ReSetLayerInfo();
 
 	// レイヤーを表示する
 	m_pMapTileLayer[m_season]->setVisible(true);
