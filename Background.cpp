@@ -22,20 +22,20 @@ bool Background::init()
 	// 画像の初期設定
 	setTexture("background/back_spring.png");
 
-	//// プリセットの初期設定
-	//m_pParticle = ParticleSystemQuad::create("background/particle_spring.plist");
+	// プリセットの初期設定
+	m_pParticle = ParticleSystemQuad::create("background/particle_spring.plist");
 
-	//// パーティクルのメモリリーク回避
-	//m_pParticle->setAutoRemoveOnFinish(true);
+	// パーティクルのメモリリーク回避
+	m_pParticle->setAutoRemoveOnFinish(true);
 
-	//// パーティクル開始
-	//m_pParticle->resetSystem();
+	// パーティクル開始
+	m_pParticle->resetSystem();
 
-	//// パーティクルの座標設定（左上）
-	//m_pParticle->setPosition(Vec2(0.0f, WINDOW_HEIGHT));
+	// パーティクルの座標設定（左上）
+	m_pParticle->setPosition(WINDOW_WIDTH/3, WINDOW_HEIGHT);
 
-	//// パーティクルをノードにつなぐ
-	//this->addChild(m_pParticle);
+	// パーティクルをノードにつなぐ
+	this->addChild(m_pParticle);
 
 	// 位置の初期設定
 	setPosition(Vec2(WINDOW_WIDTH / 2.0f, WINDOW_HEIGHT / 2.0f));
@@ -59,13 +59,13 @@ void Background::Change(int season)
 	// 夏以外はパーティクルを出す
 	if (season != static_cast<int>(SEASON::SUMMER))
 	{
-		//// ファイル名のリセット
-		//sFileName.str("");
-		//sFileName.clear();
+		// ファイル名のリセット
+		sFileName.str("");
+		sFileName.clear();
 
-		//sFileName << "background/particle_" << SEASON_NAME[season] << ".png";
+		sFileName << "background/particle_" << SEASON_NAME[season] << ".png";
 
-		//// パーティクルの変更
-		//m_pParticle->initWithFile(sFileName.str());
+		// パーティクルの変更
+		m_pParticle->initWithFile(sFileName.str());
 	}
 }

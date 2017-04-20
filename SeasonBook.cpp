@@ -23,18 +23,3 @@ bool SeasonBook::init()
 
 	return true;
 }
-
-//ƒtƒ‰ƒOŠÇ—
-void SeasonBook::Setbookflag()
-{
-	bool setflag;
-
-	if (setflag != 0)
-	{
-		setTexture("object/button_book.png");
-	}
-	else if (setflag == 0)
-	{
-		setTexture("object/button_action.png");
-	}
-}
