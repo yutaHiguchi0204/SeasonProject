@@ -9,8 +9,8 @@
 #include <vector>
 #include "Background.h"
 #include "GameManager.h"
+#include "OperationButton.h"
 #include "Player.h"
-#include "ui/CocosGUI.h"
 
 // 列挙型
 enum class KIND_TILE
@@ -59,7 +59,7 @@ public:
 
 	void ChangeSeason();																		// 季節の変更
 
-	void Scroll(float playerX, cocos2d::ui::Button* button[]);									// マップのスクロール
+	void Scroll(float playerX, OperationButton* button[]);										// マップのスクロール
 
 	void CheckCollision(Player* player);														// 当たり判定チェック
 

@@ -6,9 +6,13 @@
 
 // ヘッダファイルのインクルード
 #include "Stage.h"
+#include "PlayScene.h"
 
 // 名前空間
 USING_NS_CC;
+
+// 静的メンバの定義
+OperationButton* PlayScene::m_pButton[NUM_BUTTON];
 
 // メンバ関数の定義
 
@@ -185,7 +189,8 @@ void Stage::SetTileInfoWithProperty(ValueMap map, int row, int col, KIND_TILE ti
 	case KIND_TILE::OBJECT:		// オブジェクト
 
 		// 各オブジェクト設定
-		if		(map["object"].asString() == "seasonBook")	id = static_cast<int>(TILE::SIGN_BOARD);
+		if		(map["object"].asString() == "signBoard")	id = static_cast<int>(TILE::SIGN_BOARD);
+		else if	(map["object"].asString() == "seasonBook")	id = static_cast<int>(TILE::SEASON_BOOK);
 		else												id = static_cast<int>(TILE::NONE);
 
 		// オブジェクト数加算
@@ -243,7 +248,7 @@ void Stage::ChangeSeason()
 //! 引　数		プレイヤーのx座標（float）
 //! 戻り値		なし
 ===================================================================== */
-void Stage::Scroll(float playerX, cocos2d::ui::Button* button[])
+void Stage::Scroll(float playerX, OperationButton* button[])
 {
 	// カメラ設定
 	Camera* camera = getScene()->getDefaultCamera();
@@ -294,6 +299,12 @@ void Stage::CheckCollision(Player* player)
 	{
 		if (GameManager::isCollision(m_objectInfo[i].pos, player->getPosition()))
 		{
+			// 季節記と当たった場合
+			if (m_objectInfo[i].ID == static_cast<int>(TILE::SEASON_BOOK))
+			{
+				PlayScene::m_pButton[static_cast<int>(BUTTON::ACTION)]->ChangeActionFlg(ACTION::SEASON_BOOK);
+			}
+
 			// オブジェクトに応じて処理
 			player->Action(m_objectInfo[i].ID, m_objectInfo[i].pos, m_season);
 		}

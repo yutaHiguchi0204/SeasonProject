@@ -7,10 +7,10 @@
 
 // ヘッダファイルのインクルード
 #include "GameManager.h"
+#include "OperationButton.h"
 #include "Player.h"
 #include "SeasonBook.h"
 #include "Stage.h"
-#include "ui/CocosGUI.h"
 
 // クラスの定義
 class PlayScene : public cocos2d::Scene
@@ -20,13 +20,7 @@ private:
 
 	Stage* m_pStage;									// ステージ
 
-	//cocos2d::Sprite* m_pSignBoard01;					// 看板１
-	//cocos2d::Sprite* m_pBoard01;						// 説明盤１
-
-	Player* m_pPlayer;						// プレイヤー
-	//SeasonBook* m_pSeasonBook;				// 季節記
-
-	cocos2d::ui::Button* m_pButton[NUM_BUTTON];			// ボタン
+	Player* m_pPlayer;									// プレイヤー
 
 public:
 	CREATE_FUNC(PlayScene);
@@ -39,5 +33,7 @@ public:
 
 	//bool onTouchBegan(cocos2d::Touch* touch, cocos2d::Event* unused_event);
 
-	static int m_timeCnt;					// 時間計測
+	// 静的メンバ
+	static int m_timeCnt;									// 時間計測
+	static OperationButton* m_pButton[NUM_BUTTON];			// ボタン
 };
