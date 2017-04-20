@@ -30,13 +30,6 @@ const std::string SEASON_NAME[NUM_SEASON] = {			// 季節名
 };
 
 // 列挙型
-enum class BUTTON			// ボタン
-{
-	LEFT,
-	RIGHT,
-	ACTION
-};
-
 enum class SEASON			// 季節
 {
 	SPRING,
@@ -50,11 +43,6 @@ enum class TILE				// タイル
 	NONE = -1,
 	BLOCK,
 	WATER,
-	SIGN_BOARD
-};
-
-enum class OBJECT			// オブジェクト
-{
 	SIGN_BOARD,
 	SEASON_BOOK
 };

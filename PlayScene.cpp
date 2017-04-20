@@ -47,15 +47,9 @@ bool PlayScene::init()
 	this->addChild(m_pStage);
 
 	// ボタン生成
-	m_pButton[static_cast<int>(BUTTON::LEFT)]	= cocos2d::ui::Button::create("object/button_arrow.png");
-	m_pButton[static_cast<int>(BUTTON::RIGHT)]	= cocos2d::ui::Button::create("object/button_arrow.png");
-	m_pButton[static_cast<int>(BUTTON::ACTION)] = cocos2d::ui::Button::create("object/button_action.png");
-
-	// ボタンの初期設定
-	m_pButton[static_cast<int>(BUTTON::RIGHT)]->setFlippedX(true);
-	m_pButton[static_cast<int>(BUTTON::LEFT)]->setPosition(Vec2(96.0f, 96.0f));
-	m_pButton[static_cast<int>(BUTTON::RIGHT)]->setPosition(Vec2(288.0f, 96.0f));
-	m_pButton[static_cast<int>(BUTTON::ACTION)]->setPosition(Vec2(WINDOW_WIDTH - 96.0f, 96.0f));
+	m_pButton[static_cast<int>(BUTTON::LEFT)] = OperationButton::create(BUTTON::LEFT);
+	m_pButton[static_cast<int>(BUTTON::RIGHT)] = OperationButton::create(BUTTON::RIGHT);
+	m_pButton[static_cast<int>(BUTTON::ACTION)] = OperationButton::create(BUTTON::ACTION);
 
 	// ボタンをシーンにつなぐ
 	for (int i = 0; i < NUM_BUTTON; i++) this->addChild(m_pButton[i], 3);
@@ -77,6 +71,9 @@ void PlayScene::update(float delta)
 {
 	// スクロール
 	m_pStage->Scroll(m_pPlayer->getPositionX(), m_pButton);
+
+	// アクションボタンの初期化（ジャンプボタン）
+	m_pButton[static_cast<int>(BUTTON::ACTION)]->ChangeActionFlg(ACTION::JUMP);
 
 	// 当たり判定
 	m_pStage->CheckCollision(m_pPlayer);
@@ -120,26 +117,4 @@ void PlayScene::update(float delta)
 	{
 		m_pButton[static_cast<int>(BUTTON::ACTION)]->setColor(Color3B(255.0f, 255.0f, 255.0f));
 	}
-
-	// プレイヤーと季節記の当たり判定
-	/*Rect rectSeasonBook = m_pSeasonBook->getBoundingBox();
-	if (rectPlayer.intersectsRect(rectSeasonBook))
-	{
-		m_pButtonAction->loadTextureNormal("object/button_book.png");
-	}
-	else
-	{
-		m_pButtonAction->loadTextureNormal("object/button_action.png");
-	}*/
-
-	// プレイヤーと看板の当たり判定
-	/*Rect rectSignBoard = m_pSignBoard01->getBoundingBox();
-	if (rectPlayer.intersectsRect(rectSignBoard))
-	{
-		m_pBoard01->setVisible(true);
-	}
-	else
-	{
-		m_pBoard01->setVisible(false);
-	}*/
 }
