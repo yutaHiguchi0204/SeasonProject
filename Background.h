@@ -11,6 +11,9 @@
 // クラスの定義
 class Background : public cocos2d::Sprite
 {
+private:
+	cocos2d::ParticleSystemQuad* m_pParticle;		// パーティクル
+
 public:
 	CREATE_FUNC(Background);
 	virtual bool init();
