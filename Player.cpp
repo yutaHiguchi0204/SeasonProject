@@ -11,7 +11,7 @@
 // 名前空間
 USING_NS_CC;
 
-// 静的メンバ
+// 静的メンバ//
 int PlayScene::m_timeCnt;
 
 // メンバ関数の定義
