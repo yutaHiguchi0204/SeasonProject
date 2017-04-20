@@ -108,8 +108,11 @@ void PlayScene::update(float delta)
 	// アクションボタンが押されたらプレイヤーをジャンプさせる
 	if (m_pButton[static_cast<int>(BUTTON::ACTION)]->isHighlighted() && !Player::m_isJump)
 	{
-		m_pPlayer->Jump();
-		m_pButton[static_cast<int>(BUTTON::ACTION)]->setColor(Color3B(128.0f, 128.0f, 128.0f));
+		if (m_pButton[static_cast<int>(BUTTON::ACTION)]->GetActionFlg() == ACTION::JUMP)
+		{
+			m_pPlayer->Jump();
+			m_pButton[static_cast<int>(BUTTON::ACTION)]->setColor(Color3B(128.0f, 128.0f, 128.0f));
+		}
 	}
 
 	// アクションボタン設定

@@ -12,7 +12,7 @@ USING_NS_CC;
 
 // メンバ関数の定義
 
-// 初期化
+// 初期化（デフォルト）
 bool OperationButton::init()
 {
 	if (!cocos2d::ui::Button::init())
@@ -26,7 +26,7 @@ bool OperationButton::init()
 	return true;
 }
 
-// 初期化
+// 初期化（ボタン指定）
 bool OperationButton::init(BUTTON button)
 {
 	if (!cocos2d::ui::Button::init())
@@ -103,4 +103,14 @@ void OperationButton::ChangeButtonTexture(ACTION action)
 
 	// 背景の変更
 	loadTextureNormal(sFileName.str());
+}
+
+/* =====================================================================
+//! 内　容		アクションフラグの取得
+//! 引　数		なし
+//! 戻り値		アクションフラグ（ACTION）
+===================================================================== */
+ACTION OperationButton::GetActionFlg()
+{
+	return m_actionFlg;
 }

@@ -46,4 +46,6 @@ public:
 
 	void ChangeActionFlg(ACTION action);					// アクションフラグの変更
 	void ChangeButtonTexture(ACTION action);				// ボタンの画像を変える
+
+	ACTION GetActionFlg();									// アクションフラグを取得する
 };
