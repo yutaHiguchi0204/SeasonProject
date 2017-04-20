@@ -56,12 +56,16 @@ void Background::Change(int season)
 	// 背景の変更
 	setTexture(sFileName.str());
 
-	//// ファイル名のリセット
-	//sFileName.str("");
-	//sFileName.clear();
+	// 夏以外はパーティクルを出す
+	if (season != static_cast<int>(SEASON::SUMMER))
+	{
+		//// ファイル名のリセット
+		//sFileName.str("");
+		//sFileName.clear();
 
-	//sFileName << "background/particle_" << SEASON_NAME[season] << ".png";
+		//sFileName << "background/particle_" << SEASON_NAME[season] << ".png";
 
-	//// パーティクルの変更
-	//m_pParticle->initWithFile(sFileName.str());
+		//// パーティクルの変更
+		//m_pParticle->initWithFile(sFileName.str());
+	}
 }
