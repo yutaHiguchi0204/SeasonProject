@@ -117,6 +117,7 @@ void PlayScene::update(float delta)
 		else
 		{
 			m_pSeasonBook = SeasonBook::create();
+			m_pSeasonBook->setPosition(Vec2(m_pStage->GetCameraPosX(), WINDOW_HEIGHT_HERF));
 			this->addChild(m_pSeasonBook);
 
 			m_pButton[static_cast<int>(BUTTON::ACTION)]->SetFullBright(false);

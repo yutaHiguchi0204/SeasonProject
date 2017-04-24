@@ -251,9 +251,9 @@ void Stage::ChangeSeason()
 void Stage::Scroll(float playerX, OperationButton* button[])
 {
 	// カメラ設定
-	Camera* camera = getScene()->getDefaultCamera();
+	m_pCamera = getScene()->getDefaultCamera();
 
-	float cameraPos = camera->getPositionX();
+	float cameraPos = m_pCamera->getPositionX();
 
 	// カメラ移動の基準値を設定
 	const float CAMERA_BORDER = WINDOW_WIDTH_HERF;
@@ -274,7 +274,17 @@ void Stage::Scroll(float playerX, OperationButton* button[])
 	}
 
 	// カメラ移動
-	camera->setPositionX(cameraPos);
+	m_pCamera->setPositionX(cameraPos);
+}
+
+/* =====================================================================
+//! 内　容		カメラ座標xの取得
+//! 引　数		なし
+//! 戻り値		カメラ座標x（float）
+===================================================================== */
+float Stage::GetCameraPosX()
+{
+	return m_pCamera->getPositionX();
 }
 
 /* =====================================================================

@@ -47,6 +47,8 @@ private:
 	std::vector<StageInfo> m_objectInfo;				// タイル情報
 	std::vector<StageInfo> m_gimmickInfo;				// タイル情報
 
+	cocos2d::Camera* m_pCamera;							// カメラ
+
 public:
 
 	CREATE_FUNC(Stage);
@@ -60,6 +62,7 @@ public:
 	void ChangeSeason();																		// 季節の変更
 
 	void Scroll(float playerX, OperationButton* button[]);										// マップのスクロール
+	float GetCameraPosX();																		// カメラ座標xの取得
 
 	void CheckCollision(Player* player);														// 当たり判定チェック
 
