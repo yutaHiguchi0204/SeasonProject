@@ -256,7 +256,7 @@ void Stage::Scroll(float playerX, OperationButton* button[])
 	float cameraPos = camera->getPositionX();
 
 	// カメラ移動の基準値を設定
-	const float CAMERA_BORDER = WINDOW_WIDTH / 2.0f;
+	const float CAMERA_BORDER = WINDOW_WIDTH_HERF;
 
 	// はみ出し確認
 	if (playerX >= CAMERA_BORDER && playerX <= STAGE_WIDTH - CAMERA_BORDER)

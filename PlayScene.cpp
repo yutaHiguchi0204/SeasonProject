@@ -29,6 +29,7 @@ Scene* PlayScene::createScene()
 	return scene;
 }
 
+// ‰Šú‰»
 bool PlayScene::init()
 {
 	if (!Scene::init())

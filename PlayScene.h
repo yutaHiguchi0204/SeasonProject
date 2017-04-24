@@ -31,8 +31,6 @@ public:
 
 	void update(float delta);				// 更新処理
 
-	//bool onTouchBegan(cocos2d::Touch* touch, cocos2d::Event* unused_event);
-
 	// 静的メンバ
 	static int m_timeCnt;									// 時間計測
 	static OperationButton* m_pButton[NUM_BUTTON];			// ボタン

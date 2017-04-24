@@ -32,13 +32,13 @@ bool Background::init()
 	m_pParticle->resetSystem();
 
 	// パーティクルの座標設定（左上）
-	m_pParticle->setPosition(WINDOW_WIDTH/3, WINDOW_HEIGHT);
+	m_pParticle->setPosition(WINDOW_WIDTH / 3, WINDOW_HEIGHT);
 
 	// パーティクルをノードにつなぐ
 	this->addChild(m_pParticle);
 
 	// 位置の初期設定
-	setPosition(Vec2(WINDOW_WIDTH / 2.0f, WINDOW_HEIGHT / 2.0f));
+	setPosition(Vec2(WINDOW_WIDTH_HERF, WINDOW_HEIGHT_HERF));
 
 	return true;
 }

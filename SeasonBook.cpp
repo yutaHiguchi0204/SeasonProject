@@ -19,7 +19,10 @@ bool SeasonBook::init()
 		return false;
 	}
 
-	setTexture("object/seasonBook.png");
+	// 季節換えのページを表示
+	m_pBook = Sprite::create("object/seasonChanger.png");
+	m_pBook->setPosition(Vec2(WINDOW_WIDTH_HERF, WINDOW_HEIGHT_HERF));
+	this->addChild(m_pBook);
 
 	return true;
 }

@@ -9,16 +9,18 @@
 #include "cocos2d.h"
 
 // 定数
-const int WINDOW_WIDTH			= 960;					// 画面の幅
-const int WINDOW_HEIGHT			= 540;					// 画面の高さ
-const int STAGE_WIDTH			= WINDOW_WIDTH * 4;		// ステージサイズ
-const int SIZE_TILE				= 32;					// タイルサイズ(32×32)
-const int SIZE_PLAYER			= 48;					// プレイヤーサイズ(48×48)
-const int NUM_ROW				= 17;					// 行数
-const int NUM_COLUMN			= 120;					// 列数
-const int NUM_BUTTON			= 3;					// ボタン数
-const int NUM_SEASON			= 4;					// 季節
-const int NUM_SECOND			= 60;					// １秒
+const int	NUM_ROW				= 17;					// 行数
+const int	NUM_COLUMN			= 120;					// 列数
+const int	NUM_BUTTON			= 3;					// ボタン数
+const int	NUM_SEASON			= 4;					// 季節
+const int	NUM_SECOND			= 60;					// １秒
+const float WINDOW_WIDTH		= 960.0f;				// 画面の幅
+const float WINDOW_HEIGHT		= 540.0f;				// 画面の高さ
+const float WINDOW_WIDTH_HERF	= WINDOW_WIDTH / 2;		// 画面の幅の半分
+const float WINDOW_HEIGHT_HERF	= WINDOW_HEIGHT / 2;	// 画面の高さの半分
+const float STAGE_WIDTH			= WINDOW_WIDTH * 4;		// ステージサイズ
+const float SIZE_TILE			= 32.0f;				// タイルサイズ(32×32)
+const float SIZE_PLAYER			= 48.0f;				// プレイヤーサイズ(48×48)
 const float NUM_GRAVITY			= 0.4f;					// 重力
 const float NUM_WATER_GRAVITY	= 0.05f;				// 浮力（水の重力）
 
