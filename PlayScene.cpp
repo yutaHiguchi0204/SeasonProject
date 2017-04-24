@@ -112,13 +112,20 @@ void PlayScene::update(float delta)
 		if (m_pButton[static_cast<int>(BUTTON::ACTION)]->GetActionFlg() == ACTION::JUMP)
 		{
 			m_pPlayer->Jump();
-			m_pButton[static_cast<int>(BUTTON::ACTION)]->setColor(Color3B(128.0f, 128.0f, 128.0f));
+			m_pButton[static_cast<int>(BUTTON::ACTION)]->SetFullBright(false);
+		}
+		else
+		{
+			m_pSeasonBook = SeasonBook::create();
+			this->addChild(m_pSeasonBook);
+
+			m_pButton[static_cast<int>(BUTTON::ACTION)]->SetFullBright(false);
 		}
 	}
 
 	// アクションボタン設定
 	if (!Player::m_isJump)
 	{
-		m_pButton[static_cast<int>(BUTTON::ACTION)]->setColor(Color3B(255.0f, 255.0f, 255.0f));
+		m_pButton[static_cast<int>(BUTTON::ACTION)]->SetFullBright();
 	}
 }

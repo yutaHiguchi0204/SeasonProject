@@ -10,6 +10,10 @@
 // 名前空間
 USING_NS_CC;
 
+// 定数
+const Color3B FULL_COLOR = Color3B(255.0f, 255.0f, 255.0f);
+const Color3B HERF_COLOR = Color3B(128.0f, 128.0f, 128.0f);
+
 // メンバ関数の定義
 
 // 初期化（デフォルト）
@@ -75,6 +79,17 @@ OperationButton* OperationButton::create(BUTTON button)
 	}
 	CC_SAFE_DELETE(btn);
 	return nullptr;
+}
+
+/* =====================================================================
+//! 内　容		ボタンの明度設定
+//! 引　数		ＭＡＸか暗めか（bool）
+//! 戻り値		なし
+===================================================================== */
+void OperationButton::SetFullBright(bool full)
+{
+	if (full)	setColor(FULL_COLOR);			// ＭＡＸ
+	else		setColor(HERF_COLOR);			// 暗め
 }
 
 /* =====================================================================

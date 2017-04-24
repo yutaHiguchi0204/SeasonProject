@@ -22,6 +22,8 @@ private:
 
 	Player* m_pPlayer;									// プレイヤー
 
+	SeasonBook* m_pSeasonBook;							// 季節記
+
 public:
 	CREATE_FUNC(PlayScene);
 	virtual bool init();

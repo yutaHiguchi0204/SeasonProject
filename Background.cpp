@@ -38,7 +38,7 @@ bool Background::init()
 	this->addChild(m_pParticle);
 
 	// ˆÊ’u‚Ì‰Šúİ’è
-	setPosition(Vec2(WINDOW_WIDTH_HERF, WINDOW_HEIGHT_HERF));
+	setPosition(WINDOW_MIDDLE);
 
 	return true;
 }

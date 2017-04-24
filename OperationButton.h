@@ -44,6 +44,8 @@ public:
 
 	static OperationButton* create(BUTTON button);
 
+	void SetFullBright(bool full = true);					// ボタンの明度設定（ＭＡＸか半透明）
+
 	void ChangeActionFlg(ACTION action);					// アクションフラグの変更
 	void ChangeButtonTexture(ACTION action);				// ボタンの画像を変える
 
