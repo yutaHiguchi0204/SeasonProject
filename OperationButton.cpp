@@ -6,6 +6,8 @@
 
 // ヘッダファイルのインクルード
 #include "OperationButton.h"
+#include <fstream>
+#include <sstream>
 
 // 名前空間
 USING_NS_CC;

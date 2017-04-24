@@ -6,6 +6,7 @@
 #pragma once
 
 // ヘッダファイルのインクルード
+#include <string>
 #include "GameManager.h"
 #include "ui/CocosGUI.h"
 
