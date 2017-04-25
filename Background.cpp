@@ -56,6 +56,12 @@ void Background::Change(int season)
 	// 背景の変更
 	setTexture(sFileName.str());
 
+	//夏の季節だけ非表示
+	if (season == static_cast<int>(SEASON::SUMMER))
+	{
+		m_pParticle->setVisible(false);
+	}
+
 	// 夏以外はパーティクルを出す
 	if (season != static_cast<int>(SEASON::SUMMER))
 	{
@@ -63,9 +69,13 @@ void Background::Change(int season)
 		sFileName.str("");
 		sFileName.clear();
 
+		//パーティクルの表示
+		m_pParticle->setVisible(true);
+
 		sFileName << "background/particle_" << SEASON_NAME[season] << ".plist";
 
 		// パーティクルの変更
 		m_pParticle->initWithFile(sFileName.str());
+
 	}
 }
