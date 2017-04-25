@@ -11,9 +11,6 @@
 // 名前空間
 USING_NS_CC;
 
-// 静的メンバの定義
-OperationButton* PlayScene::m_pButton[NUM_BUTTON];
-
 // メンバ関数の定義
 
 bool Stage::init()

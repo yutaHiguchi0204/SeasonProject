@@ -21,7 +21,7 @@ bool SeasonBook::init()
 
 	// 季節換えのページを表示
 	m_pBook = Sprite::create("object/seasonChanger.png");
-	this->addChild(m_pBook);
+	this->addChild(m_pBook, 4);
 
 	return true;
 }

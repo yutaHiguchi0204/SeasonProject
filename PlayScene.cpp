@@ -41,7 +41,8 @@ bool PlayScene::init()
 	scheduleUpdate();
 
 	// 各データの初期設定
-	m_timeCnt = 0;										// 時間計測
+	m_pSeasonBook = nullptr;					// 季節記
+	m_timeCnt = 0;								// 時間計測
 
 	// ステージ
 	m_pStage = Stage::create();
@@ -83,32 +84,35 @@ void PlayScene::update(float delta)
 	m_timeCnt++;
 
 	// ボタンが押されていたらプレイヤーを移動させる
-	m_pStage->MoveButtonHighlighted(BUTTON::LEFT, m_pPlayer);
-	m_pStage->MoveButtonHighlighted(BUTTON::RIGHT, m_pPlayer);
-
-	// アクションボタンが押されたときの処理
-	if (m_pButton[static_cast<int>(BUTTON::ACTION)]->isHighlighted() && !Player::m_isJump)
+	if (m_pSeasonBook == nullptr)
 	{
-		// ジャンプ処理
-		if (m_pButton[static_cast<int>(BUTTON::ACTION)]->GetActionFlg() == ACTION::JUMP)
-		{
-			m_pPlayer->Jump();
-			m_pButton[static_cast<int>(BUTTON::ACTION)]->SetFullBright(false);
-		}
-		// 季節記処理
-		else
-		{
-			m_pSeasonBook = SeasonBook::create();
-			m_pSeasonBook->setPosition(Vec2(m_pStage->GetCameraPosX(), WINDOW_HEIGHT_HERF));
-			this->addChild(m_pSeasonBook);
+		m_pStage->MoveButtonHighlighted(BUTTON::LEFT, m_pPlayer);
+		m_pStage->MoveButtonHighlighted(BUTTON::RIGHT, m_pPlayer);
 
-			m_pButton[static_cast<int>(BUTTON::ACTION)]->SetFullBright(false);
-		}
-	}
+		// アクションボタンが押されたときの処理
+		if (m_pButton[static_cast<int>(BUTTON::ACTION)]->isHighlighted() && !Player::m_isJump)
+		{
+			// ジャンプ処理
+			if (m_pButton[static_cast<int>(BUTTON::ACTION)]->GetActionFlg() == ACTION::JUMP)
+			{
+				m_pPlayer->Jump();
+				m_pButton[static_cast<int>(BUTTON::ACTION)]->SetFullBright(false);
+			}
+			// 季節記処理
+			else
+			{
+				m_pSeasonBook = SeasonBook::create();
+				m_pSeasonBook->setPosition(Vec2(m_pStage->GetCameraPosX(), WINDOW_HEIGHT_HERF));
+				this->addChild(m_pSeasonBook);
 
-	// アクションボタンの明度を戻す
-	if (!Player::m_isJump && m_pButton[static_cast<int>(BUTTON::ACTION)]->GetActionFlg() == ACTION::JUMP)
-	{
-		m_pButton[static_cast<int>(BUTTON::ACTION)]->SetFullBright();
+				m_pButton[static_cast<int>(BUTTON::ACTION)]->SetFullBright(false);
+			}
+		}
+
+		// アクションボタンの明度を戻す
+		if (!Player::m_isJump && m_pButton[static_cast<int>(BUTTON::ACTION)]->GetActionFlg() == ACTION::JUMP)
+		{
+			m_pButton[static_cast<int>(BUTTON::ACTION)]->SetFullBright();
+		}
 	}
 }
