@@ -143,7 +143,7 @@ void Player::Action(int tileID, Vec2 tileVec, int season)
 	case static_cast<int>(TILE::BLOCK):		// ƒuƒƒbƒN
 
 		// ’²®
-		setPositionY(tileVec.y + SIZE_TILE + SIZE_PLAYER / 2);
+		setPositionY(tileVec.y + SIZE_TILE + SIZE_PLAYER_HERF);
 
 		// —‰ºˆ—
 		Fall(static_cast<int>(TILE::BLOCK), season);
