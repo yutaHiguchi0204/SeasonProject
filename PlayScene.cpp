@@ -43,6 +43,7 @@ bool PlayScene::init()
 	// 各データの初期設定
 	m_pSeasonBook = nullptr;					// 季節記
 	m_timeCnt = 0;								// 時間計測
+	m_isChangeSeason = false;					// 季節を入れ替えてるかどうか
 
 	// ステージ
 	m_pStage = Stage::create();
@@ -84,7 +85,7 @@ void PlayScene::update(float delta)
 	m_timeCnt++;
 
 	// ボタンが押されていたらプレイヤーを移動させる
-	if (m_pSeasonBook == nullptr)
+	if (!m_isChangeSeason)
 	{
 		m_pStage->MoveButtonHighlighted(BUTTON::LEFT, m_pPlayer);
 		m_pStage->MoveButtonHighlighted(BUTTON::RIGHT, m_pPlayer);
@@ -101,18 +102,24 @@ void PlayScene::update(float delta)
 			// 季節記処理
 			else
 			{
+				// 季節記の生成
 				m_pSeasonBook = SeasonBook::create();
 				m_pSeasonBook->setPosition(Vec2(m_pStage->GetCameraPosX(), WINDOW_HEIGHT_HERF));
-				this->addChild(m_pSeasonBook);
+				this->addChild(m_pSeasonBook, 4);
 
+				// 明度を暗くする
 				m_pButton[static_cast<int>(BUTTON::ACTION)]->SetFullBright(false);
+
+				// 季節変化をしている状態にする
+				m_isChangeSeason = true;
 			}
 		}
+	}
 
-		// アクションボタンの明度を戻す
-		if (!Player::m_isJump && m_pButton[static_cast<int>(BUTTON::ACTION)]->GetActionFlg() == ACTION::JUMP)
-		{
-			m_pButton[static_cast<int>(BUTTON::ACTION)]->SetFullBright();
-		}
+	// アクションボタンの明度を戻す
+	if ((!Player::m_isJump && m_pButton[static_cast<int>(BUTTON::ACTION)]->GetActionFlg() == ACTION::JUMP) ||
+		(!m_isChangeSeason && m_pButton[static_cast<int>(BUTTON::ACTION)]->GetActionFlg() == ACTION::SEASON_BOOK))
+	{
+		m_pButton[static_cast<int>(BUTTON::ACTION)]->SetFullBright();
 	}
 }

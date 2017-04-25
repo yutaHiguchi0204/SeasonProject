@@ -20,11 +20,11 @@ USING_NS_CC;
 ===================================================================== */
 bool GameManager::isCollision(Vec2 tileVec, Vec2 playerVec)
 {
-	if ((tileVec.x <= playerVec.x + SIZE_PLAYER / 2) &&
-		(tileVec.x + SIZE_TILE >= playerVec.x - SIZE_PLAYER / 2))
+	if ((tileVec.x <= playerVec.x + SIZE_PLAYER_HERF) &&
+		(tileVec.x + SIZE_TILE >= playerVec.x - SIZE_PLAYER_HERF))
 	{
-		if ((tileVec.y <= playerVec.y + SIZE_PLAYER / 2) &&
-			(tileVec.y + SIZE_TILE >= playerVec.y - SIZE_PLAYER / 2))
+		if ((tileVec.y <= playerVec.y + SIZE_PLAYER_HERF) &&
+			(tileVec.y + SIZE_TILE >= playerVec.y - SIZE_PLAYER_HERF))
 		{
 			return true;
 		}

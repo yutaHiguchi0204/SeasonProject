@@ -7,19 +7,22 @@
 
 // ヘッダファイルのインクルード
 #include "GameManager.h"
+#include "SeasonBook.h"
+#include "ui/CocosGUI.h"
 
 // クラスの定義
 class SeasonBook : public cocos2d::Sprite
 {
 private:
-	cocos2d::Sprite* m_pBook;			// 本体
+	cocos2d::Sprite* m_pBook;					// 本体
+
+	cocos2d::ui::Button* m_pButtonClose;		// 閉じるボタン
+	cocos2d::ui::Button* m_pButtonArrowLeft;	// 左矢印
+	cocos2d::ui::Button* m_pButtonArrowRight;	// 右矢印
 
 public:
 	CREATE_FUNC(SeasonBook);
 	virtual bool init();
 
-	void Change();						// 季節入れ替え画面を表示
-
-	// 静的メンバ
-	static bool m_isChangeSeason;		// 季節記を開いて季節を変えてる途中かどうか
+	void update(float delta);
 };

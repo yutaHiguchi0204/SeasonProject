@@ -36,7 +36,7 @@ enum class ACTION			// アクション
 class OperationButton : public cocos2d::ui::Button
 {
 private:
-	ACTION m_actionFlg;			// アクションフラグ（アクションボタンのときのみ変更有）
+	ACTION m_actionFlg;							// アクションフラグ（アクションボタンのときのみ変更有）
 
 public:
 	CREATE_FUNC(OperationButton);

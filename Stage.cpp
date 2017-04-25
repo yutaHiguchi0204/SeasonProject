@@ -64,15 +64,6 @@ bool Stage::init()
 	// レイヤー情報の設定
 	SetLayerInfo();
 
-	// イベントリスナー作成
-	EventListenerTouchOneByOne* listener = EventListenerTouchOneByOne::create();
-
-	// イベントリスナーに各コールバック関数をセットする
-	listener->onTouchBegan = CC_CALLBACK_2(Stage::onTouchBegan, this);
-
-	// イベントリスナー登録
-	this->getEventDispatcher()->addEventListenerWithSceneGraphPriority(listener, this);
-
 	return true;
 }
 
@@ -363,11 +354,4 @@ void Stage::MoveButtonHighlighted(BUTTON button, Player* player)
 			}
 		}
 	}
-}
-
-bool Stage::onTouchBegan(Touch* touch, Event* unused_event)
-{
-	ChangeSeason();
-
-	return true;
 }

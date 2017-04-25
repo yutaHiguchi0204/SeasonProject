@@ -36,4 +36,5 @@ public:
 	// 静的メンバ
 	static int m_timeCnt;									// 時間計測
 	static OperationButton* m_pButton[NUM_BUTTON];			// ボタン
+	static bool m_isChangeSeason;							// 季節を入れ替えてるかどうか
 };
