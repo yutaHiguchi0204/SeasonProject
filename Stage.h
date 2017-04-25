@@ -65,6 +65,7 @@ public:
 	float GetCameraPosX();																		// カメラ座標xの取得
 
 	void CheckCollision(Player* player);														// 当たり判定チェック
+	void MoveButtonHighlighted(BUTTON button, Player* player);									// 移動ボタンが押された時の処理
 
 	// タッチ判定
 	bool onTouchBegan(cocos2d::Touch* touch, cocos2d::Event* unused_event);

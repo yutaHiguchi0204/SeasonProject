@@ -8,6 +8,7 @@
 #include "OperationButton.h"
 #include <fstream>
 #include <sstream>
+#include "PlayScene.h"
 
 // 名前空間
 USING_NS_CC;
@@ -15,6 +16,9 @@ USING_NS_CC;
 // 定数
 const Color3B FULL_COLOR = Color3B(255.0f, 255.0f, 255.0f);
 const Color3B HERF_COLOR = Color3B(128.0f, 128.0f, 128.0f);
+
+// 静的メンバの定義
+OperationButton* PlayScene::m_pButton[NUM_BUTTON];
 
 // メンバ関数の定義
 

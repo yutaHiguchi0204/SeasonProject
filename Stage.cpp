@@ -331,7 +331,42 @@ void Stage::CheckCollision(Player* player)
 	}
 }
 
+/* =====================================================================
+//! 内　容		移動ボタンが押された時の処理
+//! 引　数		ボタン（BUTTON）、プレイヤー（Player*）
+//! 戻り値		なし
+===================================================================== */
+void Stage::MoveButtonHighlighted(BUTTON button, Player* player)
+{
+	// ボタンが押されてるかどうか
+	if (PlayScene::m_pButton[static_cast<int>(button)]->isHighlighted())
+	{
+		// 左ボタン
+		if (button == BUTTON::LEFT)
+		{
+			// プレイヤーの向きを設定
+			player->setFlippedX(true);
 
+			// プレイヤーの移動
+			if (player->getPositionX() > SIZE_PLAYER_HERF)
+			{
+				player->Move(-SPEED_MOVE_PLAYER);
+			}
+		}
+		// 右ボタン
+		else
+		{
+			// プレイヤーの向きを設定
+			player->setFlippedX(false);
+
+			// プレイヤーの移動
+			if (player->getPositionX() < STAGE_WIDTH - SIZE_PLAYER_HERF)
+			{
+				player->Move(SPEED_MOVE_PLAYER);
+			}
+		}
+	}
+}
 
 bool Stage::onTouchBegan(Touch* touch, Event* unused_event)
 {

@@ -83,37 +83,19 @@ void PlayScene::update(float delta)
 	m_timeCnt++;
 
 	// ボタンが押されていたらプレイヤーを移動させる
-	if (m_pButton[static_cast<int>(BUTTON::LEFT)]->isHighlighted())
-	{
-		// プレイヤーの向きを設定
-		m_pPlayer->setFlippedX(true);
+	m_pStage->MoveButtonHighlighted(BUTTON::LEFT, m_pPlayer);
+	m_pStage->MoveButtonHighlighted(BUTTON::RIGHT, m_pPlayer);
 
-		// プレイヤーの移動
-		if (m_pPlayer->getPositionX() > SIZE_PLAYER / 2)
-		{
-			m_pPlayer->Move(-SPEED_MOVE_PLAYER);
-		}
-	}
-	else if (m_pButton[static_cast<int>(BUTTON::RIGHT)]->isHighlighted())
-	{
-		// プレイヤーの向きを設定
-		m_pPlayer->setFlippedX(false);
-
-		// プレイヤーの移動
-		if (m_pPlayer->getPositionX() < STAGE_WIDTH - SIZE_PLAYER / 2)
-		{
-			m_pPlayer->Move(SPEED_MOVE_PLAYER);
-		}
-	}
-
-	// アクションボタンが押されたらプレイヤーをジャンプさせる
+	// アクションボタンが押されたときの処理
 	if (m_pButton[static_cast<int>(BUTTON::ACTION)]->isHighlighted() && !Player::m_isJump)
 	{
+		// ジャンプ処理
 		if (m_pButton[static_cast<int>(BUTTON::ACTION)]->GetActionFlg() == ACTION::JUMP)
 		{
 			m_pPlayer->Jump();
 			m_pButton[static_cast<int>(BUTTON::ACTION)]->SetFullBright(false);
 		}
+		// 季節記処理
 		else
 		{
 			m_pSeasonBook = SeasonBook::create();
@@ -124,8 +106,8 @@ void PlayScene::update(float delta)
 		}
 	}
 
-	// アクションボタン設定
-	if (!Player::m_isJump)
+	// アクションボタンの明度を戻す
+	if (!Player::m_isJump && m_pButton[static_cast<int>(BUTTON::ACTION)]->GetActionFlg() == ACTION::JUMP)
 	{
 		m_pButton[static_cast<int>(BUTTON::ACTION)]->SetFullBright();
 	}
