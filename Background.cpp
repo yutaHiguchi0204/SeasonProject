@@ -63,7 +63,7 @@ void Background::Change(int season)
 		sFileName.str("");
 		sFileName.clear();
 
-		sFileName << "background/particle_" << SEASON_NAME[season] << ".png";
+		sFileName << "background/particle_" << SEASON_NAME[season] << ".plist";
 
 		// パーティクルの変更
 		m_pParticle->initWithFile(sFileName.str());
