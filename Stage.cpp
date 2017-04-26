@@ -20,8 +20,12 @@ bool Stage::init()
 		return false;
 	}
 
+	// 更新処理準備
+	scheduleUpdate();
+
 	// メンバの初期設定
 	m_season = static_cast<int>(SEASON::SPRING);		// 季節
+	m_seasonBefore = m_season;
 	m_numTiles = 0;
 
 	// 背景
@@ -65,6 +69,20 @@ bool Stage::init()
 	SetLayerInfo();
 
 	return true;
+}
+
+/* =====================================================================
+//! 内　容		更新処理
+//! 引　数		ダミー引数（float）
+//! 戻り値		なし
+===================================================================== */
+void Stage::update(float delta)
+{
+	// 季節の変更
+	if (m_season != m_seasonBefore)
+	{
+		ChangeSeason();
+	}
 }
 
 /* =====================================================================
@@ -213,12 +231,8 @@ void Stage::SetTileInfoWithProperty(ValueMap map, int row, int col, KIND_TILE ti
 void Stage::ChangeSeason()
 {
 	// 現在の季節のレイヤーを非表示にする
-	m_pMapTileLayer[m_season]->setVisible(false);
-	m_pMapGimmickLayer[m_season]->setVisible(false);
-
-	// 季節を変える
-	m_season++;
-	if (m_season >= NUM_SEASON) m_season = static_cast<int>(SEASON::SPRING);
+	m_pMapTileLayer[m_seasonBefore]->setVisible(false);
+	m_pMapGimmickLayer[m_seasonBefore]->setVisible(false);
 
 	// 背景を変える
 	m_pBack->Change(m_season);
@@ -229,6 +243,9 @@ void Stage::ChangeSeason()
 	// レイヤーを表示する
 	m_pMapTileLayer[m_season]->setVisible(true);
 	m_pMapGimmickLayer[m_season]->setVisible(true);
+
+	// 季節の変更を確定させる
+	m_seasonBefore = m_season;
 }
 
 /* =====================================================================

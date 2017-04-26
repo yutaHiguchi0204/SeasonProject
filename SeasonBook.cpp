@@ -12,6 +12,7 @@
 USING_NS_CC;
 
 // 静的メンバの定義
+int Stage::m_season;
 bool PlayScene::m_isChangeSeason;
 
 // メンバ関数の定義
@@ -26,9 +27,15 @@ bool SeasonBook::init()
 	// 更新処理準備
 	scheduleUpdate();
 
-	// 季節換えのページを表示
+	// 季節記の生成
 	m_pBook = Sprite::create("object/seasonChanger.png");
 	this->addChild(m_pBook);
+
+	// 季節のページの生成
+	std::stringstream sFileName;
+	sFileName << "object/page_" << SEASON_NAME[Stage::m_season] << ".png";
+	m_pPage = Sprite::create(sFileName.str());
+	this->addChild(m_pPage);
 
 	// 閉じるボタン
 	m_pButtonClose = cocos2d::ui::Button::create("object/button_close.png");
@@ -44,20 +51,35 @@ bool SeasonBook::init()
 	this->addChild(m_pButtonArrowLeft);
 	this->addChild(m_pButtonArrowRight);
 
+	// 閉じるボタンが押された時
+	m_pButtonClose->addClickEventListener([&](Ref* ref)
+	{
+		removeFromParent();
+		PlayScene::m_isChangeSeason = false;
+	});
+
+	// 季節記の矢印ボタンが押された時
+	m_pButtonArrowLeft->addClickEventListener([&](Ref* ref) { Change(-1); });
+	m_pButtonArrowRight->addClickEventListener([&](Ref* ref) { Change(1); });
+
 	return true;
 }
 
 /* =====================================================================
-//! 内　容		更新処理
-//! 引　数		ダミー引数（float）
+//! 内　容		季節換え
+//! 引　数		プラスかマイナス（int）
 //! 戻り値		なし
 ===================================================================== */
-void SeasonBook::update(float delta)
+void SeasonBook::Change(int num)
 {
-	// 閉じるボタンが押されてたら本を閉じる
-	if (m_pButtonClose->isHighlighted())
-	{
-		removeFromParent();
-		PlayScene::m_isChangeSeason = false;
-	}
+	Stage::m_season += num;
+
+	// 調整
+	if (Stage::m_season < static_cast<int>(SEASON::SPRING)) Stage::m_season = static_cast<int>(SEASON::WINTER);
+	if (Stage::m_season > static_cast<int>(SEASON::WINTER)) Stage::m_season = static_cast<int>(SEASON::SPRING);
+
+	// 季節のページを変える
+	std::stringstream sFileName;
+	sFileName << "object/page_" << SEASON_NAME[Stage::m_season] << ".png";
+	m_pPage->setTexture(sFileName.str());
 }

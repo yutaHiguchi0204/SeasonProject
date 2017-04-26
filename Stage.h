@@ -31,7 +31,7 @@ struct StageInfo
 class Stage : public cocos2d::Node
 {
 private:
-	int m_season;										// 季節
+	int m_seasonBefore;									// 変更前の季節
 	int m_numTiles;										// 総タイル数
 	int m_numObjects;									// 総オブジェクト数
 	int m_numGimmicks;									// 総ギミック数
@@ -54,6 +54,8 @@ public:
 	CREATE_FUNC(Stage);
 	virtual bool init();
 
+	void update(float delta);
+
 	void ReSetLayerInfo();																		// タイル情報の初期化
 	void SetLayerInfo();																		// レイヤー情報の設定
 	void SetTileInfoWithLayer(cocos2d::TMXLayer* layer, KIND_TILE tile);						// レイヤーからタイル情報を設定
@@ -66,4 +68,7 @@ public:
 
 	void CheckCollision(Player* player);														// 当たり判定チェック
 	void MoveButtonHighlighted(BUTTON button, Player* player);									// 移動ボタンが押された時の処理
+
+	// 静的メンバ
+	static int m_season;																		// 季節
 };
