@@ -44,11 +44,25 @@ bool Stage::init()
 	m_pMap->setPosition(Vec2(0, 0));
 	this->addChild(m_pMap);
 
+
+
 	//黒板１の描画
 	blackboard1 = Sprite::create("object\\blackboard1.png");
 	blackboard1->setPosition(Vec2(500.0f, 400.0f));
 	blackboard1->setVisible(false);
 	this->addChild(blackboard1);
+
+	//黒板２の描画
+	blackboard2 = Sprite::create("object\\blackboard2.png");
+	blackboard2->setPosition(Vec2(500.0f, 400.0f));
+	blackboard2->setVisible(false);
+	this->addChild(blackboard2);
+
+	//黒板３の描画
+	blackboard3 = Sprite::create("object\\blackboard3.png");
+	blackboard3->setPosition(Vec2(500.0f, 400.0f));
+	blackboard3->setVisible(false);
+	this->addChild(blackboard3);
 
 	// レイヤー設定
 	for (int i = 0; i < NUM_SEASON; i++)
@@ -336,6 +350,10 @@ void Stage::CheckCollision()
 
 	// 説明盤を非表示にする
 	blackboard1->setVisible(false);
+	blackboard2->setVisible(false);
+	blackboard3->setVisible(false);
+	
+	
 
 	// オブジェクトとの当たり判定
 	for (int i = 0; i < m_numObjects; i++)
@@ -351,12 +369,18 @@ void Stage::CheckCollision()
 				PlayScene::m_pButton[static_cast<int>(BUTTON::ACTION)]->ChangeActionFlg(ACTION::SEASON_BOOK);
 			}
 			
-			//看板と当たった場合
-			if(m_objectInfo[i].ID == static_cast<int>(TILE::SIGN_BOARD))
+			//看板1と当たった場合
+			else if(m_objectInfo[i].ID == static_cast<int>(TILE::SIGN_BOARD))
 			{
 				//画像を表示する
 				blackboard1->setVisible(true);
 			}
+			
+			//看板2と当たった場合
+			
+			
+			//看板3と当たった場合
+			
 			
 			// オブジェクトに応じて処理
 			m_pPlayer->Action(m_objectInfo[i].ID, m_objectInfo[i].pos, m_season);

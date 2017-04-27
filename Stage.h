@@ -52,7 +52,9 @@ private:
 
 	cocos2d::Camera* m_pCamera;							// ƒJƒƒ‰
 
-	cocos2d::Sprite* blackboard1;						//ŠÅ”Â
+	cocos2d::Sprite* blackboard1;						//ŠÅ”Â1
+	cocos2d::Sprite* blackboard2;						//ŠÅ”Â2
+	cocos2d::Sprite* blackboard3;						//ŠÅ”Â3
 
 public:
 
