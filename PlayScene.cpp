@@ -11,6 +11,9 @@
 USING_NS_CC;
 using namespace std;
 
+// 静的メンバの定義
+bool Stage::m_isChangeSeason;
+
 // メンバ関数の定義
 
 // シーン管理
@@ -41,7 +44,7 @@ bool PlayScene::init()
 	scheduleUpdate();
 
 	// 各データの初期設定
-	m_timeCnt = 0;										// 時間計測
+	m_timeCnt = 0;								// 時間計測
 
 	// ステージ
 	m_pStage = Stage::create();
@@ -55,11 +58,6 @@ bool PlayScene::init()
 	// ボタンをシーンにつなぐ
 	for (int i = 0; i < NUM_BUTTON; i++) this->addChild(m_pButton[i], 3);
 
-	// プレイヤー
-	m_pPlayer = Player::create();
-	m_pPlayer->setPosition(Vec2(64.0f, 216.0f));
-	this->addChild(m_pPlayer, 1);
-
 	return true;
 }
 
@@ -71,61 +69,31 @@ bool PlayScene::init()
 void PlayScene::update(float delta)
 {
 	// スクロール
-	m_pStage->Scroll(m_pPlayer->getPositionX(), m_pButton);
+	m_pStage->Scroll();
 
 	// アクションボタンの初期化（ジャンプボタン）
 	m_pButton[static_cast<int>(BUTTON::ACTION)]->ChangeActionFlg(ACTION::JUMP);
 
 	// 当たり判定
-	m_pStage->CheckCollision(m_pPlayer);
+	m_pStage->CheckCollision();
 
 	// 時間計測
 	m_timeCnt++;
 
 	// ボタンが押されていたらプレイヤーを移動させる
-	if (m_pButton[static_cast<int>(BUTTON::LEFT)]->isHighlighted())
+	if (!Stage::m_isChangeSeason)
 	{
-		// プレイヤーの向きを設定
-		m_pPlayer->setFlippedX(true);
+		// 移動ボタンが押されたときの処理
+		m_pStage->CheckButtonHighlighted(BUTTON::LEFT);
+		m_pStage->CheckButtonHighlighted(BUTTON::RIGHT);
 
-		// プレイヤーの移動
-		if (m_pPlayer->getPositionX() > SIZE_PLAYER / 2)
-		{
-			m_pPlayer->Move(-SPEED_MOVE_PLAYER);
-		}
-	}
-	else if (m_pButton[static_cast<int>(BUTTON::RIGHT)]->isHighlighted())
-	{
-		// プレイヤーの向きを設定
-		m_pPlayer->setFlippedX(false);
-
-		// プレイヤーの移動
-		if (m_pPlayer->getPositionX() < STAGE_WIDTH - SIZE_PLAYER / 2)
-		{
-			m_pPlayer->Move(SPEED_MOVE_PLAYER);
-		}
+		// アクションボタンが押されたときの処理
+		m_pStage->CheckButtonHighlighted(BUTTON::ACTION);
 	}
 
-	// アクションボタンが押されたらプレイヤーをジャンプさせる
-	if (m_pButton[static_cast<int>(BUTTON::ACTION)]->isHighlighted() && !Player::m_isJump)
-	{
-		if (m_pButton[static_cast<int>(BUTTON::ACTION)]->GetActionFlg() == ACTION::JUMP)
-		{
-			m_pPlayer->Jump();
-			m_pButton[static_cast<int>(BUTTON::ACTION)]->SetFullBright(false);
-		}
-		else
-		{
-			m_pSeasonBook = SeasonBook::create();
-			m_pSeasonBook->setPosition(Vec2(m_pStage->GetCameraPosX(), WINDOW_HEIGHT_HERF));
-			this->addChild(m_pSeasonBook);
-
-			m_pButton[static_cast<int>(BUTTON::ACTION)]->SetFullBright(false);
-		}
-	}
-
-	// アクションボタン設定
-	if (!Player::m_isJump)
+	// アクションボタンの明度を戻す
+	if ((!Player::m_isJump && m_pButton[static_cast<int>(BUTTON::ACTION)]->GetActionFlg() == ACTION::JUMP) ||
+		(!Stage::m_isChangeSeason && m_pButton[static_cast<int>(BUTTON::ACTION)]->GetActionFlg() == ACTION::SEASON_BOOK))
 	{
 		m_pButton[static_cast<int>(BUTTON::ACTION)]->SetFullBright();
 	}

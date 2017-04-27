@@ -23,9 +23,16 @@ bool Stage::init()
 		return false;
 	}
 
+	// 更新処理準備
+	scheduleUpdate();
+
 	// メンバの初期設定
 	m_season = static_cast<int>(SEASON::SPRING);		// 季節
+	m_seasonBefore = m_season;							// 季節の確定
+	m_isChangeSeason = false;							// 季節を入れ替えてるかどうか
 	m_numTiles = 0;
+	m_numObjects = 0;
+	m_numGimmicks = 0;
 
 	// 背景
 	m_pBack = Background::create();
@@ -73,16 +80,29 @@ bool Stage::init()
 	// レイヤー情報の設定
 	SetLayerInfo();
 
-	// イベントリスナー作成
-	EventListenerTouchOneByOne* listener = EventListenerTouchOneByOne::create();
+	// プレイヤー
+	m_pPlayer = Player::create();
+	m_pPlayer->setPosition(Vec2(64.0f, 216.0f));
+	this->addChild(m_pPlayer, 1);
 
-	// イベントリスナーに各コールバック関数をセットする
-	listener->onTouchBegan = CC_CALLBACK_2(Stage::onTouchBegan, this);
-
-	// イベントリスナー登録
-	this->getEventDispatcher()->addEventListenerWithSceneGraphPriority(listener, this);
+	// 季節記
+	m_pSeasonBook = nullptr;
 
 	return true;
+}
+
+/* =====================================================================
+//! 内　容		更新処理
+//! 引　数		ダミー引数（float）
+//! 戻り値		なし
+===================================================================== */
+void Stage::update(float delta)
+{
+	// 季節の変更
+	if (m_season != m_seasonBefore)
+	{
+		ChangeSeason();
+	}
 }
 
 /* =====================================================================
@@ -109,6 +129,11 @@ void Stage::ReSetLayerInfo()
 	{
 		m_gimmickInfo.pop_back();
 	}
+
+	// タイル数の初期化
+	m_numTiles = 0;
+	m_numObjects = 0;
+	m_numGimmicks = 0;
 
 	// タイル情報の設定
 	SetLayerInfo();
@@ -231,30 +256,29 @@ void Stage::SetTileInfoWithProperty(ValueMap map, int row, int col, KIND_TILE ti
 void Stage::ChangeSeason()
 {
 	// 現在の季節のレイヤーを非表示にする
-	m_pMapTileLayer[m_season]->setVisible(false);
-	m_pMapGimmickLayer[m_season]->setVisible(false);
-
-	// 季節を変える
-	m_season++;
-	if (m_season >= NUM_SEASON) m_season = static_cast<int>(SEASON::SPRING);
+	m_pMapTileLayer[m_seasonBefore]->setVisible(false);
+	m_pMapGimmickLayer[m_seasonBefore]->setVisible(false);
 
 	// 背景を変える
 	m_pBack->Change(m_season);
 
 	// レイヤー情報の再設定
-	//ReSetLayerInfo();
+	ReSetLayerInfo();
 
 	// レイヤーを表示する
 	m_pMapTileLayer[m_season]->setVisible(true);
 	m_pMapGimmickLayer[m_season]->setVisible(true);
+
+	// 季節の変更を確定させる
+	m_seasonBefore = m_season;
 }
 
 /* =====================================================================
 //! 内　容		マップのスクロール
-//! 引　数		プレイヤーのx座標（float）
+//! 引　数		なし
 //! 戻り値		なし
 ===================================================================== */
-void Stage::Scroll(float playerX, OperationButton* button[])
+void Stage::Scroll()
 {
 	// カメラ設定
 	m_pCamera = getScene()->getDefaultCamera();
@@ -265,18 +289,18 @@ void Stage::Scroll(float playerX, OperationButton* button[])
 	const float CAMERA_BORDER = WINDOW_WIDTH_HERF;
 
 	// はみ出し確認
-	if (playerX >= CAMERA_BORDER && playerX <= STAGE_WIDTH - CAMERA_BORDER)
+	if (m_pPlayer->getPositionX() >= CAMERA_BORDER && m_pPlayer->getPositionX() <= STAGE_WIDTH - CAMERA_BORDER)
 	{
 		// 背景移動
-		m_pBack->setPositionX(playerX);
+		m_pBack->setPositionX(m_pPlayer->getPositionX());
 
 		// ボタン移動
-		button[static_cast<int>(BUTTON::LEFT)]->setPositionX(playerX - 384.0f);
-		button[static_cast<int>(BUTTON::RIGHT)]->setPositionX(playerX - 192.0f);
-		button[static_cast<int>(BUTTON::ACTION)]->setPositionX(playerX + 384.0f);
+		PlayScene::m_pButton[static_cast<int>(BUTTON::LEFT)]->setPositionX(m_pPlayer->getPositionX() - 384.0f);
+		PlayScene::m_pButton[static_cast<int>(BUTTON::RIGHT)]->setPositionX(m_pPlayer->getPositionX() - 192.0f);
+		PlayScene::m_pButton[static_cast<int>(BUTTON::ACTION)]->setPositionX(m_pPlayer->getPositionX() + 384.0f);
 
 		// カメラ設定
-		cameraPos = playerX;
+		cameraPos = m_pPlayer->getPositionX();
 	}
 
 	// カメラ移動
@@ -295,18 +319,18 @@ float Stage::GetCameraPosX()
 
 /* =====================================================================
 //! 内　容		当たり判定チェック
-//! 引　数		プレイヤー（Player*）
+//! 引　数		なし
 //! 戻り値		なし
 ===================================================================== */
-void Stage::CheckCollision(Player* player)
+void Stage::CheckCollision()
 {
 	// タイルとの当たり判定
 	for (int i = 0; i < m_numTiles; i++)
 	{
-		if (GameManager::isCollision(m_tileInfo[i].pos, player->getPosition()))
+		if (GameManager::isCollision(m_tileInfo[i].pos, m_pPlayer->getPosition()))
 		{
 			// タイルに応じて処理
-			player->Action(m_tileInfo[i].ID, m_tileInfo[i].pos, m_season);
+			m_pPlayer->Action(m_tileInfo[i].ID, m_tileInfo[i].pos, m_season);
 		}
 	}
 
@@ -316,8 +340,10 @@ void Stage::CheckCollision(Player* player)
 	// オブジェクトとの当たり判定
 	for (int i = 0; i < m_numObjects; i++)
 	{
+
 		//オブジェクトとプレイヤーが当たった場合
-		if (GameManager::isCollision(m_objectInfo[i].pos, player->getPosition()))
+		if (GameManager::isCollision(m_objectInfo[i].pos, m_pPlayer->getPosition()))
+
 		{
 			// 季節記と当たった場合
 			if (m_objectInfo[i].ID == static_cast<int>(TILE::SEASON_BOOK))
@@ -333,7 +359,7 @@ void Stage::CheckCollision(Player* player)
 			}
 			
 			// オブジェクトに応じて処理
-			player->Action(m_objectInfo[i].ID, m_objectInfo[i].pos, m_season);
+			m_pPlayer->Action(m_objectInfo[i].ID, m_objectInfo[i].pos, m_season);
 		}
 
 	}
@@ -341,19 +367,75 @@ void Stage::CheckCollision(Player* player)
 	// ギミックとの当たり判定
 	for (int i = 0; i < m_numGimmicks; i++)
 	{
-		if (GameManager::isCollision(m_gimmickInfo[i].pos, player->getPosition()))
+		if (GameManager::isCollision(m_gimmickInfo[i].pos, m_pPlayer->getPosition()))
 		{
 			// ギミックに応じて処理
-			player->Action(m_gimmickInfo[i].ID, m_gimmickInfo[i].pos, m_season);
+			m_pPlayer->Action(m_gimmickInfo[i].ID, m_gimmickInfo[i].pos, m_season);
 		}
 	}
 }
 
-
-
-bool Stage::onTouchBegan(Touch* touch, Event* unused_event)
+/* =====================================================================
+//! 内　容		ボタンが押された時の処理
+//! 引　数		ボタン（BUTTON）
+//! 戻り値		なし
+===================================================================== */
+void Stage::CheckButtonHighlighted(BUTTON button)
 {
-	ChangeSeason();
+	// ボタンが押されてるかどうか
+	if (PlayScene::m_pButton[static_cast<int>(button)]->isHighlighted())
+	{
+		// 左ボタン
+		if (button == BUTTON::LEFT)
+		{
+			// プレイヤーの向きを設定
+			m_pPlayer->setFlippedX(true);
 
-	return true;
+			// プレイヤーの移動
+			if (m_pPlayer->getPositionX() > SIZE_PLAYER_HERF)
+			{
+				m_pPlayer->Move(-SPEED_MOVE_PLAYER);
+			}
+		}
+		// 右ボタン
+		else if (button == BUTTON::RIGHT)
+		{
+			// プレイヤーの向きを設定
+			m_pPlayer->setFlippedX(false);
+
+			// プレイヤーの移動
+			if (m_pPlayer->getPositionX() < STAGE_WIDTH - SIZE_PLAYER_HERF)
+			{
+				m_pPlayer->Move(SPEED_MOVE_PLAYER);
+			}
+		}
+		// アクションボタン
+		else
+		{
+			// ジャンプしてないときに処理
+			if (!Player::m_isJump)
+			{
+				// ジャンプ処理
+				if (PlayScene::m_pButton[static_cast<int>(BUTTON::ACTION)]->GetActionFlg() == ACTION::JUMP)
+				{
+					m_pPlayer->Jump();
+					PlayScene::m_pButton[static_cast<int>(BUTTON::ACTION)]->SetFullBright(false);
+				}
+				// 季節記処理
+				else
+				{
+					// 季節記の生成
+					m_pSeasonBook = SeasonBook::create();
+					m_pSeasonBook->setPosition(Vec2(GetCameraPosX(), WINDOW_HEIGHT_HERF));
+					this->addChild(m_pSeasonBook, 4);
+
+					// 明度を暗くする
+					PlayScene::m_pButton[static_cast<int>(BUTTON::ACTION)]->SetFullBright(false);
+
+					// 季節変化をしている状態にする
+					m_isChangeSeason = true;
+				}
+			}
+		}
+	}
 }

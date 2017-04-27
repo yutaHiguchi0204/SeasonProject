@@ -8,6 +8,7 @@
 #include "OperationButton.h"
 #include <fstream>
 #include <sstream>
+#include "PlayScene.h"
 
 // –¼‘O‹óŠÔ
 USING_NS_CC;

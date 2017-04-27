@@ -8,21 +8,13 @@
 // ヘッダファイルのインクルード
 #include "GameManager.h"
 #include "OperationButton.h"
-#include "Player.h"
-#include "SeasonBook.h"
 #include "Stage.h"
 
 // クラスの定義
 class PlayScene : public cocos2d::Scene
 {
 private:
-	int m_mapInfo[NUM_ROW][NUM_COLUMN];					// マップ情報
-
 	Stage* m_pStage;									// ステージ
-
-	Player* m_pPlayer;									// プレイヤー
-
-	SeasonBook* m_pSeasonBook;							// 季節記
 
 public:
 	CREATE_FUNC(PlayScene);

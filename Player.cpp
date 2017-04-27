@@ -23,14 +23,17 @@ bool Player::init()
 		return false;
 	}
 
+	// 更新処理準備
+	scheduleUpdate();
+
+	// プレイヤーの画像設定
 	setTexture("object/player.png");
 
+	// メンバの初期設定
 	m_spdX = 0.0f;
 	m_spdY = 0.0f;
 	m_isJump = false;
 	m_isDive = false;
-
-	scheduleUpdate();
 
 	return true;
 }
@@ -47,9 +50,26 @@ void Player::update(float delta)
 	m_spdX = 0.0f;
 
 	// 重力
-	if (m_isDive)
+	Gravity(m_isDive);
+
+	// プレイヤーアニメーション
+	if (PlayScene::m_timeCnt % SPEED_ANIMATION == 0) AnimationPlayer();
+
+	// 画像の変更
+	setTextureRect(Rect(m_grpX, 0, SIZE_PLAYER, SIZE_PLAYER));
+}
+
+/* =====================================================================
+//! 内　容		重力付加
+//! 引　数		水中か否か（bool）
+//! 戻り値		なし
+===================================================================== */
+void Player::Gravity(bool dive)
+{
+	// 水中にいる場合
+	if (dive)
 	{
-		// 水中
+		// 水中での重力
 		if (m_spdY > SPEED_MAX_FALL_WATER)
 		{
 			m_spdY -= NUM_WATER_GRAVITY;
@@ -59,24 +79,16 @@ void Player::update(float delta)
 	}
 	else
 	{
-		// 何もないとき
+		// 通常の重力
 		if (m_spdY > SPEED_MAX_FALL)
 		{
 			m_spdY -= NUM_GRAVITY;
 		}
 	}
-
-	// プレイヤーアニメーション
-	if (PlayScene::m_timeCnt % 10 == 0)
-	{
-		AnimationPlayer();
-	}
-
-	setTextureRect(Rect(m_grpX, 0, SIZE_PLAYER, SIZE_PLAYER));
 }
 
 /* =====================================================================
-//! 内　容		落下運動
+//! 内　容		落下処理
 //! 引　数		マップ情報（int）、季節（int）
 //! 戻り値		なし
 ===================================================================== */
@@ -143,7 +155,7 @@ void Player::Action(int tileID, Vec2 tileVec, int season)
 	case static_cast<int>(TILE::BLOCK):		// ブロック
 
 		// 調整
-		setPositionY(tileVec.y + SIZE_TILE + SIZE_PLAYER / 2);
+		setPositionY(tileVec.y + SIZE_TILE + SIZE_PLAYER_HERF);
 
 		// 落下処理
 		Fall(static_cast<int>(TILE::BLOCK), season);

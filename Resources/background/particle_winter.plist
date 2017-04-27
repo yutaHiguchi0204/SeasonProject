@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>angle</key>
-	<real>-90</real>
+	<real>-61</real>
 	<key>angleVariance</key>
 	<real>24</real>
 	<key>blendFuncDestination</key>
@@ -17,11 +17,11 @@
 	<key>finishColorAlpha</key>
 	<real>1</real>
 	<key>finishColorBlue</key>
-	<real>0</real>
+	<real>1</real>
 	<key>finishColorGreen</key>
-	<real>0</real>
+	<real>1</real>
 	<key>finishColorRed</key>
-	<real>0</real>
+	<real>1</real>
 	<key>finishColorVarianceAlpha</key>
 	<real>0</real>
 	<key>finishColorVarianceBlue</key>
@@ -67,19 +67,19 @@
 	<key>rotationStartVariance</key>
 	<real>0</real>
 	<key>sourcePositionVariancex</key>
-	<real>-320</real>
+	<real>488</real>
 	<key>sourcePositionVariancey</key>
-	<real>-385</real>
+	<real>460</real>
 	<key>sourcePositionx</key>
 	<real>380.8170932921928</real>
 	<key>sourcePositiony</key>
-	<real>917.8376793277229</real>
+	<real>927.3391038291473</real>
 	<key>speed</key>
-	<real>90</real>
+	<real>124</real>
 	<key>speedVariance</key>
 	<real>39</real>
 	<key>startColorAlpha</key>
-	<real>0.34</real>
+	<real>1</real>
 	<key>startColorBlue</key>
 	<real>1</real>
 	<key>startColorGreen</key>
@@ -95,7 +95,7 @@
 	<key>startColorVarianceRed</key>
 	<real>0</real>
 	<key>startParticleSize</key>
-	<real>25</real>
+	<real>11</real>
 	<key>startParticleSizeVariance</key>
 	<real>2</real>
 	<key>tangentialAccelVariance</key>
@@ -103,7 +103,7 @@
 	<key>tangentialAcceleration</key>
 	<real>0</real>
 	<key>textureFileName</key>
-	<string>particle_texture.png</string>
+	<string>particle_winter.png</string>
 	<key>textureImageData</key>
 	<string>H4sIAAAAAAAAAwHSAi39iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAJkSURBVHjaxJeJbusgEEW94S1L//83X18M2MSuLd2pbqc4wZGqRLrKBsyZhQHny7Jk73xVL8xpVhWrcmiB5lX+6GJ5YgQ2owbAm8oIwH1VgKZUmGcRqKGGPgtEQQAzGR8hQ59fAmhJHSAagigJ4E7GPWRXOYC6owAd1JM6wDQPADyMWUqZRMqmAojHp1Vn6EQQEgUNMJLnUjMyJsM49wygBkAPw9dVFwXRkncCIIW3GRgoTQUZn6HxCMAFEFd8TwEQ78X4rHbILoAUmeT+RFG4UhQ6MiIAE4W/UsYFjuVjAIa2nIY4q1R0GFtQWG3E84lqw2GO2QOoCKBVu0BAPgDSU0eUDjjQenNkV/AW/pWChhpMTelo1a64AOKM30vk18GzTHXCNtI/Knz3DFBgsUqBGIjTInXRY1yA9xkVoqW5tVq3pDR9A0hfF5BSARmVnh7RMDCaIdcNgbPBkgzn1Bu+SfIEFSpSBmkxyrMicb0fAEuCZrWnN89veA/4XcakrPcjBWzkTuLjlbfTQPOlBhz+HwkqqPXmPQDdrQItxE1moGof1S74j/8txk8EHhTQrAE8qlwfqS5yukm1x/rAJ9Jiaa6nyATqD78aUVBhFo8b1V4DdTXdCW+IxA1zB4JhiOhZMEWO1HqnvdoHZ4FAMIhV9REF8FiUm0jsYPEJx/Fm/N8OhH90HI9YRHesWbXXZwAShU8qThe7H8YAuJmw5yOd989uRINKRTJAhoF8jbqrHKfeCYdIISZfSq26bk/K+yO3YvfKrVgiwQBHnwt8ynPB25+M8hceTt/ybPhnryJ78+tLgAEAuCFyiQgQB30AAAAASUVORK5CYIJZHYeC0gIAAA==</string>
 </dict>

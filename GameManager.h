@@ -21,6 +21,7 @@ const float				WINDOW_HEIGHT_HERF		= WINDOW_HEIGHT / 2;										// 画面の高さの
 const float				STAGE_WIDTH				= WINDOW_WIDTH * 4;											// ステージサイズ
 const float				SIZE_TILE				= 32.0f;													// タイルサイズ(32×32)
 const float				SIZE_PLAYER				= 48.0f;													// プレイヤーサイズ(48×48)
+const float				SIZE_PLAYER_HERF		= SIZE_PLAYER / 2;											// プレイヤーの半分のサイズ
 const float				NUM_GRAVITY				= 0.4f;														// 重力
 const float				NUM_WATER_GRAVITY		= 0.05f;													// 浮力（水の重力）
 const cocos2d::Vec2		WINDOW_MIDDLE			= cocos2d::Vec2(WINDOW_WIDTH_HERF, WINDOW_HEIGHT_HERF);		// 画面の中心
