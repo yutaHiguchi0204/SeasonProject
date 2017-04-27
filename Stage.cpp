@@ -110,6 +110,11 @@ void Stage::ReSetLayerInfo()
 		m_gimmickInfo.pop_back();
 	}
 
+	// タイル数の初期化
+	m_numTiles = 0;
+	m_numObjects = 0;
+	m_numGimmicks = 0;
+
 	// タイル情報の設定
 	SetLayerInfo();
 }
@@ -238,7 +243,7 @@ void Stage::ChangeSeason()
 	m_pBack->Change(m_season);
 
 	// レイヤー情報の再設定
-	//ReSetLayerInfo();
+	ReSetLayerInfo();
 
 	// レイヤーを表示する
 	m_pMapTileLayer[m_season]->setVisible(true);
