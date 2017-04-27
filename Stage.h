@@ -49,6 +49,8 @@ private:
 
 	cocos2d::Camera* m_pCamera;							// ƒJƒƒ‰
 
+	cocos2d::Sprite* blackboard1;						//ŠÅ”Â
+
 public:
 
 	CREATE_FUNC(Stage);

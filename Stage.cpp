@@ -37,6 +37,12 @@ bool Stage::init()
 	m_pMap->setPosition(Vec2(0, 0));
 	this->addChild(m_pMap);
 
+	//黒板１の描画
+	blackboard1 = Sprite::create("object\\blackboard1.png");
+	blackboard1->setPosition(Vec2(500.0f, 400.0f));
+	blackboard1->setVisible(false);
+	this->addChild(blackboard1);
+
 	// レイヤー設定
 	for (int i = 0; i < NUM_SEASON; i++)
 	{
@@ -304,9 +310,13 @@ void Stage::CheckCollision(Player* player)
 		}
 	}
 
+	// 説明盤を非表示にする
+	blackboard1->setVisible(false);
+
 	// オブジェクトとの当たり判定
 	for (int i = 0; i < m_numObjects; i++)
 	{
+		//オブジェクトとプレイヤーが当たった場合
 		if (GameManager::isCollision(m_objectInfo[i].pos, player->getPosition()))
 		{
 			// 季節記と当たった場合
@@ -314,10 +324,18 @@ void Stage::CheckCollision(Player* player)
 			{
 				PlayScene::m_pButton[static_cast<int>(BUTTON::ACTION)]->ChangeActionFlg(ACTION::SEASON_BOOK);
 			}
-
+			
+			//看板と当たった場合
+			if(m_objectInfo[i].ID == static_cast<int>(TILE::SIGN_BOARD))
+			{
+				//画像を表示する
+				blackboard1->setVisible(true);
+			}
+			
 			// オブジェクトに応じて処理
 			player->Action(m_objectInfo[i].ID, m_objectInfo[i].pos, m_season);
 		}
+
 	}
 
 	// ギミックとの当たり判定
