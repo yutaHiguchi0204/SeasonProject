@@ -9,6 +9,7 @@
 #include "GameManager.h"
 
 // 定数
+const int SPEED_ANIMATION			= 10;		// アニメーションスピード
 const float SPEED_MOVE_PLAYER		=  4.0f;	// 移動速度
 const float SPEED_MAX_FALL			= -10.0f;	// 最大落下速度
 const float SPEED_MAX_FALL_WATER	= -5.0f;	// 最大水中落下速度
@@ -31,6 +32,7 @@ public:
 
 	void update(float delta);
 
+	void Gravity(bool dive);										// 重力付加
 	void Fall(int mapInfo, int season);								// 落下処理
 	void Move(float speed);											// 左右に移動
 	void Jump();													// ジャンプ処理

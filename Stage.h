@@ -11,6 +11,7 @@
 #include "GameManager.h"
 #include "OperationButton.h"
 #include "Player.h"
+#include "SeasonBook.h"
 
 // 列挙型
 enum class KIND_TILE
@@ -37,6 +38,8 @@ private:
 	int m_numGimmicks;									// 総ギミック数
 
 	Background* m_pBack;								// 背景
+	Player* m_pPlayer;									// プレイヤー
+	SeasonBook* m_pSeasonBook;							// 季節記
 
 	cocos2d::TMXTiledMap* m_pMap;						// マップ
 	cocos2d::TMXLayer* m_pMapTileLayer[NUM_SEASON];		// マップレイヤー（タイル）
@@ -44,8 +47,8 @@ private:
 	cocos2d::TMXLayer* m_pMapObjectLayer;				// マップレイヤー（オブジェクト）
 
 	std::vector<StageInfo> m_tileInfo;					// タイル情報
-	std::vector<StageInfo> m_objectInfo;				// タイル情報
-	std::vector<StageInfo> m_gimmickInfo;				// タイル情報
+	std::vector<StageInfo> m_objectInfo;				// オブジェクト情報
+	std::vector<StageInfo> m_gimmickInfo;				// ギミック情報
 
 	cocos2d::Camera* m_pCamera;							// カメラ
 
@@ -63,12 +66,13 @@ public:
 
 	void ChangeSeason();																		// 季節の変更
 
-	void Scroll(float playerX, OperationButton* button[]);										// マップのスクロール
+	void Scroll();																				// マップのスクロール
 	float GetCameraPosX();																		// カメラ座標xの取得
 
-	void CheckCollision(Player* player);														// 当たり判定チェック
-	void MoveButtonHighlighted(BUTTON button, Player* player);									// 移動ボタンが押された時の処理
+	void CheckCollision();																		// 当たり判定チェック
+	void CheckButtonHighlighted(BUTTON button);													// ボタンが押された時の処理
 
 	// 静的メンバ
 	static int m_season;																		// 季節
+	static bool m_isChangeSeason;																// 季節を入れ替えてるかどうか
 };

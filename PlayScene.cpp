@@ -11,6 +11,9 @@
 USING_NS_CC;
 using namespace std;
 
+// 静的メンバの定義
+bool Stage::m_isChangeSeason;
+
 // メンバ関数の定義
 
 // シーン管理
@@ -41,9 +44,7 @@ bool PlayScene::init()
 	scheduleUpdate();
 
 	// 各データの初期設定
-	m_pSeasonBook = nullptr;					// 季節記
 	m_timeCnt = 0;								// 時間計測
-	m_isChangeSeason = false;					// 季節を入れ替えてるかどうか
 
 	// ステージ
 	m_pStage = Stage::create();
@@ -57,11 +58,6 @@ bool PlayScene::init()
 	// ボタンをシーンにつなぐ
 	for (int i = 0; i < NUM_BUTTON; i++) this->addChild(m_pButton[i], 3);
 
-	// プレイヤー
-	m_pPlayer = Player::create();
-	m_pPlayer->setPosition(Vec2(64.0f, 216.0f));
-	this->addChild(m_pPlayer, 1);
-
 	return true;
 }
 
@@ -73,52 +69,31 @@ bool PlayScene::init()
 void PlayScene::update(float delta)
 {
 	// スクロール
-	m_pStage->Scroll(m_pPlayer->getPositionX(), m_pButton);
+	m_pStage->Scroll();
 
 	// アクションボタンの初期化（ジャンプボタン）
 	m_pButton[static_cast<int>(BUTTON::ACTION)]->ChangeActionFlg(ACTION::JUMP);
 
 	// 当たり判定
-	m_pStage->CheckCollision(m_pPlayer);
+	m_pStage->CheckCollision();
 
 	// 時間計測
 	m_timeCnt++;
 
 	// ボタンが押されていたらプレイヤーを移動させる
-	if (!m_isChangeSeason)
+	if (!Stage::m_isChangeSeason)
 	{
-		m_pStage->MoveButtonHighlighted(BUTTON::LEFT, m_pPlayer);
-		m_pStage->MoveButtonHighlighted(BUTTON::RIGHT, m_pPlayer);
+		// 移動ボタンが押されたときの処理
+		m_pStage->CheckButtonHighlighted(BUTTON::LEFT);
+		m_pStage->CheckButtonHighlighted(BUTTON::RIGHT);
 
 		// アクションボタンが押されたときの処理
-		if (m_pButton[static_cast<int>(BUTTON::ACTION)]->isHighlighted() && !Player::m_isJump)
-		{
-			// ジャンプ処理
-			if (m_pButton[static_cast<int>(BUTTON::ACTION)]->GetActionFlg() == ACTION::JUMP)
-			{
-				m_pPlayer->Jump();
-				m_pButton[static_cast<int>(BUTTON::ACTION)]->SetFullBright(false);
-			}
-			// 季節記処理
-			else
-			{
-				// 季節記の生成
-				m_pSeasonBook = SeasonBook::create();
-				m_pSeasonBook->setPosition(Vec2(m_pStage->GetCameraPosX(), WINDOW_HEIGHT_HERF));
-				this->addChild(m_pSeasonBook, 4);
-
-				// 明度を暗くする
-				m_pButton[static_cast<int>(BUTTON::ACTION)]->SetFullBright(false);
-
-				// 季節変化をしている状態にする
-				m_isChangeSeason = true;
-			}
-		}
+		m_pStage->CheckButtonHighlighted(BUTTON::ACTION);
 	}
 
 	// アクションボタンの明度を戻す
 	if ((!Player::m_isJump && m_pButton[static_cast<int>(BUTTON::ACTION)]->GetActionFlg() == ACTION::JUMP) ||
-		(!m_isChangeSeason && m_pButton[static_cast<int>(BUTTON::ACTION)]->GetActionFlg() == ACTION::SEASON_BOOK))
+		(!Stage::m_isChangeSeason && m_pButton[static_cast<int>(BUTTON::ACTION)]->GetActionFlg() == ACTION::SEASON_BOOK))
 	{
 		m_pButton[static_cast<int>(BUTTON::ACTION)]->SetFullBright();
 	}

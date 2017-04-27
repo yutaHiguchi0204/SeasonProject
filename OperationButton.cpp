@@ -17,9 +17,6 @@ USING_NS_CC;
 const Color3B FULL_COLOR = Color3B(255.0f, 255.0f, 255.0f);
 const Color3B HERF_COLOR = Color3B(128.0f, 128.0f, 128.0f);
 
-// 静的メンバの定義
-OperationButton* PlayScene::m_pButton[NUM_BUTTON];
-
 // メンバ関数の定義
 
 // 初期化（デフォルト）

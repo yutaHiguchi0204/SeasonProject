@@ -13,7 +13,6 @@ USING_NS_CC;
 
 // 静的メンバの定義
 int Stage::m_season;
-bool PlayScene::m_isChangeSeason;
 
 // メンバ関数の定義
 
@@ -55,7 +54,7 @@ bool SeasonBook::init()
 	m_pButtonClose->addClickEventListener([&](Ref* ref)
 	{
 		removeFromParent();
-		PlayScene::m_isChangeSeason = false;
+		Stage::m_isChangeSeason = false;
 	});
 
 	// 季節記の矢印ボタンが押された時
