@@ -44,7 +44,7 @@ void SignBoard::EnabledBlackBoard(bool TorF)
 void SignBoard::SetBlackBoardTexture(int num)
 {
 	std::stringstream sFileName;
-	sFileName << "object/blackBoard_" << num << ".png";
+	sFileName << "object/blackBoard_" << num + 1 << ".png";
 
 	//ŠÅ”Â‚Ìƒtƒ@ƒCƒ‹‚ð’Ç‰Á
 	m_blackBoard->setTexture(sFileName.str());

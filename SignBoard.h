@@ -20,8 +20,6 @@ class SignBoard : public cocos2d::Sprite
 		CREATE_FUNC(SignBoard);
 		virtual bool init();
 
-		//static SignBoard* create();
-
 		//オブジェクト番号の取得
 		int GetObjectNumber();
 		//オブジェクト番号の追加
