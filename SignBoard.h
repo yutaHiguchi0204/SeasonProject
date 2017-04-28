@@ -3,11 +3,11 @@
 //! @create		木下　浩暉
 //! @date		17/04/27
 ===================================================================== */
-
 #pragma once
+
 #include "cocos2d.h"
 
-class SignBoard:public cocos2d::Sprite
+class SignBoard : public cocos2d::Sprite
 {
 	private:
 		//看板
@@ -25,10 +25,11 @@ class SignBoard:public cocos2d::Sprite
 		//オブジェクト番号の取得
 		int GetObjectNumber();
 		//オブジェクト番号の追加
-		void SignBoard::SetObjectNumber(int SetObj);
+		void SetObjectNumber(int SetObj);
+
 		//看板の画像を追加する
 		void SetBlackBoardTexture(int num);
 
+		void DrawBlackBoard(int objNum);
 		void EnabledBlackBoard(bool TorF);
-
 };

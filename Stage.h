@@ -12,6 +12,7 @@
 #include "OperationButton.h"
 #include "Player.h"
 #include "SeasonBook.h"
+#include "SignBoard.h"
 
 // 列挙型
 enum class KIND_TILE
@@ -35,6 +36,7 @@ private:
 	int m_seasonBefore;									// 変更前の季節
 	int m_numTiles;										// 総タイル数
 	int m_numObjects;									// 総オブジェクト数
+	int m_numSignBoards;								// 総看板数
 	int m_numGimmicks;									// 総ギミック数
 
 	Background* m_pBack;								// 背景
@@ -49,12 +51,9 @@ private:
 	std::vector<StageInfo> m_tileInfo;					// タイル情報
 	std::vector<StageInfo> m_objectInfo;				// オブジェクト情報
 	std::vector<StageInfo> m_gimmickInfo;				// ギミック情報
+	std::vector<SignBoard*> m_signBoard;				// 看板
 
 	cocos2d::Camera* m_pCamera;							// カメラ
-
-	cocos2d::Sprite* blackboard1;						//看板1
-	cocos2d::Sprite* blackboard2;						//看板2
-	cocos2d::Sprite* blackboard3;						//看板3
 
 public:
 
@@ -67,6 +66,7 @@ public:
 	void SetLayerInfo();																		// レイヤー情報の設定
 	void SetTileInfoWithLayer(cocos2d::TMXLayer* layer, KIND_TILE tile);						// レイヤーからタイル情報を設定
 	void SetTileInfoWithProperty(cocos2d::ValueMap map, int row, int col, KIND_TILE tile);		// プロパティからタイル情報を設定
+	void SetSignBoardID();																		// 説明盤のＩＤを登録
 
 	void ChangeSeason();																		// 季節の変更
 

@@ -8,24 +8,6 @@
 
 USING_NS_CC;
 
-//クリエイト
-
-//SignBoard* SignBoard::create()
-//{
-//	SignBoard *pRet = new(std::nothrow) SignBoard();  
-//		if (pRet && pRet->init())  
-//		{  
-//			pRet->autorelease();  
-//			return pRet;  
-//		}  
-//		else  
-//		{  
-//			delete pRet;  
-//			pRet = nullptr;  
-//			return nullptr;  
-//		}  
-//}
-
 //オブジェクト番号の取得
 int SignBoard::GetObjectNumber()
 {
@@ -39,6 +21,19 @@ void SignBoard::SetObjectNumber(int SetObj)
 	m_objNumber = SetObj;
 }
 
+/* =====================================================================
+//! 内　容		オブジェクト情報の添字と一致している説明盤を表示
+//! 引　数		オブジェクト情報ＩＤ（int）
+//! 戻り値		なし
+===================================================================== */
+void SignBoard::DrawBlackBoard(int objNum)
+{
+	if (GetObjectNumber() == objNum)
+	{
+		EnabledBlackBoard(true);
+	}
+}
+
 //黒板の表示非表示(bool)
 void SignBoard::EnabledBlackBoard(bool TorF)
 {
@@ -49,7 +44,7 @@ void SignBoard::EnabledBlackBoard(bool TorF)
 void SignBoard::SetBlackBoardTexture(int num)
 {
 	std::stringstream sFileName;
-	sFileName << "object/blackBoard_" << num + 1 << ".png";
+	sFileName << "object/blackBoard_" << num << ".png";
 
 	//看板のファイルを追加
 	m_blackBoard->setTexture(sFileName.str());
@@ -61,6 +56,11 @@ bool SignBoard::init()
 	{
 		return false;
 	}
+
+	// 説明盤の生成
+	m_blackBoard = Sprite::create();
+	m_blackBoard->setVisible(false);
+	this->addChild(m_blackBoard);
 
 	return true;
 }

@@ -32,6 +32,7 @@ bool Stage::init()
 	m_isChangeSeason = false;							// 季節を入れ替えてるかどうか
 	m_numTiles = 0;
 	m_numObjects = 0;
+	m_numSignBoards = 0;
 	m_numGimmicks = 0;
 
 	// 背景
@@ -43,26 +44,6 @@ bool Stage::init()
 	m_pMap->setAnchorPoint(Vec2(0, 0));
 	m_pMap->setPosition(Vec2(0, 0));
 	this->addChild(m_pMap);
-
-
-
-	//黒板１の描画
-	blackboard1 = Sprite::create("object\\blackboard1.png");
-	blackboard1->setPosition(Vec2(500.0f, 400.0f));
-	blackboard1->setVisible(false);
-	this->addChild(blackboard1);
-
-	//黒板２の描画
-	blackboard2 = Sprite::create("object\\blackboard2.png");
-	blackboard2->setPosition(Vec2(500.0f, 400.0f));
-	blackboard2->setVisible(false);
-	this->addChild(blackboard2);
-
-	//黒板３の描画
-	blackboard3 = Sprite::create("object\\blackboard3.png");
-	blackboard3->setPosition(Vec2(500.0f, 400.0f));
-	blackboard3->setVisible(false);
-	this->addChild(blackboard3);
 
 	// レイヤー設定
 	for (int i = 0; i < NUM_SEASON; i++)
@@ -93,6 +74,9 @@ bool Stage::init()
 
 	// レイヤー情報の設定
 	SetLayerInfo();
+
+	// 説明盤のＩＤ登録
+	SetSignBoardID();
 
 	// プレイヤー
 	m_pPlayer = Player::create();
@@ -234,7 +218,15 @@ void Stage::SetTileInfoWithProperty(ValueMap map, int row, int col, KIND_TILE ti
 	case KIND_TILE::OBJECT:		// オブジェクト
 
 		// 各オブジェクト設定
-		if		(map["object"].asString() == "signBoard")	id = static_cast<int>(TILE::SIGN_BOARD);
+		if (map["object"].asString() == "signBoard")
+		{
+			// 看板クラスの生成
+			m_signBoard.push_back(SignBoard::create());
+			this->addChild(m_signBoard[m_numSignBoards]);
+			m_numSignBoards++;
+
+			id = static_cast<int>(TILE::SIGN_BOARD);
+		}
 		else if	(map["object"].asString() == "seasonBook")	id = static_cast<int>(TILE::SEASON_BOOK);
 		else												id = static_cast<int>(TILE::NONE);
 
@@ -259,6 +251,29 @@ void Stage::SetTileInfoWithProperty(ValueMap map, int row, int col, KIND_TILE ti
 		m_gimmickInfo.push_back(StageInfo{ id, pos });
 
 		break;
+	}
+}
+
+/* =====================================================================
+//! 内　容		説明盤のＩＤを登録
+//! 引　数		なし
+//! 戻り値		なし
+===================================================================== */
+void Stage::SetSignBoardID()
+{
+	// 看板数の初期化
+	m_numSignBoards = 0;
+
+	for (int i = 0; i < m_numObjects; i++)
+	{
+		if (m_objectInfo[i].ID == static_cast<int>(TILE::SIGN_BOARD))
+		{
+			m_numSignBoards++;
+
+			// オブジェクト情報中の看板情報を登録
+			m_signBoard[m_numSignBoards - 1]->SetObjectNumber(i);
+			m_signBoard[m_numSignBoards - 1]->SetBlackBoardTexture(m_numSignBoards);
+		}
 	}
 }
 
@@ -348,44 +363,38 @@ void Stage::CheckCollision()
 		}
 	}
 
-	// 説明盤を非表示にする
-	blackboard1->setVisible(false);
-	blackboard2->setVisible(false);
-	blackboard3->setVisible(false);
-	
-	
+	// 説明盤非表示
+	for (int i = 0; i < m_numSignBoards; i++)
+	{
+		m_signBoard[i]->EnabledBlackBoard(false);
+	}
 
 	// オブジェクトとの当たり判定
 	for (int i = 0; i < m_numObjects; i++)
 	{
-
 		//オブジェクトとプレイヤーが当たった場合
 		if (GameManager::isCollision(m_objectInfo[i].pos, m_pPlayer->getPosition()))
-
 		{
 			// 季節記と当たった場合
 			if (m_objectInfo[i].ID == static_cast<int>(TILE::SEASON_BOOK))
 			{
 				PlayScene::m_pButton[static_cast<int>(BUTTON::ACTION)]->ChangeActionFlg(ACTION::SEASON_BOOK);
 			}
-			
-			//看板1と当たった場合
-			else if(m_objectInfo[i].ID == static_cast<int>(TILE::SIGN_BOARD))
+
+			// 看板と当たった場合
+			if (m_objectInfo[i].ID == static_cast<int>(TILE::SIGN_BOARD))
 			{
-				//画像を表示する
-				blackboard1->setVisible(true);
+				// オブジェクト情報の添字と一致している説明盤を表示する
+				for (int j = 0; j < m_numSignBoards; j++)
+				{
+					m_signBoard[j]->setPosition(Vec2(GetCameraPosX(), WINDOW_HEIGHT_HERF + 64.0f));
+					m_signBoard[j]->DrawBlackBoard(i);
+				}
 			}
-			
-			//看板2と当たった場合
-			
-			
-			//看板3と当たった場合
-			
 			
 			// オブジェクトに応じて処理
 			m_pPlayer->Action(m_objectInfo[i].ID, m_objectInfo[i].pos, m_season);
 		}
-
 	}
 
 	// ギミックとの当たり判定
