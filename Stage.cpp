@@ -376,12 +376,6 @@ void Stage::CheckCollision()
 				blackboard1->setVisible(true);
 			}
 			
-			//看板2と当たった場合
-			
-			
-			//看板3と当たった場合
-			
-			
 			// オブジェクトに応じて処理
 			m_pPlayer->Action(m_objectInfo[i].ID, m_objectInfo[i].pos, m_season);
 		}
