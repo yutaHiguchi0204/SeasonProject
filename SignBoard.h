@@ -6,12 +6,15 @@
 #pragma once
 
 #include "cocos2d.h"
+#include "ui/CocosGUI.h"
 
 class SignBoard : public cocos2d::Sprite
 {
 	private:
 		//看板
 		cocos2d::Sprite* m_blackBoard;
+		//閉じるボタン
+		cocos2d::ui::Button* m_pButtonClose;
 		//オブジェクト番号
 		int m_objNumber;
 

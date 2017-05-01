@@ -51,7 +51,7 @@ private:
 	std::vector<StageInfo> m_tileInfo;					// タイル情報
 	std::vector<StageInfo> m_objectInfo;				// オブジェクト情報
 	std::vector<StageInfo> m_gimmickInfo;				// ギミック情報
-	std::vector<SignBoard*> m_signBoard;				// 看板
+	std::vector<SignBoard*> m_pSignBoard;				// 看板
 
 	cocos2d::Camera* m_pCamera;							// カメラ
 
@@ -75,8 +75,11 @@ public:
 
 	void CheckCollision();																		// 当たり判定チェック
 	void CheckButtonHighlighted(BUTTON button);													// ボタンが押された時の処理
+	void ActionButtonHighlighted(ACTION action);												// アクションボタンが押された時の処理
+
+	void ActionObject(int objID);																// オブジェクトアクション
 
 	// 静的メンバ
 	static int m_season;																		// 季節
-	static bool m_isChangeSeason;																// 季節を入れ替えてるかどうか
+	static bool m_isShowObject;																	// 看板や季節記などオブジェクトを参照している状態かどうか
 };

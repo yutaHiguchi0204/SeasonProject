@@ -5,6 +5,7 @@
 ===================================================================== */
 
 #include "SignBoard.h"
+#include "Stage.h"
 
 USING_NS_CC;
 
@@ -34,13 +35,14 @@ void SignBoard::DrawBlackBoard(int objNum)
 	}
 }
 
-//黒板の表示非表示(bool)
+//説明盤の表示非表示(bool)
 void SignBoard::EnabledBlackBoard(bool TorF)
 {
 	m_blackBoard->setVisible(TorF);
+	m_pButtonClose->setVisible(TorF);
 }
 
-//黒板の画像を追加する(int)
+//説明盤の画像を追加する(int)
 void SignBoard::SetBlackBoardTexture(int num)
 {
 	std::stringstream sFileName;
@@ -61,6 +63,19 @@ bool SignBoard::init()
 	m_blackBoard = Sprite::create();
 	m_blackBoard->setVisible(false);
 	this->addChild(m_blackBoard);
+
+	// 閉じるボタンの生成
+	m_pButtonClose = cocos2d::ui::Button::create("object/button_close.png");
+	m_pButtonClose->setPositionY(160.0f);
+	m_pButtonClose->setVisible(false);
+	this->addChild(m_pButtonClose);
+
+	// 閉じるボタンが押された時
+	m_pButtonClose->addClickEventListener([&](Ref* ref)
+	{
+		EnabledBlackBoard(false);
+		Stage::m_isShowObject = false;
+	});
 
 	return true;
 }

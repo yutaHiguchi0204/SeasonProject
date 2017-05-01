@@ -12,7 +12,7 @@ USING_NS_CC;
 using namespace std;
 
 // 静的メンバの定義
-bool Stage::m_isChangeSeason;
+bool Stage::m_isShowObject;
 
 // メンバ関数の定義
 
@@ -56,7 +56,7 @@ bool PlayScene::init()
 	m_pButton[static_cast<int>(BUTTON::ACTION)] = OperationButton::create(BUTTON::ACTION);
 
 	// ボタンをシーンにつなぐ
-	for (int i = 0; i < NUM_BUTTON; i++) this->addChild(m_pButton[i], 3);
+	for (int i = 0; i < NUM_BUTTON; i++) this->addChild(m_pButton[i]);
 
 	return true;
 }
@@ -81,7 +81,7 @@ void PlayScene::update(float delta)
 	m_timeCnt++;
 
 	// ボタンが押されていたらプレイヤーを移動させる
-	if (!Stage::m_isChangeSeason)
+	if (!Stage::m_isShowObject)
 	{
 		// 移動ボタンが押されたときの処理
 		m_pStage->CheckButtonHighlighted(BUTTON::LEFT);
@@ -93,7 +93,7 @@ void PlayScene::update(float delta)
 
 	// アクションボタンの明度を戻す
 	if ((!Player::m_isJump && m_pButton[static_cast<int>(BUTTON::ACTION)]->GetActionFlg() == ACTION::JUMP) ||
-		(!Stage::m_isChangeSeason && m_pButton[static_cast<int>(BUTTON::ACTION)]->GetActionFlg() == ACTION::SEASON_BOOK))
+		(!Stage::m_isShowObject && m_pButton[static_cast<int>(BUTTON::ACTION)]->GetActionFlg() == ACTION::SEASON_BOOK))
 	{
 		m_pButton[static_cast<int>(BUTTON::ACTION)]->SetFullBright();
 	}

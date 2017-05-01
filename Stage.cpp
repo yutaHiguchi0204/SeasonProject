@@ -29,7 +29,7 @@ bool Stage::init()
 	// メンバの初期設定
 	m_season = static_cast<int>(SEASON::SPRING);		// 季節
 	m_seasonBefore = m_season;							// 季節の確定
-	m_isChangeSeason = false;							// 季節を入れ替えてるかどうか
+	m_isShowObject = false;								// オブジェクトを参照しているかどうか
 	m_numTiles = 0;
 	m_numObjects = 0;
 	m_numSignBoards = 0;
@@ -221,8 +221,8 @@ void Stage::SetTileInfoWithProperty(ValueMap map, int row, int col, KIND_TILE ti
 		if (map["object"].asString() == "signBoard")
 		{
 			// 看板クラスの生成
-			m_signBoard.push_back(SignBoard::create());
-			this->addChild(m_signBoard[m_numSignBoards]);
+			m_pSignBoard.push_back(SignBoard::create());
+			this->addChild(m_pSignBoard[m_numSignBoards], 4);
 			m_numSignBoards++;
 
 			id = static_cast<int>(TILE::SIGN_BOARD);
@@ -271,8 +271,8 @@ void Stage::SetSignBoardID()
 			m_numSignBoards++;
 
 			// オブジェクト情報中の看板情報を登録
-			m_signBoard[m_numSignBoards - 1]->SetObjectNumber(i);
-			m_signBoard[m_numSignBoards - 1]->SetBlackBoardTexture(m_numSignBoards);
+			m_pSignBoard[m_numSignBoards - 1]->SetObjectNumber(i);
+			m_pSignBoard[m_numSignBoards - 1]->SetBlackBoardTexture(m_numSignBoards);
 		}
 	}
 }
@@ -358,42 +358,21 @@ void Stage::CheckCollision()
 	{
 		if (GameManager::isCollision(m_tileInfo[i].pos, m_pPlayer->getPosition()))
 		{
-			// タイルに応じて処理
+			// タイルに応じたプレイヤーの処理
 			m_pPlayer->Action(m_tileInfo[i].ID, m_tileInfo[i].pos, m_season);
 		}
-	}
-
-	// 説明盤非表示
-	for (int i = 0; i < m_numSignBoards; i++)
-	{
-		m_signBoard[i]->EnabledBlackBoard(false);
 	}
 
 	// オブジェクトとの当たり判定
 	for (int i = 0; i < m_numObjects; i++)
 	{
-		//オブジェクトとプレイヤーが当たった場合
 		if (GameManager::isCollision(m_objectInfo[i].pos, m_pPlayer->getPosition()))
 		{
-			// 季節記と当たった場合
-			if (m_objectInfo[i].ID == static_cast<int>(TILE::SEASON_BOOK))
-			{
-				PlayScene::m_pButton[static_cast<int>(BUTTON::ACTION)]->ChangeActionFlg(ACTION::SEASON_BOOK);
-			}
-
-			// 看板と当たった場合
-			if (m_objectInfo[i].ID == static_cast<int>(TILE::SIGN_BOARD))
-			{
-				// オブジェクト情報の添字と一致している説明盤を表示する
-				for (int j = 0; j < m_numSignBoards; j++)
-				{
-					m_signBoard[j]->setPosition(Vec2(GetCameraPosX(), WINDOW_HEIGHT_HERF + 64.0f));
-					m_signBoard[j]->DrawBlackBoard(i);
-				}
-			}
+			// オブジェクトの処理
+			ActionObject(m_objectInfo[i].ID);
 			
-			// オブジェクトに応じて処理
-			m_pPlayer->Action(m_objectInfo[i].ID, m_objectInfo[i].pos, m_season);
+			// オブジェクトに応じたプレイヤーの処理
+			//m_pPlayer->Action(m_objectInfo[i].ID, m_objectInfo[i].pos, m_season);
 		}
 	}
 
@@ -402,7 +381,7 @@ void Stage::CheckCollision()
 	{
 		if (GameManager::isCollision(m_gimmickInfo[i].pos, m_pPlayer->getPosition()))
 		{
-			// ギミックに応じて処理
+			// ギミックに応じたプレイヤーの処理
 			m_pPlayer->Action(m_gimmickInfo[i].ID, m_gimmickInfo[i].pos, m_season);
 		}
 	}
@@ -448,27 +427,88 @@ void Stage::CheckButtonHighlighted(BUTTON button)
 			// ジャンプしてないときに処理
 			if (!Player::m_isJump)
 			{
-				// ジャンプ処理
-				if (PlayScene::m_pButton[static_cast<int>(BUTTON::ACTION)]->GetActionFlg() == ACTION::JUMP)
-				{
-					m_pPlayer->Jump();
-					PlayScene::m_pButton[static_cast<int>(BUTTON::ACTION)]->SetFullBright(false);
-				}
-				// 季節記処理
-				else
-				{
-					// 季節記の生成
-					m_pSeasonBook = SeasonBook::create();
-					m_pSeasonBook->setPosition(Vec2(GetCameraPosX(), WINDOW_HEIGHT_HERF));
-					this->addChild(m_pSeasonBook, 4);
+				ActionButtonHighlighted(PlayScene::m_pButton[static_cast<int>(BUTTON::ACTION)]->GetActionFlg());
+			}
+		}
+	}
+}
 
-					// 明度を暗くする
-					PlayScene::m_pButton[static_cast<int>(BUTTON::ACTION)]->SetFullBright(false);
+/* =====================================================================
+//! 内　容		アクションボタンが押された時の処理
+//! 引　数		アクション（ACTION）
+//! 戻り値		なし
+===================================================================== */
+void Stage::ActionButtonHighlighted(ACTION action)
+{
+	switch (action)
+	{
+	case ACTION::JUMP:				// ジャンプボタン
 
-					// 季節変化をしている状態にする
-					m_isChangeSeason = true;
+		m_pPlayer->Jump();
+		PlayScene::m_pButton[static_cast<int>(BUTTON::ACTION)]->SetFullBright(false);
+		break;
+
+	case ACTION::SEASON_BOOK:		// 季節記ボタン
+
+		// 季節記の生成
+		m_pSeasonBook = SeasonBook::create();
+		m_pSeasonBook->setPosition(Vec2(GetCameraPosX(), WINDOW_HEIGHT_HERF));
+		this->addChild(m_pSeasonBook, 4);
+
+		// 明度を暗くする
+		PlayScene::m_pButton[static_cast<int>(BUTTON::ACTION)]->SetFullBright(false);
+
+		// 季節記を見ている状態にする
+		m_isShowObject = true;
+
+		break;
+
+	case ACTION::SIGN_BOARD:		// 看板ボタン
+
+		// 明度を暗くする
+		PlayScene::m_pButton[static_cast<int>(BUTTON::ACTION)]->SetFullBright(false);
+
+		// 説明盤の生成（プレイヤーと当たっているものだけ）
+		for (int i = 0; i < m_numObjects; i++)
+		{
+			if (GameManager::isCollision(m_objectInfo[i].pos, m_pPlayer->getPosition()))
+			{
+				for (int j = 0; j < m_numSignBoards; j++)
+				{
+					m_pSignBoard[j]->setPosition(Vec2(GetCameraPosX(), WINDOW_HEIGHT_HERF));
+					m_pSignBoard[j]->DrawBlackBoard(i);
 				}
 			}
 		}
+
+		// 看板を見ている状態にする
+		m_isShowObject = true;
+
+		break;
+	}
+}
+
+/* =====================================================================
+//! 内　容		オブジェクトアクション
+//! 引　数		オブジェクトＩＤ（int）
+//! 戻り値		なし
+===================================================================== */
+void Stage::ActionObject(int objID)
+{
+	switch (objID)
+	{
+	case static_cast<int>(TILE::SEASON_BOOK):		// 季節記と当たった場合
+
+		// ボタンの画像を変える
+		PlayScene::m_pButton[static_cast<int>(BUTTON::ACTION)]->ChangeActionFlg(ACTION::SEASON_BOOK);
+
+		break;
+
+	case static_cast<int>(TILE::SIGN_BOARD) :		// 看板と当たった場合
+
+		// ボタンの画像を変える
+		PlayScene::m_pButton[static_cast<int>(BUTTON::ACTION)]->ChangeActionFlg(ACTION::SIGN_BOARD);
+
+		break;
 	}
 }
