@@ -353,6 +353,8 @@ float Stage::GetCameraPosX()
 ===================================================================== */
 void Stage::CheckCollision()
 {
+	m_leftFlag = false;
+	m_rightFlag = false;
 	// ƒ^ƒCƒ‹‚Æ‚Ì“–‚½‚è”»’è
 	for (int i = 0; i < m_numTiles; i++)
 	{
@@ -510,5 +512,24 @@ void Stage::ActionObject(int objID)
 		PlayScene::m_pButton[static_cast<int>(BUTTON::ACTION)]->ChangeActionFlg(ACTION::SIGN_BOARD);
 
 		break;
+	}
+
+
+}
+
+void Stage::Colision()
+{
+	
+	for (int i = 0; i < m_numTiles; i++)
+	{
+		// Õ“Ë”»’è
+		if (GameManager::decisionCollision(m_tileInfo[i].pos, m_pPlayer->getPosition()) == static_cast<int>(COLLISION::RIGHT) && !m_tileInfo[i].ID == static_cast<int>(TILE::WATER))
+		{
+			m_rightFlag = true;
+		}
+		else if (GameManager::decisionCollision(m_tileInfo[i].pos, m_pPlayer->getPosition()) == static_cast<int>(COLLISION::LEFT) && !m_tileInfo[i].ID == static_cast<int>(TILE::WATER))
+		{
+			m_leftFlag = true;
+		}
 	}
 }

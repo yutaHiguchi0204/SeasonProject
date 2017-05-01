@@ -32,3 +32,31 @@ bool GameManager::isCollision(Vec2 tileVec, Vec2 playerVec)
 
 	return false;
 }
+/* =====================================================================
+//! 内　容		衝突判定チェック
+//! 引　数		タイル座標（Vec2）、プレイヤー座標（Vec2）
+//! 戻り値		なし
+===================================================================== */
+
+int GameManager::decisionCollision(Vec2 tileVec, Vec2 playerVec)
+{
+	if (playerVec.y - tileVec.y <= SIZE_TILE)
+	{
+
+		// 右のあたり判定
+		if (playerVec.x + SIZE_PLAYER_HERF + SPEED_MOVE_PLAYER >= tileVec.x &&
+			playerVec.x - SIZE_PLAYER_HERF <= tileVec.x + SIZE_TILE)
+		{
+			return static_cast<int>(COLLISION::RIGHT);
+		}
+		// 左のあたり判定
+		else if (playerVec.x - SIZE_PLAYER_HERF - SPEED_MOVE_PLAYER <= tileVec.x + SIZE_TILE &&
+			playerVec.x + SIZE_PLAYER_HERF >= tileVec.x)
+		{
+			return static_cast<int>(COLLISION::LEFT);
+		}
+	}
+
+
+	return static_cast<int>(COLLISION::NONE);
+}
