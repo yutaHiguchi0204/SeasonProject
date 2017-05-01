@@ -368,29 +368,11 @@ void Stage::CheckCollision()
 	{
 		if (GameManager::isCollision(m_objectInfo[i].pos, m_pPlayer->getPosition()))
 		{
-<<<<<<< HEAD
-			// 季節記と当たった場合
-			if (m_objectInfo[i].ID == static_cast<int>(TILE::SEASON_BOOK))
-			{
-				PlayScene::m_pButton[static_cast<int>(BUTTON::ACTION)]->ChangeActionFlg(ACTION::SEASON_BOOK);
-			}
-			
-			//看板1と当たった場合
-			else if(m_objectInfo[i].ID == static_cast<int>(TILE::SIGN_BOARD))
-			{
-				//画像を表示する
-				blackboard1->setVisible(true);
-			}
-			
-			// オブジェクトに応じて処理
-			m_pPlayer->Action(m_objectInfo[i].ID, m_objectInfo[i].pos, m_season);
-=======
 			// オブジェクトの処理
 			ActionObject(m_objectInfo[i].ID);
 			
 			// オブジェクトに応じたプレイヤーの処理
 			//m_pPlayer->Action(m_objectInfo[i].ID, m_objectInfo[i].pos, m_season);
->>>>>>> 35bf8b59dd23808bbf0d4463a26b541600fb0d1c
 		}
 	}
 
