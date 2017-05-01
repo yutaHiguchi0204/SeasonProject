@@ -29,9 +29,10 @@ bool Stage::init()
 	// メンバの初期設定
 	m_season = static_cast<int>(SEASON::SPRING);		// 季節
 	m_seasonBefore = m_season;							// 季節の確定
-	m_isChangeSeason = false;							// 季節を入れ替えてるかどうか
+	m_isShowObject = false;								// オブジェクトを参照しているかどうか
 	m_numTiles = 0;
 	m_numObjects = 0;
+	m_numSignBoards = 0;
 	m_numGimmicks = 0;
 
 	// 背景
@@ -43,26 +44,6 @@ bool Stage::init()
 	m_pMap->setAnchorPoint(Vec2(0, 0));
 	m_pMap->setPosition(Vec2(0, 0));
 	this->addChild(m_pMap);
-
-
-
-	//黒板１の描画
-	blackboard1 = Sprite::create("object\\blackboard1.png");
-	blackboard1->setPosition(Vec2(500.0f, 400.0f));
-	blackboard1->setVisible(false);
-	this->addChild(blackboard1);
-
-	//黒板２の描画
-	blackboard2 = Sprite::create("object\\blackboard2.png");
-	blackboard2->setPosition(Vec2(500.0f, 400.0f));
-	blackboard2->setVisible(false);
-	this->addChild(blackboard2);
-
-	//黒板３の描画
-	blackboard3 = Sprite::create("object\\blackboard3.png");
-	blackboard3->setPosition(Vec2(500.0f, 400.0f));
-	blackboard3->setVisible(false);
-	this->addChild(blackboard3);
 
 	// レイヤー設定
 	for (int i = 0; i < NUM_SEASON; i++)
@@ -93,6 +74,9 @@ bool Stage::init()
 
 	// レイヤー情報の設定
 	SetLayerInfo();
+
+	// 説明盤のＩＤ登録
+	SetSignBoardID();
 
 	// プレイヤー
 	m_pPlayer = Player::create();
@@ -234,7 +218,15 @@ void Stage::SetTileInfoWithProperty(ValueMap map, int row, int col, KIND_TILE ti
 	case KIND_TILE::OBJECT:		// オブジェクト
 
 		// 各オブジェクト設定
-		if		(map["object"].asString() == "signBoard")	id = static_cast<int>(TILE::SIGN_BOARD);
+		if (map["object"].asString() == "signBoard")
+		{
+			// 看板クラスの生成
+			m_pSignBoard.push_back(SignBoard::create());
+			this->addChild(m_pSignBoard[m_numSignBoards], 4);
+			m_numSignBoards++;
+
+			id = static_cast<int>(TILE::SIGN_BOARD);
+		}
 		else if	(map["object"].asString() == "seasonBook")	id = static_cast<int>(TILE::SEASON_BOOK);
 		else												id = static_cast<int>(TILE::NONE);
 
@@ -259,6 +251,29 @@ void Stage::SetTileInfoWithProperty(ValueMap map, int row, int col, KIND_TILE ti
 		m_gimmickInfo.push_back(StageInfo{ id, pos });
 
 		break;
+	}
+}
+
+/* =====================================================================
+//! 内　容		説明盤のＩＤを登録
+//! 引　数		なし
+//! 戻り値		なし
+===================================================================== */
+void Stage::SetSignBoardID()
+{
+	// 看板数の初期化
+	m_numSignBoards = 0;
+
+	for (int i = 0; i < m_numObjects; i++)
+	{
+		if (m_objectInfo[i].ID == static_cast<int>(TILE::SIGN_BOARD))
+		{
+			m_numSignBoards++;
+
+			// オブジェクト情報中の看板情報を登録
+			m_pSignBoard[m_numSignBoards - 1]->SetObjectNumber(i);
+			m_pSignBoard[m_numSignBoards - 1]->SetBlackBoardTexture(m_numSignBoards);
+		}
 	}
 }
 
@@ -343,26 +358,17 @@ void Stage::CheckCollision()
 	{
 		if (GameManager::isCollision(m_tileInfo[i].pos, m_pPlayer->getPosition()))
 		{
-			// タイルに応じて処理
+			// タイルに応じたプレイヤーの処理
 			m_pPlayer->Action(m_tileInfo[i].ID, m_tileInfo[i].pos, m_season);
 		}
 	}
 
-	// 説明盤を非表示にする
-	blackboard1->setVisible(false);
-	blackboard2->setVisible(false);
-	blackboard3->setVisible(false);
-	
-	
-
 	// オブジェクトとの当たり判定
 	for (int i = 0; i < m_numObjects; i++)
 	{
-
-		//オブジェクトとプレイヤーが当たった場合
 		if (GameManager::isCollision(m_objectInfo[i].pos, m_pPlayer->getPosition()))
-
 		{
+<<<<<<< HEAD
 			// 季節記と当たった場合
 			if (m_objectInfo[i].ID == static_cast<int>(TILE::SEASON_BOOK))
 			{
@@ -378,8 +384,14 @@ void Stage::CheckCollision()
 			
 			// オブジェクトに応じて処理
 			m_pPlayer->Action(m_objectInfo[i].ID, m_objectInfo[i].pos, m_season);
+=======
+			// オブジェクトの処理
+			ActionObject(m_objectInfo[i].ID);
+			
+			// オブジェクトに応じたプレイヤーの処理
+			//m_pPlayer->Action(m_objectInfo[i].ID, m_objectInfo[i].pos, m_season);
+>>>>>>> 35bf8b59dd23808bbf0d4463a26b541600fb0d1c
 		}
-
 	}
 
 	// ギミックとの当たり判定
@@ -387,7 +399,7 @@ void Stage::CheckCollision()
 	{
 		if (GameManager::isCollision(m_gimmickInfo[i].pos, m_pPlayer->getPosition()))
 		{
-			// ギミックに応じて処理
+			// ギミックに応じたプレイヤーの処理
 			m_pPlayer->Action(m_gimmickInfo[i].ID, m_gimmickInfo[i].pos, m_season);
 		}
 	}
@@ -433,27 +445,88 @@ void Stage::CheckButtonHighlighted(BUTTON button)
 			// ジャンプしてないときに処理
 			if (!Player::m_isJump)
 			{
-				// ジャンプ処理
-				if (PlayScene::m_pButton[static_cast<int>(BUTTON::ACTION)]->GetActionFlg() == ACTION::JUMP)
-				{
-					m_pPlayer->Jump();
-					PlayScene::m_pButton[static_cast<int>(BUTTON::ACTION)]->SetFullBright(false);
-				}
-				// 季節記処理
-				else
-				{
-					// 季節記の生成
-					m_pSeasonBook = SeasonBook::create();
-					m_pSeasonBook->setPosition(Vec2(GetCameraPosX(), WINDOW_HEIGHT_HERF));
-					this->addChild(m_pSeasonBook, 4);
+				ActionButtonHighlighted(PlayScene::m_pButton[static_cast<int>(BUTTON::ACTION)]->GetActionFlg());
+			}
+		}
+	}
+}
 
-					// 明度を暗くする
-					PlayScene::m_pButton[static_cast<int>(BUTTON::ACTION)]->SetFullBright(false);
+/* =====================================================================
+//! 内　容		アクションボタンが押された時の処理
+//! 引　数		アクション（ACTION）
+//! 戻り値		なし
+===================================================================== */
+void Stage::ActionButtonHighlighted(ACTION action)
+{
+	switch (action)
+	{
+	case ACTION::JUMP:				// ジャンプボタン
 
-					// 季節変化をしている状態にする
-					m_isChangeSeason = true;
+		m_pPlayer->Jump();
+		PlayScene::m_pButton[static_cast<int>(BUTTON::ACTION)]->SetFullBright(false);
+		break;
+
+	case ACTION::SEASON_BOOK:		// 季節記ボタン
+
+		// 季節記の生成
+		m_pSeasonBook = SeasonBook::create();
+		m_pSeasonBook->setPosition(Vec2(GetCameraPosX(), WINDOW_HEIGHT_HERF));
+		this->addChild(m_pSeasonBook, 4);
+
+		// 明度を暗くする
+		PlayScene::m_pButton[static_cast<int>(BUTTON::ACTION)]->SetFullBright(false);
+
+		// 季節記を見ている状態にする
+		m_isShowObject = true;
+
+		break;
+
+	case ACTION::SIGN_BOARD:		// 看板ボタン
+
+		// 明度を暗くする
+		PlayScene::m_pButton[static_cast<int>(BUTTON::ACTION)]->SetFullBright(false);
+
+		// 説明盤の生成（プレイヤーと当たっているものだけ）
+		for (int i = 0; i < m_numObjects; i++)
+		{
+			if (GameManager::isCollision(m_objectInfo[i].pos, m_pPlayer->getPosition()))
+			{
+				for (int j = 0; j < m_numSignBoards; j++)
+				{
+					m_pSignBoard[j]->setPosition(Vec2(GetCameraPosX(), WINDOW_HEIGHT_HERF));
+					m_pSignBoard[j]->DrawBlackBoard(i);
 				}
 			}
 		}
+
+		// 看板を見ている状態にする
+		m_isShowObject = true;
+
+		break;
+	}
+}
+
+/* =====================================================================
+//! 内　容		オブジェクトアクション
+//! 引　数		オブジェクトＩＤ（int）
+//! 戻り値		なし
+===================================================================== */
+void Stage::ActionObject(int objID)
+{
+	switch (objID)
+	{
+	case static_cast<int>(TILE::SEASON_BOOK):		// 季節記と当たった場合
+
+		// ボタンの画像を変える
+		PlayScene::m_pButton[static_cast<int>(BUTTON::ACTION)]->ChangeActionFlg(ACTION::SEASON_BOOK);
+
+		break;
+
+	case static_cast<int>(TILE::SIGN_BOARD) :		// 看板と当たった場合
+
+		// ボタンの画像を変える
+		PlayScene::m_pButton[static_cast<int>(BUTTON::ACTION)]->ChangeActionFlg(ACTION::SIGN_BOARD);
+
+		break;
 	}
 }

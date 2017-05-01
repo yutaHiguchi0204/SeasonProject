@@ -54,7 +54,7 @@ bool SeasonBook::init()
 	m_pButtonClose->addClickEventListener([&](Ref* ref)
 	{
 		removeFromParent();
-		Stage::m_isChangeSeason = false;
+		Stage::m_isShowObject = false;
 	});
 
 	// ‹Gß‹L‚Ì–îˆóƒ{ƒ^ƒ“‚ª‰Ÿ‚³‚ê‚½
