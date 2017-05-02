@@ -85,7 +85,9 @@ void PlayScene::update(float delta)
 	m_pStage->CheckCollision();
 
 	// Õ“Ë”»’è
-	m_pStage->Colision();
+	m_pStage->CheckDecisionColision();
+
+	m_pStage->CheckGimmickCollision();
 
 	// ŽžŠÔŒv‘ª
 	m_timeCnt++;

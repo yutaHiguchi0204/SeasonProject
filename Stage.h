@@ -74,7 +74,9 @@ public:
 	float GetCameraPosX();																		// カメラ座標xの取得
 
 	void CheckCollision();																		// 当たり判定チェック
-	void Colision();
+	void CheckDecisionColision();																// 衝突判定チェック
+	void CheckGimmickCollision();																// ギミック衝突判定チェック
+
 	void CheckButtonHighlighted(BUTTON button);													// ボタンが押された時の処理
 	void ActionButtonHighlighted(ACTION action);												// アクションボタンが押された時の処理
 

@@ -517,7 +517,12 @@ void Stage::ActionObject(int objID)
 
 }
 
-void Stage::Colision()
+/* =====================================================================
+//! 内　容		衝突判定チェック
+//! 引　数		なし
+//! 戻り値		なし
+===================================================================== */
+void Stage::CheckDecisionColision()
 {
 	
 	for (int i = 0; i < m_numTiles; i++)
@@ -528,6 +533,27 @@ void Stage::Colision()
 			m_rightFlag = true;
 		}
 		else if (GameManager::decisionCollision(m_tileInfo[i].pos, m_pPlayer->getPosition()) == static_cast<int>(COLLISION::LEFT) && !m_tileInfo[i].ID == static_cast<int>(TILE::WATER))
+		{
+			m_leftFlag = true;
+		}
+	}
+}
+
+/* =====================================================================
+//! 内　容		ギミック衝突判定チェック
+//! 引　数		なし
+//! 戻り値		なし
+===================================================================== */
+void Stage::CheckGimmickCollision()
+{
+	for (int i = 0; i < m_numGimmicks; i++)
+	{
+		// 衝突判定
+		if (GameManager::decisionCollision(m_gimmickInfo[i].pos, m_pPlayer->getPosition()) == static_cast<int>(COLLISION::RIGHT) )
+		{
+			m_rightFlag = true;
+		}
+		else if (GameManager::decisionCollision(m_gimmickInfo[i].pos, m_pPlayer->getPosition()) == static_cast<int>(COLLISION::LEFT) )
 		{
 			m_leftFlag = true;
 		}
