@@ -1,14 +1,16 @@
 #include "AppDelegate.h"
-#include "PlayScene.h"
+#include "TitleScene.h"
 
 USING_NS_CC;
 
-AppDelegate::AppDelegate() {
+AppDelegate::AppDelegate() 
+{
 
 }
 
 AppDelegate::~AppDelegate() 
 {
+
 }
 
 //if you want a different context,just modify the value of glContextAttrs
@@ -42,7 +44,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
     FileUtils::getInstance()->addSearchPath("res");
 
     // create a scene. it's an autorelease object
-	auto scene = PlayScene::create();
+	auto scene = TitleScene::createScene();
 
     // run
     director->runWithScene(scene);
