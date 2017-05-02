@@ -42,7 +42,6 @@ int GameManager::decisionCollision(Vec2 tileVec, Vec2 playerVec)
 {
 	if (playerVec.y - tileVec.y <= SIZE_TILE)
 	{
-
 		// ‰E‚Ì‚ ‚½‚è”»’è
 		if (playerVec.x + SIZE_PLAYER_HERF + SPEED_MOVE_PLAYER >= tileVec.x &&
 			playerVec.x - SIZE_PLAYER_HERF <= tileVec.x + SIZE_TILE)
@@ -56,7 +55,6 @@ int GameManager::decisionCollision(Vec2 tileVec, Vec2 playerVec)
 			return static_cast<int>(COLLISION::LEFT);
 		}
 	}
-
 
 	return static_cast<int>(COLLISION::NONE);
 }

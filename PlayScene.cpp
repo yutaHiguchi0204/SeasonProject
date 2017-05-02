@@ -75,7 +75,6 @@ void PlayScene::update(float delta)
 
 	// ボタンの明るさ
 	m_pButton[static_cast<int>(BUTTON::LEFT)]->SetFullBright();
-
 	m_pButton[static_cast<int>(BUTTON::RIGHT)]->SetFullBright();
 
 	// アクションボタンの初期化（ジャンプボタン）
@@ -83,11 +82,6 @@ void PlayScene::update(float delta)
 
 	// 当たり判定
 	m_pStage->CheckCollision();
-
-	// 衝突判定
-	m_pStage->CheckDecisionColision();
-
-	m_pStage->CheckGimmickCollision();
 
 	// 時間計測
 	m_timeCnt++;
