@@ -42,12 +42,12 @@ bool TitleScene::init()
 	scheduleUpdate();
 
 	// ”wŒi‰æ‘œ
-	Sprite* back = Sprite::create("title.png");
+	Sprite* back = Sprite::create("background/title.png");
 	back->setPosition(480, 270);
 	this->addChild(back);
 
-	//ƒ{ƒ^ƒ“‰æ‘œ
-	ui::Button* m_tButton = ui::Button::create("start.png");
+	// ƒ{ƒ^ƒ“‰æ‘œ
+	ui::Button* m_tButton = ui::Button::create("object/start.png");
 	m_tButton->setPosition(Vec2(480, 100));
 	m_tButton->setScale(1.5f);
 	this->addChild(m_tButton);
