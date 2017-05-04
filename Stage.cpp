@@ -13,6 +13,7 @@ USING_NS_CC;
 
 // 静的メンバの定義
 OperationButton* PlayScene::m_pButton[NUM_BUTTON];
+bool Pollen::m_isPollenFlg;
 
 // メンバ関数の定義
 
@@ -242,6 +243,7 @@ void Stage::SetTileInfoWithProperty(ValueMap map, int row, int col, KIND_TILE ti
 
 		// 各ギミック設定
 		if		(map["tree"].asString() == "block")			id = static_cast<int>(TILE::BLOCK);
+		else if (map["tree"].asString() == "pollen")		id = static_cast<int>(TILE::POLLEN);
 		else												id = static_cast<int>(TILE::NONE);
 
 		// ギミック数加算
@@ -321,7 +323,13 @@ void Stage::Scroll()
 	if (m_pPlayer->getPositionX() >= CAMERA_BORDER && m_pPlayer->getPositionX() <= STAGE_WIDTH - CAMERA_BORDER)
 	{
 		// 背景移動
-		m_pBack->setPositionX(m_pPlayer->getPositionX());
+		m_pBack->setPositionX(GetCameraPosX());
+
+		// 花粉移動
+		if (Pollen::m_isPollenFlg)
+		{
+			m_pPollen->setPositionX(GetCameraPosX());
+		}
 
 		// ボタン移動
 		PlayScene::m_pButton[static_cast<int>(BUTTON::LEFT)]->setPositionX(m_pPlayer->getPositionX() - 384.0f);
@@ -353,6 +361,9 @@ float Stage::GetCameraPosX()
 ===================================================================== */
 void Stage::CheckCollision()
 {
+	m_leftFlag = false;
+	m_rightFlag = false;
+
 	// タイルとの当たり判定
 	for (int i = 0; i < m_numTiles; i++)
 	{
@@ -360,6 +371,16 @@ void Stage::CheckCollision()
 		{
 			// タイルに応じたプレイヤーの処理
 			m_pPlayer->Action(m_tileInfo[i].ID, m_tileInfo[i].pos, m_season);
+		}
+
+		// 左右の衝突判定
+		if (GameManager::decisionCollision(m_tileInfo[i].pos, m_pPlayer->getPosition()) == static_cast<int>(COLLISION::RIGHT) && !m_tileInfo[i].ID == static_cast<int>(TILE::WATER))
+		{
+			m_rightFlag = true;
+		}
+		else if (GameManager::decisionCollision(m_tileInfo[i].pos, m_pPlayer->getPosition()) == static_cast<int>(COLLISION::LEFT) && !m_tileInfo[i].ID == static_cast<int>(TILE::WATER))
+		{
+			m_leftFlag = true;
 		}
 	}
 
@@ -381,8 +402,29 @@ void Stage::CheckCollision()
 	{
 		if (GameManager::isCollision(m_gimmickInfo[i].pos, m_pPlayer->getPosition()))
 		{
+			// 杉の場合花粉を出す
+			if (m_gimmickInfo[i].ID == static_cast<int>(TILE::POLLEN) && !Pollen::m_isPollenFlg)
+			{
+				m_pPollen = Pollen::create();
+				m_pPollen->setPosition(Vec2(GetCameraPosX(), WINDOW_HEIGHT_HERF));
+				this->addChild(m_pPollen, 5);
+			}
+
 			// ギミックに応じたプレイヤーの処理
 			m_pPlayer->Action(m_gimmickInfo[i].ID, m_gimmickInfo[i].pos, m_season);
+		}
+
+		// 左右の衝突判定
+		if (m_gimmickInfo[i].ID == static_cast<int>(TILE::BLOCK))
+		{
+			if (GameManager::decisionCollision(m_gimmickInfo[i].pos, m_pPlayer->getPosition()) == static_cast<int>(COLLISION::RIGHT))
+			{
+				m_rightFlag = true;
+			}
+			else if (GameManager::decisionCollision(m_gimmickInfo[i].pos, m_pPlayer->getPosition()) == static_cast<int>(COLLISION::LEFT))
+			{
+				m_leftFlag = true;
+			}
 		}
 	}
 }

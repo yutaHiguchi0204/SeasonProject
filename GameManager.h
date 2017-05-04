@@ -48,7 +48,15 @@ enum class TILE				// タイル
 	BLOCK,
 	WATER,
 	SIGN_BOARD,
-	SEASON_BOOK
+	SEASON_BOOK,
+	POLLEN
+};
+
+enum class COLLISION
+{
+	NONE,
+	LEFT,
+	RIGHT
 };
 
 // 共通関数をまとめたクラス
@@ -57,5 +65,10 @@ class GameManager
 public:
 
 	static bool isCollision(cocos2d::Vec2 tileVec, cocos2d::Vec2 playerVec);		// 着地判定
+<<<<<<< HEAD
 };
 
+=======
+	static int decisionCollision(cocos2d::Vec2 tileVec, cocos2d::Vec2 playerVec);	//衝突判定
+};
+>>>>>>> 7c7ce9247fbdd94ca23152cbd5db87735746ad0d

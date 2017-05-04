@@ -17,6 +17,8 @@ using namespace std;
 
 // 静的メンバの定義
 bool Stage::m_isShowObject;
+bool Stage::m_leftFlag;
+bool Stage::m_rightFlag;
 
 // メンバ関数の定義
 
@@ -116,6 +118,10 @@ void PlayScene::update(float delta)
 	// スクロール
 	m_pStage->Scroll();
 
+	// ボタンの明るさ
+	m_pButton[static_cast<int>(BUTTON::LEFT)]->SetFullBright();
+	m_pButton[static_cast<int>(BUTTON::RIGHT)]->SetFullBright();
+
 	// アクションボタンの初期化（ジャンプボタン）
 	m_pButton[static_cast<int>(BUTTON::ACTION)]->ChangeActionFlg(ACTION::JUMP);
 
@@ -129,11 +135,19 @@ void PlayScene::update(float delta)
 	if (!Stage::m_isShowObject)
 	{
 		// 移動ボタンが押されたときの処理
-		m_pStage->CheckButtonHighlighted(BUTTON::LEFT);
-		m_pStage->CheckButtonHighlighted(BUTTON::RIGHT);
+		if(!Stage::m_leftFlag)m_pStage->CheckButtonHighlighted(BUTTON::LEFT);
+		if (!Stage::m_rightFlag)m_pStage->CheckButtonHighlighted(BUTTON::RIGHT);
 
 		// アクションボタンが押されたときの処理
 		m_pStage->CheckButtonHighlighted(BUTTON::ACTION);
+	}
+	if (Stage::m_leftFlag)
+	{
+		m_pButton[static_cast<int>(BUTTON::LEFT)]->SetFullBright(false);
+	}
+	else if (Stage::m_rightFlag)
+	{
+		m_pButton[static_cast<int>(BUTTON::RIGHT)]->SetFullBright(false);
 	}
 
 	// アクションボタンの明度を戻す

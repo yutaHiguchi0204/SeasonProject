@@ -11,6 +11,7 @@
 #include "GameManager.h"
 #include "OperationButton.h"
 #include "Player.h"
+#include "Pollen.h"
 #include "SeasonBook.h"
 #include "SignBoard.h"
 
@@ -42,6 +43,7 @@ private:
 	Background* m_pBack;								// 背景
 	Player* m_pPlayer;									// プレイヤー
 	SeasonBook* m_pSeasonBook;							// 季節記
+	Pollen* m_pPollen;									// 花粉
 
 	cocos2d::TMXTiledMap* m_pMap;						// マップ
 	cocos2d::TMXLayer* m_pMapTileLayer[NUM_SEASON];		// マップレイヤー（タイル）
@@ -74,6 +76,7 @@ public:
 	float GetCameraPosX();																		// カメラ座標xの取得
 
 	void CheckCollision();																		// 当たり判定チェック
+
 	void CheckButtonHighlighted(BUTTON button);													// ボタンが押された時の処理
 	void ActionButtonHighlighted(ACTION action);												// アクションボタンが押された時の処理
 
@@ -82,4 +85,6 @@ public:
 	// 静的メンバ
 	static int m_season;																		// 季節
 	static bool m_isShowObject;																	// 看板や季節記などオブジェクトを参照している状態かどうか
+	static bool m_leftFlag;																		// 衝突判定用フラグ（左）
+	static bool m_rightFlag;																	// 衝突判定用フラグ（右）
 };
