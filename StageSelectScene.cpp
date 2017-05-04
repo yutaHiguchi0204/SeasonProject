@@ -69,6 +69,7 @@ bool StageSelectScene::onTouchBegan(cocos2d::Touch * touch, cocos2d::Event * pEv
 
 	// ŽŸ‚ÌƒV[ƒ“‚ÉˆÚs
 	_director->replaceScene(nextScene);
+	Stage::m_isShowObject = false;
 
 	return false;
 }

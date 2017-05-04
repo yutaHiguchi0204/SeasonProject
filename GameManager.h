@@ -58,3 +58,4 @@ public:
 
 	static bool isCollision(cocos2d::Vec2 tileVec, cocos2d::Vec2 playerVec);		// ’…’n”»’è
 };
+
