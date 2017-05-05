@@ -16,6 +16,7 @@ bool Player::m_isJump;
 bool Stage::m_isShowObject;
 bool Stage::m_leftFlag;
 bool Stage::m_rightFlag;
+bool Stage::m_isPause;
 
 // メンバ関数の定義
 
@@ -82,21 +83,25 @@ void PlayScene::update(float delta)
 	// 当たり判定
 	m_pStage->CheckCollision();
 
-	// ボタンが押されていたらプレイヤーを移動させる
-	if (!Stage::m_isShowObject)
+	// ポーズ中でなければ
+	if (!Stage::m_isPause)
 	{
-		// 移動ボタンが押されたときの処理
-		if (!Stage::m_leftFlag)
-			m_pStage->CheckButtonHighlighted(BUTTON::LEFT);
-		if (!Stage::m_rightFlag)
-			m_pStage->CheckButtonHighlighted(BUTTON::RIGHT);
+		// ボタンが押されていたらプレイヤーを移動させる
+		if (!Stage::m_isShowObject)
+		{
+			// 移動ボタンが押されたときの処理
+			if (!Stage::m_leftFlag)
+				m_pStage->CheckButtonHighlighted(BUTTON::LEFT);
+			if (!Stage::m_rightFlag)
+				m_pStage->CheckButtonHighlighted(BUTTON::RIGHT);
 
-		// アクションボタンが押されたときの処理
-		m_pStage->CheckButtonHighlighted(BUTTON::ACTION);
+			// アクションボタンが押されたときの処理
+			m_pStage->CheckButtonHighlighted(BUTTON::ACTION);
+		}
+
+		// ポーズボタンが押されたらポーズ画面を出す
+		m_pStage->CheckButtonHighlighted(BUTTON::PAUSE);
 	}
-
-	// ポーズボタンが押されたらポーズ画面を出す
-	m_pStage->CheckButtonHighlighted(BUTTON::PAUSE);
 
 	// 左右で進めない場合はその時に応じてボタンの明度を変える
 	if		(Stage::m_leftFlag)

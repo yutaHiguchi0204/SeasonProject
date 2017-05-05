@@ -32,6 +32,7 @@ bool Stage::init()
 	m_season = static_cast<int>(SEASON::SPRING);		// 季節
 	m_seasonBefore = m_season;							// 季節の確定
 	m_isShowObject = false;								// オブジェクトを参照しているかどうか
+	m_isPause = false;									// ポーズ中かどうか
 	m_numTiles = 0;
 	m_numObjects = 0;
 	m_numSignBoards = 0;
@@ -495,6 +496,9 @@ void Stage::CheckButtonHighlighted(BUTTON button)
 			m_pPause = Pause::create();
 			m_pPause->setPosition(Vec2(WINDOW_WIDTH_HERF, WINDOW_HEIGHT_HERF));
 			this->addChild(m_pPause);
+
+			// ポーズ
+			m_isPause = true;
 		}
 	}
 }
@@ -509,6 +513,7 @@ void Stage::ActionButtonHighlighted(ACTION action)
 	switch (action)
 	{
 	case ACTION::JUMP:				// ジャンプボタン
+	case ACTION::SWIM:				// 泳ぐボタン
 
 		m_pPlayer->Jump();
 		PlayScene::m_pButton[static_cast<int>(BUTTON::ACTION)]->SetFullBright(false);

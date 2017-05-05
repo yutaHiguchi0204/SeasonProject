@@ -7,6 +7,7 @@
 // ヘッダファイルのインクルード
 #include "Player.h"
 #include "PlayScene.h"
+#include "Stage.h"
 
 // 名前空間
 USING_NS_CC;
@@ -43,21 +44,24 @@ bool Player::init()
 ===================================================================== */
 void Player::update(float delta)
 {
-	// 移動
-	setPosition(getPosition() + Vec2(m_spdX, m_spdY));
-	m_spdX = 0.0f;
+	if (!Stage::m_isPause)
+	{
+		// 移動
+		setPosition(getPosition() + Vec2(m_spdX, m_spdY));
+		m_spdX = 0.0f;
 
-	// 重力
-	Gravity(m_isDive);
+		// 重力
+		Gravity(m_isDive);
 
-	// プレイヤーアニメーション
-	if (m_time % SPEED_ANIMATION == 0) AnimationPlayer();
+		// プレイヤーアニメーション
+		if (m_time % SPEED_ANIMATION == 0) AnimationPlayer();
 
-	// 画像の変更
-	setTextureRect(Rect(m_grpX, 0, SIZE_PLAYER, SIZE_PLAYER));
+		// 画像の変更
+		setTextureRect(Rect(m_grpX, 0, SIZE_PLAYER, SIZE_PLAYER));
 
-	// 時間計測
-	m_time++;
+		// 時間計測
+		m_time++;
+	}
 }
 
 /* =====================================================================
@@ -112,6 +116,9 @@ void Player::Fall(int mapInfo, int season)
 		{
 			m_isJump = false;
 			m_isDive = true;
+
+			// 泳ぐボタンに変わる
+			PlayScene::m_pButton[static_cast<int>(BUTTON::ACTION)]->ChangeButtonTexture(ACTION::SWIM);
 		}
 	}
 }

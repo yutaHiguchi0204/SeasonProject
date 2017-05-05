@@ -62,7 +62,7 @@ bool OperationButton::init(BUTTON button)
 
 	case BUTTON::PAUSE:
 		loadTextureNormal("object/button_pause.png");
-		setPosition(Vec2(64.0f, WINDOW_HEIGHT - 64.0f));
+		setPosition(Vec2(80.0f, WINDOW_HEIGHT - 48.0f));
 		break;
 	}
 

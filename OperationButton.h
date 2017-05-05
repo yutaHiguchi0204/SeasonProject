@@ -11,10 +11,11 @@
 #include "ui/CocosGUI.h"
 
 // 定数
-const int NUM_ACTION = 3;						// アクション数
+const int NUM_ACTION = 4;						// アクション数
 const std::string ACTION_NAME[NUM_ACTION] =		// アクション名
 {
 	"jump",
+	"swim",
 	"book",
 	"signBoard"
 };
@@ -31,6 +32,7 @@ enum class BUTTON			// ボタン
 enum class ACTION			// アクション
 {
 	JUMP,
+	SWIM,
 	SEASON_BOOK,
 	SIGN_BOARD
 };

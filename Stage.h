@@ -89,4 +89,5 @@ public:
 	static bool m_isShowObject;																	// 看板や季節記などオブジェクトを参照している状態かどうか
 	static bool m_leftFlag;																		// 衝突判定用フラグ（左）
 	static bool m_rightFlag;																	// 衝突判定用フラグ（右）
+	static bool m_isPause;																		// ポーズ中かどうか
 };

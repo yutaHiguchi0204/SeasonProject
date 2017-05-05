@@ -6,6 +6,7 @@
 
 // ヘッダファイルのインクルード
 #include "Pause.h"
+#include "Stage.h"
 #include "TitleScene.h"
 
 // 名前空間
@@ -21,6 +22,9 @@ bool Pause::init()
 	{
 		return false;
 	}
+
+	// 更新処理準備
+	scheduleUpdate();
 
 	// ポーズ画面の設定
 	setTexture("pause/pauseBack.png");
@@ -81,5 +85,7 @@ void Pause::ClosePause(bool sceneOut)
 		_director->replaceScene(nextScene);
 	}
 
+	// 後処理
+	Stage::m_isPause = false;
 	removeFromParent();
 }
