@@ -65,12 +65,5 @@ class GameManager
 public:
 
 	static bool isCollision(cocos2d::Vec2 tileVec, cocos2d::Vec2 playerVec);		// ’…’n”»’è
-
-<<<<<<< HEAD
-	static int decisionCollision(cocos2d::Vec2 tileVec, cocos2d::Vec2 playerVec);	//Õ“Ë”»’è
-};
-
-=======
 	static int decisionCollision(cocos2d::Vec2 tileVec, cocos2d::Vec2 playerVec);	// ¶‰E‚ÌÕ“Ë”»’è
 };
->>>>>>> 392fa37ea95fde1636c09180ff4fd467683cf261

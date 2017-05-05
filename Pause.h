@@ -12,6 +12,7 @@
 class Pause : public cocos2d::Sprite
 {
 private:
+	cocos2d::Sprite* m_pPauseMain;						// ポーズのメイン画面
 	cocos2d::ui::Button* m_pPauseButtonBack;			// ゲームに戻るボタン
 	cocos2d::ui::Button* m_pPauseButtonTitle;			// タイトルに戻るボタン
 

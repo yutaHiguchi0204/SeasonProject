@@ -23,16 +23,21 @@ bool Pause::init()
 	}
 
 	// ポーズ画面の設定
-	setTexture("pause/pause.png");
+	setTexture("pause/pauseBack.png");
+
+	// メイン画面の設定
+	m_pPauseMain = Sprite::create("pause/pause.png");
+	m_pPauseMain->setPosition(Vec2(WINDOW_WIDTH_HERF, WINDOW_HEIGHT_HERF));
+	this->addChild(m_pPauseMain);
 
 	// ゲームに戻るボタンの生成
 	m_pPauseButtonBack = cocos2d::ui::Button::create("pause/button_backGame.png");
-	m_pPauseButtonBack->setPosition(Vec2(WINDOW_WIDTH_HERF, WINDOW_HEIGHT_HERF + 64.0f));
+	m_pPauseButtonBack->setPosition(Vec2(WINDOW_WIDTH_HERF, WINDOW_HEIGHT_HERF + 16.0f));
 	this->addChild(m_pPauseButtonBack);
 
 	// タイトルに戻るボタンの生成
 	m_pPauseButtonTitle = cocos2d::ui::Button::create("pause/button_backTitle.png");
-	m_pPauseButtonTitle->setPosition(Vec2(WINDOW_WIDTH_HERF, WINDOW_HEIGHT_HERF - 64.0f));
+	m_pPauseButtonTitle->setPosition(Vec2(WINDOW_WIDTH_HERF, WINDOW_HEIGHT_HERF - 112.0f));
 	this->addChild(m_pPauseButtonTitle);
 
 	return true;
