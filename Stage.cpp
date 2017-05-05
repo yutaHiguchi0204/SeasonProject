@@ -6,6 +6,7 @@
 
 // ヘッダファイルのインクルード
 #include "Stage.h"
+#include "ClearScene.h"
 #include "PlayScene.h"
 
 // 名前空間
@@ -459,9 +460,23 @@ void Stage::CheckButtonHighlighted(BUTTON button)
 			m_pPlayer->setFlippedX(false);
 
 			// プレイヤーの移動
-			if (m_pPlayer->getPositionX() < STAGE_WIDTH - SIZE_PLAYER_HERF)
+			/*if (m_pPlayer->getPositionX() < STAGE_WIDTH - SIZE_PLAYER_HERF)
 			{
 				m_pPlayer->Move(SPEED_MOVE_PLAYER);
+			}*/
+			m_pPlayer->Move(SPEED_MOVE_PLAYER);
+
+			// クリア判定
+			if (m_pPlayer->getPositionX() >= STAGE_WIDTH)
+			{
+				// 次のシーンを作成する
+				Scene* nextScene = ClearScene::create();
+
+				// フェードトランジション
+				nextScene = TransitionFade::create(1.0f, nextScene, Color3B(255, 255, 255));
+
+				// 次のシーンに移行
+				_director->replaceScene(nextScene);
 			}
 		}
 		// アクションボタン

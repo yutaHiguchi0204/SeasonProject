@@ -1,6 +1,6 @@
 /* =====================================================================
 //! @param		「TitleScene」クラスのヘッダファイル
-//! @create		樋口　裕太
+//! @create		松丸　勇輝
 //! @date		17/05/01
 ===================================================================== */
 #pragma once
@@ -9,7 +9,7 @@
 #include "GameManager.h"
 #include "ui/CocosGUI.h"
 
-class TitleScene :public cocos2d::Scene
+class TitleScene : public cocos2d::Scene
 {
 private:
 public:

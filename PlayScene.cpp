@@ -12,6 +12,7 @@ USING_NS_CC;
 using namespace std;
 
 // 静的メンバの定義
+bool Player::m_isJump;
 bool Stage::m_isShowObject;
 bool Stage::m_leftFlag;
 bool Stage::m_rightFlag;
@@ -44,9 +45,6 @@ bool PlayScene::init()
 
 	// 更新処理準備
 	scheduleUpdate();
-
-	// 各データの初期設定
-	m_timeCnt = 0;								// 時間計測
 
 	// ステージ
 	m_pStage = Stage::create();
@@ -83,9 +81,6 @@ void PlayScene::update(float delta)
 
 	// 当たり判定
 	m_pStage->CheckCollision();
-
-	// 時間計測
-	m_timeCnt++;
 
 	// ボタンが押されていたらプレイヤーを移動させる
 	if (!Stage::m_isShowObject)
