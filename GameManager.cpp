@@ -37,7 +37,6 @@ bool GameManager::isCollision(Vec2 tileVec, Vec2 playerVec)
 //! 引　数		タイル座標（Vec2）、プレイヤー座標（Vec2）
 //! 戻り値		なし
 ===================================================================== */
-
 int GameManager::decisionCollision(Vec2 tileVec, Vec2 playerVec)
 {
 	if (playerVec.y - tileVec.y <= SIZE_TILE)

@@ -24,7 +24,8 @@ enum class BUTTON			// ボタン
 {
 	LEFT,
 	RIGHT,
-	ACTION
+	ACTION,
+	PAUSE
 };
 
 enum class ACTION			// アクション

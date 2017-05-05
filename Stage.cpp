@@ -332,9 +332,10 @@ void Stage::Scroll()
 		}
 
 		// ボタン移動
-		PlayScene::m_pButton[static_cast<int>(BUTTON::LEFT)]->setPositionX(m_pPlayer->getPositionX() - 384.0f);
-		PlayScene::m_pButton[static_cast<int>(BUTTON::RIGHT)]->setPositionX(m_pPlayer->getPositionX() - 192.0f);
-		PlayScene::m_pButton[static_cast<int>(BUTTON::ACTION)]->setPositionX(m_pPlayer->getPositionX() + 384.0f);
+		PlayScene::m_pButton[static_cast<int>(BUTTON::LEFT)]->setPositionX(m_pPlayer->getPositionX() - WINDOW_WIDTH_HERF + 96.0f);
+		PlayScene::m_pButton[static_cast<int>(BUTTON::RIGHT)]->setPositionX(m_pPlayer->getPositionX() - WINDOW_WIDTH_HERF + 288.0f);
+		PlayScene::m_pButton[static_cast<int>(BUTTON::ACTION)]->setPositionX(m_pPlayer->getPositionX() + WINDOW_WIDTH_HERF - 96.0f);
+		PlayScene::m_pButton[static_cast<int>(BUTTON::PAUSE)]->setPositionX(m_pPlayer->getPositionX() - WINDOW_WIDTH_HERF + 64.0f);
 
 		// カメラ設定
 		cameraPos = m_pPlayer->getPositionX();
@@ -464,13 +465,21 @@ void Stage::CheckButtonHighlighted(BUTTON button)
 			}
 		}
 		// アクションボタン
-		else
+		else if (button == BUTTON::ACTION)
 		{
 			// ジャンプしてないときに処理
 			if (!Player::m_isJump)
 			{
 				ActionButtonHighlighted(PlayScene::m_pButton[static_cast<int>(BUTTON::ACTION)]->GetActionFlg());
 			}
+		}
+		// ポーズボタン
+		else
+		{
+			// ポーズ画面の生成
+			m_pPause = Pause::create();
+			m_pPause->setPosition(Vec2(WINDOW_WIDTH_HERF, WINDOW_HEIGHT_HERF));
+			this->addChild(m_pPause);
 		}
 	}
 }

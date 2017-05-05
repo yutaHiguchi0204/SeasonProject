@@ -10,6 +10,7 @@
 #include "Background.h"
 #include "GameManager.h"
 #include "OperationButton.h"
+#include "Pause.h"
 #include "Player.h"
 #include "Pollen.h"
 #include "SeasonBook.h"
@@ -55,6 +56,7 @@ private:
 	std::vector<StageInfo> m_gimmickInfo;				// ギミック情報
 	std::vector<SignBoard*> m_pSignBoard;				// 看板
 
+	Pause* m_pPause;									// ポーズ
 	cocos2d::Camera* m_pCamera;							// カメラ
 
 public:
