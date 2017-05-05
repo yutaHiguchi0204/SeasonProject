@@ -11,7 +11,7 @@
 // 定数
 const int				NUM_ROW					= 17;														// 行数
 const int				NUM_COLUMN				= 120;														// 列数
-const int				NUM_BUTTON				= 3;														// ボタン数
+const int				NUM_BUTTON				= 4;														// ボタン数
 const int				NUM_SEASON				= 4;														// 季節
 const int				NUM_SECOND				= 60;														// １秒
 const float				WINDOW_WIDTH			= 960.0f;													// 画面の幅
@@ -66,6 +66,11 @@ public:
 
 	static bool isCollision(cocos2d::Vec2 tileVec, cocos2d::Vec2 playerVec);		// 着地判定
 
+<<<<<<< HEAD
 	static int decisionCollision(cocos2d::Vec2 tileVec, cocos2d::Vec2 playerVec);	//衝突判定
 };
 
+=======
+	static int decisionCollision(cocos2d::Vec2 tileVec, cocos2d::Vec2 playerVec);	// 左右の衝突判定
+};
+>>>>>>> 392fa37ea95fde1636c09180ff4fd467683cf261

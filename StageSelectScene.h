@@ -1,6 +1,6 @@
 /* =====================================================================
 //! @param		「StageSelectScene」クラスのヘッダファイル
-//! @create		樋口　裕太
+//! @create		松丸　勇輝
 //! @date		17/05/01
 ===================================================================== */
 #pragma once
@@ -8,7 +8,7 @@
 //ヘッダファイルのインクルード
 #include "GameManager.h"
 
-class StageSelectScene :cocos2d::Scene
+class StageSelectScene : public cocos2d::Scene
 {
 public:
 	CREATE_FUNC(StageSelectScene);

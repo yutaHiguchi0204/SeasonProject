@@ -26,6 +26,8 @@ private:
 
 	bool m_isDive;		// …’†‚É‚¢‚é‚©‚Ç‚¤‚©
 
+	int m_time;			// ŠÔŒv‘ª
+
 public:
 	CREATE_FUNC(Player);
 	virtual bool init();

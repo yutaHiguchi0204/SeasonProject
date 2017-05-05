@@ -1,25 +1,27 @@
 /* =====================================================================
-//! @param		「StageSelectScene」クラスのソースファイル
+//! @param		「ClearScene」クラスのソースファイル
 //! @create		樋口　裕太
-//! @date		17/05/01
+//! @date		17/05/05
 ===================================================================== */
 
 // ヘッダファイルのインクルード
+#include "ClearScene.h"
 #include "StageSelectScene.h"
-#include "PlayScene.h"
 
 // 名前空間
 USING_NS_CC;
 using namespace std;
 
+// メンバ関数の定義
+
 // シーン管理
-Scene* StageSelectScene::createScene()
+Scene* ClearScene::createScene()
 {
 	// シーンを作成する
 	auto scene = Scene::create();
 
 	// レイヤーを作成する
-	auto layer = StageSelectScene::create();
+	auto layer = ClearScene::create();
 
 	// レイヤーをシーンに追加する
 	scene->addChild(layer);
@@ -29,47 +31,44 @@ Scene* StageSelectScene::createScene()
 }
 
 // 初期化
-bool StageSelectScene::init()
+bool ClearScene::init()
 {
-	// 基底クラスの初期化
 	if (!Scene::init())
 	{
-		// 基底クラスの初期化が失敗なら、異常終了
 		return false;
 	}
 
 	// 更新処理準備
 	scheduleUpdate();
 
-	Sprite* back = Sprite::create("background/back_stageSelect.png");
-	back->setPosition(480, 270);
-	this->addChild(back);
+	// 背景
+	m_pBack = Sprite::create("background/back_clear.png");
+	m_pBack->setPosition(Vec2(WINDOW_WIDTH_HERF, WINDOW_HEIGHT_HERF));
+	this->addChild(m_pBack);
 
 	// タッチイベントリスナーを作成
 	EventListenerTouchOneByOne* listener = EventListenerTouchOneByOne::create();
-	listener->onTouchBegan = CC_CALLBACK_2(StageSelectScene::onTouchBegan, this);
-
+	listener->onTouchBegan = CC_CALLBACK_2(ClearScene::onTouchBegan, this);
 	_director->getEventDispatcher()->addEventListenerWithSceneGraphPriority(listener, this);
 
 	return true;
 }
 
-void StageSelectScene::update(float delta)
-{
-
-}
-
-bool StageSelectScene::onTouchBegan(cocos2d::Touch * touch, cocos2d::Event * pEvent)
+/* =====================================================================
+//! 内　容		タッチ処理
+//! 引　数		タッチ情報（Touch）、イベント情報（Event）
+//! 戻り値		タッチされたか否か（bool）
+===================================================================== */
+bool ClearScene::onTouchBegan(Touch* touch, Event* pEvent)
 {
 	// 次のシーンを作成する
-	Scene* nextScene = PlayScene::create();
+	Scene* nextScene = StageSelectScene::create();
 
-	//フェードトランジション
+	// フェードトランジション
 	nextScene = TransitionFade::create(1.0f, nextScene, Color3B(255, 255, 255));
 
 	// 次のシーンに移行
 	_director->replaceScene(nextScene);
-	Stage::m_isShowObject = false;
 
 	return false;
 }

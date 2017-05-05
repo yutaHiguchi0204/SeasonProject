@@ -11,9 +11,6 @@
 // 名前空間
 USING_NS_CC;
 
-// 静的メンバ//
-int PlayScene::m_timeCnt;
-
 // メンバ関数の定義
 
 bool Player::init()
@@ -34,6 +31,7 @@ bool Player::init()
 	m_spdY = 0.0f;
 	m_isJump = false;
 	m_isDive = false;
+	m_time = 0;
 
 	return true;
 }
@@ -53,10 +51,13 @@ void Player::update(float delta)
 	Gravity(m_isDive);
 
 	// プレイヤーアニメーション
-	if (PlayScene::m_timeCnt % SPEED_ANIMATION == 0) AnimationPlayer();
+	if (m_time % SPEED_ANIMATION == 0) AnimationPlayer();
 
 	// 画像の変更
 	setTextureRect(Rect(m_grpX, 0, SIZE_PLAYER, SIZE_PLAYER));
+
+	// 時間計測
+	m_time++;
 }
 
 /* =====================================================================

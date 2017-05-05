@@ -1,30 +1,26 @@
 /* =====================================================================
-//! @param		「PlayScene」クラスのヘッダファイル
+//! @param		「ClearScene」クラスのヘッダファイル
 //! @create		樋口　裕太
-//! @date		17/03/04
+//! @date		17/05/05
 ===================================================================== */
 #pragma once
 
 // ヘッダファイルのインクルード
 #include "GameManager.h"
-#include "OperationButton.h"
-#include "Stage.h"
 
 // クラスの定義
-class PlayScene : public cocos2d::Scene
+class ClearScene : public cocos2d::Scene
 {
 private:
-	Stage* m_pStage;										// ステージ
+	cocos2d::Sprite* m_pBack;			// 背景
 
 public:
-	CREATE_FUNC(PlayScene);
+	CREATE_FUNC(ClearScene);
 	virtual bool init();
 
 	// シーンを作成する
 	static cocos2d::Scene* createScene();
 
-	void update(float delta);
-
-	// 静的メンバ
-	static OperationButton* m_pButton[NUM_BUTTON];			// アクションボタン（移動、ポーズ含む）
+	// タッチ処理
+	bool onTouchBegan(cocos2d::Touch* touch, cocos2d::Event* pEvent);
 };

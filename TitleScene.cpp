@@ -42,7 +42,7 @@ bool TitleScene::init()
 	scheduleUpdate();
 
 	// ”wŒi‰æ‘œ
-	Sprite* back = Sprite::create("background/title.png");
+	Sprite* back = Sprite::create("background/back_title.png");
 	back->setPosition(480, 270);
 	this->addChild(back);
 
