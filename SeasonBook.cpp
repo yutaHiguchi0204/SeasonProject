@@ -74,8 +74,8 @@ void SeasonBook::Change(int num)
 	Stage::m_season += num;
 
 	// ’²®
-	if (Stage::m_season < static_cast<int>(SEASON::SPRING)) Stage::m_season = static_cast<int>(SEASON::WINTER);
-	if (Stage::m_season > static_cast<int>(SEASON::WINTER)) Stage::m_season = static_cast<int>(SEASON::SPRING);
+	if (Stage::m_season < static_cast<int>(SEASON::SPRING)) Stage::m_season = Player::m_numBookmark - 1;
+	if (Stage::m_season > Player::m_numBookmark - 1)		Stage::m_season = static_cast<int>(SEASON::SPRING);
 
 	// ‹Gß‚Ìƒy[ƒW‚ğ•Ï‚¦‚é
 	std::stringstream sFileName;

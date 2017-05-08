@@ -14,6 +14,7 @@ USING_NS_CC;
 
 // 静的メンバの定義
 OperationButton* PlayScene::m_pButton[NUM_BUTTON];
+int Player::m_numBookmark;
 bool Pollen::m_isPollenFlg;
 
 // メンバ関数の定義
@@ -48,6 +49,14 @@ bool Stage::init()
 	m_pMap->setPosition(Vec2(0, 0));
 	this->addChild(m_pMap);
 
+	// プレイヤー
+	m_pPlayer = Player::create();
+	m_pPlayer->setPosition(Vec2(192.0f, 216.0f));
+	this->addChild(m_pPlayer, 1);
+
+	// 季節記
+	m_pSeasonBook = nullptr;
+
 	// レイヤー設定
 	for (int i = 0; i < NUM_SEASON - 2; i++)
 	{
@@ -81,13 +90,8 @@ bool Stage::init()
 	// 説明盤のＩＤ登録
 	SetSignBoardID();
 
-	// プレイヤー
-	m_pPlayer = Player::create();
-	m_pPlayer->setPosition(Vec2(192.0f, 216.0f));
-	this->addChild(m_pPlayer, 1);
-
-	// 季節記
-	m_pSeasonBook = nullptr;
+	// 新しい季節のしおりがマップ上にあれば描画
+	SetNewBookmark();
 
 	return true;
 }
@@ -283,6 +287,21 @@ void Stage::SetSignBoardID()
 }
 
 /* =====================================================================
+//! 内　容		新しい季節のしおりを配置
+//! 引　数		なし（別ステージができた場合はステージを必要とする（staticなら必要なし）
+//! 戻り値		なし
+===================================================================== */
+void Stage::SetNewBookmark()
+{
+	// ステージによって作るしおりを変更
+
+	m_pNewBookmark = Sprite::create("object/sprBookMark_summer.png");
+	m_pNewBookmark->retain();
+	m_pNewBookmark->setPosition(Vec2(20 * SIZE_TILE - 16.0f, 10 * SIZE_TILE - 16.0f));
+	this->addChild(m_pNewBookmark);
+}
+
+/* =====================================================================
 //! 内　容		季節の変更
 //! 引　数		なし
 //! 戻り値		なし
@@ -338,7 +357,7 @@ void Stage::Scroll()
 		PlayScene::m_pButton[static_cast<int>(BUTTON::LEFT)]->setPositionX(m_pPlayer->getPositionX() - WINDOW_WIDTH_HERF + 96.0f);
 		PlayScene::m_pButton[static_cast<int>(BUTTON::RIGHT)]->setPositionX(m_pPlayer->getPositionX() - WINDOW_WIDTH_HERF + 288.0f);
 		PlayScene::m_pButton[static_cast<int>(BUTTON::ACTION)]->setPositionX(m_pPlayer->getPositionX() + WINDOW_WIDTH_HERF - 96.0f);
-		PlayScene::m_pButton[static_cast<int>(BUTTON::PAUSE)]->setPositionX(m_pPlayer->getPositionX() - WINDOW_WIDTH_HERF + 64.0f);
+		PlayScene::m_pButton[static_cast<int>(BUTTON::PAUSE)]->setPositionX(m_pPlayer->getPositionX() - WINDOW_WIDTH_HERF + 88.0f);
 
 		// カメラ設定
 		cameraPos = m_pPlayer->getPositionX();
@@ -431,6 +450,20 @@ void Stage::CheckCollision()
 			}
 		}
 	}
+
+	// 新しい季節のしおりとの当たり判定
+	if (m_pNewBookmark != nullptr)
+	{
+		if (GameManager::isCollision(m_pNewBookmark->getPosition(), m_pPlayer->getPosition()))
+		{
+			// 季節のしおりの持ち数を増やす
+			Player::m_numBookmark++;
+
+			m_pNewBookmark->release();
+			m_pNewBookmark->removeFromParent();
+			m_pNewBookmark = nullptr;
+		}
+	}
 }
 
 /* =====================================================================
@@ -495,7 +528,7 @@ void Stage::CheckButtonHighlighted(BUTTON button)
 		{
 			// ポーズ画面の生成
 			m_pPause = Pause::create();
-			m_pPause->setPosition(Vec2(WINDOW_WIDTH_HERF, WINDOW_HEIGHT_HERF));
+			m_pPause->setPosition(Vec2(GetCameraPosX(), WINDOW_HEIGHT_HERF));
 			this->addChild(m_pPause);
 
 			// ポーズ

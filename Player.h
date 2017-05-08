@@ -44,4 +44,5 @@ public:
 	void AnimationPlayer();											// プレイヤーアニメーション
 
 	static bool m_isJump;											// ジャンプをしているか
+	static int m_numBookmark;										// 持っているしおりの数
 };

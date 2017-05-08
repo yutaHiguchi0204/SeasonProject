@@ -44,6 +44,16 @@ bool Pause::init()
 	m_pPauseButtonTitle->setPosition(Vec2(WINDOW_WIDTH_HERF, WINDOW_HEIGHT_HERF - 112.0f));
 	this->addChild(m_pPauseButtonTitle);
 
+	// ‚µ‚¨‚èƒAƒCƒRƒ“‚Ì¶¬
+	for (int i = 0; i < Player::m_numBookmark; i++)
+	{
+		std::stringstream sFileName;
+		sFileName << "pause/bookmark_" << SEASON_NAME[i] << ".png";
+		m_pBookmarkIcon[i] = Sprite::create(sFileName.str());
+		m_pBookmarkIcon[i]->setPosition(Vec2(i / 2 * 448.0f + 256.0f, WINDOW_HEIGHT - (i % 2 * 128.0f + 256.0f)));
+		this->addChild(m_pBookmarkIcon[i]);
+	}
+
 	return true;
 }
 

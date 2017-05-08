@@ -56,6 +56,8 @@ private:
 	std::vector<StageInfo> m_gimmickInfo;				// ギミック情報
 	std::vector<SignBoard*> m_pSignBoard;				// 看板
 
+	cocos2d::Sprite* m_pNewBookmark;					// 新しい季節のしおり
+
 	Pause* m_pPause;									// ポーズ
 	cocos2d::Camera* m_pCamera;							// カメラ
 
@@ -71,6 +73,7 @@ public:
 	void SetTileInfoWithLayer(cocos2d::TMXLayer* layer, KIND_TILE tile);						// レイヤーからタイル情報を設定
 	void SetTileInfoWithProperty(cocos2d::ValueMap map, int row, int col, KIND_TILE tile);		// プロパティからタイル情報を設定
 	void SetSignBoardID();																		// 説明盤のＩＤを登録
+	void SetNewBookmark();																		// 新しい季節のしおりを配置
 
 	void ChangeSeason();																		// 季節の変更
 

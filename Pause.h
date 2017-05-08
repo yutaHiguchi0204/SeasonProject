@@ -16,6 +16,8 @@ private:
 	cocos2d::ui::Button* m_pPauseButtonBack;			// ゲームに戻るボタン
 	cocos2d::ui::Button* m_pPauseButtonTitle;			// タイトルに戻るボタン
 
+	cocos2d::Sprite* m_pBookmarkIcon[NUM_SEASON];		// しおりアイコン
+
 public:
 	CREATE_FUNC(Pause);
 	virtual bool init();

@@ -33,6 +33,7 @@ bool Player::init()
 	m_isJump = false;
 	m_isDive = false;
 	m_time = 0;
+	m_numBookmark = 1;
 
 	return true;
 }
