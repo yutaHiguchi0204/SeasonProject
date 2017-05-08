@@ -43,13 +43,13 @@ bool Stage::init()
 	this->addChild(m_pBack);
 
 	// マップ描画
-	m_pMap = TMXTiledMap::create("mapData/mapFlower.tmx");
+	m_pMap = TMXTiledMap::create("mapData/map_flower.tmx");
 	m_pMap->setAnchorPoint(Vec2(0, 0));
 	m_pMap->setPosition(Vec2(0, 0));
 	this->addChild(m_pMap);
 
 	// レイヤー設定
-	for (int i = 0; i < NUM_SEASON; i++)
+	for (int i = 0; i < NUM_SEASON - 2; i++)
 	{
 		std::stringstream sFileName;
 		sFileName << "tileLayer_" << SEASON_NAME[i];
@@ -83,7 +83,7 @@ bool Stage::init()
 
 	// プレイヤー
 	m_pPlayer = Player::create();
-	m_pPlayer->setPosition(Vec2(64.0f, 216.0f));
+	m_pPlayer->setPosition(Vec2(192.0f, 216.0f));
 	this->addChild(m_pPlayer, 1);
 
 	// 季節記
@@ -246,6 +246,7 @@ void Stage::SetTileInfoWithProperty(ValueMap map, int row, int col, KIND_TILE ti
 		// 各ギミック設定
 		if		(map["tree"].asString() == "block")			id = static_cast<int>(TILE::BLOCK);
 		else if (map["tree"].asString() == "pollen")		id = static_cast<int>(TILE::POLLEN);
+		else if (map["bug"].asString() == "block")			id = static_cast<int>(TILE::BLOCK);
 		else												id = static_cast<int>(TILE::NONE);
 
 		// ギミック数加算
