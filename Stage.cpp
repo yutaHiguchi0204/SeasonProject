@@ -34,6 +34,7 @@ bool Stage::init()
 	m_seasonBefore = m_season;							// 季節の確定
 	m_isShowObject = false;								// オブジェクトを参照しているかどうか
 	m_isPause = false;									// ポーズ中かどうか
+	Pollen::m_isPollenFlg = false;						// 花粉フラグをおろしておく
 	m_numTiles = 0;
 	m_numObjects = 0;
 	m_numSignBoards = 0;
@@ -295,10 +296,13 @@ void Stage::SetNewBookmark()
 {
 	// ステージによって作るしおりを変更
 
-	m_pNewBookmark = Sprite::create("object/sprBookMark_summer.png");
-	m_pNewBookmark->retain();
-	m_pNewBookmark->setPosition(Vec2(20 * SIZE_TILE - 16.0f, 10 * SIZE_TILE - 16.0f));
-	this->addChild(m_pNewBookmark);
+	if (Player::m_numBookmark - 1 < static_cast<int>(SEASON::SUMMER))
+	{
+		m_pNewBookmark = Sprite::create("object/sprBookMark_summer.png");
+		m_pNewBookmark->retain();
+		m_pNewBookmark->setPosition(Vec2(20 * SIZE_TILE - 16.0f, 10 * SIZE_TILE - 16.0f));
+		this->addChild(m_pNewBookmark);
+	}
 }
 
 /* =====================================================================
