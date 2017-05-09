@@ -47,30 +47,30 @@ bool StageSelectScene::init()
 	this->addChild(back);
 
 	// ボタン画像
-	ui::Button* selectButton = ui::Button::create("object/selectButton.png");
+	cocos2d::ui::Button* selectButton = ui::Button::create("object/selectButton.png");
 	selectButton->setPosition(Vec2(128.0f, 96.0f));
 	this->addChild(selectButton);
 
-	ui::Button* NotselectButton1 = ui::Button::create("object/Not_selectButton.png");
-	NotselectButton1->setPosition(Vec2(WINDOW_WIDTH - 128.0f, 192.0f));
-	this->addChild(NotselectButton1);
+	cocos2d::ui::Button* notSelectButton1 = ui::Button::create("object/Not_selectButton.png");
+	notSelectButton1->setPosition(Vec2(WINDOW_WIDTH - 128.0f, 192.0f));
+	this->addChild(notSelectButton1);
 
-	ui::Button* NotselectButton2 = ui::Button::create("object/Not_selectButton.png");
-	NotselectButton2->setPosition(Vec2(128.0f, WINDOW_HEIGHT - 192.0f));
-	this->addChild(NotselectButton2);
+	cocos2d::ui::Button* notSelectButton2 = ui::Button::create("object/Not_selectButton.png");
+	notSelectButton2->setPosition(Vec2(128.0f, WINDOW_HEIGHT - 192.0f));
+	this->addChild(notSelectButton2);
 
-	ui::Button* NotselectButton3 = ui::Button::create("object/Not_selectButton.png");
-	NotselectButton3->setPosition(Vec2(WINDOW_WIDTH - 128.0f, WINDOW_HEIGHT - 96.0f));
-	this->addChild(NotselectButton3);
+	cocos2d::ui::Button* notSelectButton3 = ui::Button::create("object/Not_selectButton.png");
+	notSelectButton3->setPosition(Vec2(WINDOW_WIDTH - 128.0f, WINDOW_HEIGHT - 96.0f));
+	this->addChild(notSelectButton3);
 
 	// プレイヤー
-	m_pSprPlayer = Sprite::create(("object/player.png"));
+	m_pSprPlayer = Sprite::create("object/player.png");
 	m_pSprPlayer->setPosition(selectButton->getPosition());
 	this->addChild(m_pSprPlayer);
 
 	// タッチイベントリスナーを作成
 	EventListenerTouchOneByOne* listener = EventListenerTouchOneByOne::create();
-	m_selectButton->addTouchEventListener(CC_CALLBACK_2(StageSelectScene::onButtonTouch, this));
+	selectButton->addTouchEventListener(CC_CALLBACK_2(StageSelectScene::onButtonTouch, this));
 
 	return true;
 }
@@ -93,7 +93,7 @@ void StageSelectScene::onButtonTouch(cocos2d::Ref * ref, cocos2d::ui::Widget::To
 	if (eventType == ui::Widget::TouchEventType::ENDED)
 	{
 		// 次のシーンを作成する
-		Scene* nextScene = PlayScene::createScene();
+		Scene* nextScene = PlayScene::create();
 
 		//フェードトランジション
 		nextScene = TransitionFade::create(1.0f, nextScene, Color3B(255, 255, 255));

@@ -43,12 +43,12 @@ bool TitleScene::init()
 
 	// 背景画像
 	Sprite* back = Sprite::create("background/back_title.png");
-	back->setPosition(480, 270);
+	back->setPosition(WINDOW_WIDTH_HERF, WINDOW_HEIGHT_HERF);
 	this->addChild(back);
 
 	// ボタン画像
 	ui::Button* m_tButton = ui::Button::create("object/start.png");
-	m_tButton->setPosition(Vec2(480, 100));
+	m_tButton->setPosition(Vec2(WINDOW_WIDTH_HERF, 128.0f));
 	m_tButton->setScale(1.5f);
 	this->addChild(m_tButton);
 
@@ -70,7 +70,7 @@ void TitleScene::onButtonTouch(cocos2d::Ref * ref, cocos2d::ui::Widget::TouchEve
 	if (eventType == ui::Widget::TouchEventType::ENDED)
 	{
 		// 次のシーンを作成する
-		Scene* nextScene = StageSelectScene::createScene();
+		Scene* nextScene = StageSelectScene::create();
 
 		//フェードトランジション
 		nextScene = TransitionFade::create(1.0f, nextScene, Color3B(255, 255, 255));

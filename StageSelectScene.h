@@ -13,7 +13,6 @@ class StageSelectScene : public cocos2d::Scene
 {
 private:
 	cocos2d::Sprite* m_pSprPlayer;
-	cocos2d::ui::Button* m_selectButton; //ボタン
 	
 	int m_playerGrpX;	// 画像のx座標
 	int m_time;			// 時間計測
