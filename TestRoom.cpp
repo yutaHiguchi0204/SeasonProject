@@ -7,7 +7,7 @@
 
 USING_NS_CC;
 
-bool Player::m_isJump;
+//bool Player::m_isJump;
 
 bool Test::init()
 {
