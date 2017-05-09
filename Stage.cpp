@@ -236,6 +236,7 @@ void Stage::SetTileInfoWithProperty(ValueMap map, int row, int col, KIND_TILE ti
 			id = static_cast<int>(TILE::SIGN_BOARD);
 		}
 		else if	(map["object"].asString() == "seasonBook")	id = static_cast<int>(TILE::SEASON_BOOK);
+		else if (map["clear"].asString() == "clear")		id = static_cast<int>(TILE::CLEAR);
 		else												id = static_cast<int>(TILE::NONE);
 
 		// オブジェクト数加算
@@ -499,23 +500,9 @@ void Stage::CheckButtonHighlighted(BUTTON button)
 			m_pPlayer->setFlippedX(false);
 
 			// プレイヤーの移動
-			/*if (m_pPlayer->getPositionX() < STAGE_WIDTH - SIZE_PLAYER_HERF)
+			if (m_pPlayer->getPositionX() < STAGE_WIDTH - SIZE_PLAYER_HERF)
 			{
 				m_pPlayer->Move(SPEED_MOVE_PLAYER);
-			}*/
-			m_pPlayer->Move(SPEED_MOVE_PLAYER);
-
-			// クリア判定
-			if (m_pPlayer->getPositionX() >= STAGE_WIDTH)
-			{
-				// 次のシーンを作成する
-				Scene* nextScene = ClearScene::create();
-
-				// フェードトランジション
-				nextScene = TransitionFade::create(1.0f, nextScene, Color3B(255, 255, 255));
-
-				// 次のシーンに移行
-				_director->replaceScene(nextScene);
 			}
 		}
 		// アクションボタン
@@ -613,10 +600,23 @@ void Stage::ActionObject(int objID)
 
 		break;
 
-	case static_cast<int>(TILE::SIGN_BOARD) :		// 看板と当たった場合
+	case static_cast<int>(TILE::SIGN_BOARD):		// 看板と当たった場合
 
 		// ボタンの画像を変える
 		PlayScene::m_pButton[static_cast<int>(BUTTON::ACTION)]->ChangeActionFlg(ACTION::SIGN_BOARD);
+
+		break;
+
+	case static_cast<int>(TILE::CLEAR) :				// クリアオブジェクトと当たった場合
+
+		// 次のシーンを作成する
+		Scene* nextScene = ClearScene::create();
+
+		// フェードトランジション
+		//nextScene = TransitionFade::create(1.0f, nextScene, Color3B(255, 255, 255));
+
+		// 次のシーンに移行
+		_director->replaceScene(nextScene);
 
 		break;
 	}

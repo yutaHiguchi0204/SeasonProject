@@ -49,7 +49,8 @@ enum class TILE				// ƒ^ƒCƒ‹
 	WATER,
 	SIGN_BOARD,
 	SEASON_BOOK,
-	POLLEN
+	POLLEN,
+	CLEAR
 };
 
 enum class COLLISION
