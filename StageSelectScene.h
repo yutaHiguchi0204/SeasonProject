@@ -7,9 +7,17 @@
 
 //ヘッダファイルのインクルード
 #include "GameManager.h"
+#include "ui/CocosGUI.h"
 
 class StageSelectScene : public cocos2d::Scene
 {
+private:
+	cocos2d::Sprite* m_pSprPlayer;
+	cocos2d::ui::Button* m_selectButton; //ボタン
+	
+	int m_playerGrpX;	// 画像のx座標
+	int m_time;			// 時間計測
+
 public:
 	CREATE_FUNC(StageSelectScene);
 	virtual bool init();
@@ -19,7 +27,9 @@ public:
 
 	void update(float delta);
 
-	bool onTouchBegan(cocos2d::Touch * touch, cocos2d::Event * pEvent);
+	void onButtonTouch(cocos2d::Ref* ref, cocos2d::ui::Widget::TouchEventType eventType);
+
+	void animationPlayer();	// プレイヤーアニメーション
 
 };
 
