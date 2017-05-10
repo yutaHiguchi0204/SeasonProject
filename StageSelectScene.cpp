@@ -1,6 +1,6 @@
 /* =====================================================================
 //! @param		「StageSelectScene」クラスのソースファイル
-//! @create		樋口　裕太
+//! @create		松丸　勇輝
 //! @date		17/05/01
 ===================================================================== */
 
@@ -47,19 +47,19 @@ bool StageSelectScene::init()
 	this->addChild(back);
 
 	// ボタン画像
-	cocos2d::ui::Button* selectButton = ui::Button::create("object/selectButton.png");
+	cocos2d::ui::Button* selectButton = cocos2d::ui::Button::create("object/selectButton.png");
 	selectButton->setPosition(Vec2(128.0f, 96.0f));
 	this->addChild(selectButton);
 
-	cocos2d::ui::Button* notSelectButton1 = ui::Button::create("object/Not_selectButton.png");
+	cocos2d::ui::Button* notSelectButton1 = cocos2d::ui::Button::create("object/Not_selectButton.png");
 	notSelectButton1->setPosition(Vec2(WINDOW_WIDTH - 128.0f, 192.0f));
 	this->addChild(notSelectButton1);
 
-	cocos2d::ui::Button* notSelectButton2 = ui::Button::create("object/Not_selectButton.png");
+	cocos2d::ui::Button* notSelectButton2 = cocos2d::ui::Button::create("object/Not_selectButton.png");
 	notSelectButton2->setPosition(Vec2(128.0f, WINDOW_HEIGHT - 192.0f));
 	this->addChild(notSelectButton2);
 
-	cocos2d::ui::Button* notSelectButton3 = ui::Button::create("object/Not_selectButton.png");
+	cocos2d::ui::Button* notSelectButton3 = cocos2d::ui::Button::create("object/Not_selectButton.png");
 	notSelectButton3->setPosition(Vec2(WINDOW_WIDTH - 128.0f, WINDOW_HEIGHT - 96.0f));
 	this->addChild(notSelectButton3);
 
