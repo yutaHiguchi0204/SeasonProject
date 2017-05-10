@@ -613,7 +613,7 @@ void Stage::ActionObject(int objID)
 		Scene* nextScene = ClearScene::create();
 
 		// フェードトランジション
-		nextScene = TransitionFade::create(1.0f, nextScene, Color3B(255, 255, 255));
+		//nextScene = TransitionFade::create(1.0f, nextScene, Color3B(255, 255, 255));
 
 		// 次のシーンに移行
 		_director->replaceScene(nextScene);
