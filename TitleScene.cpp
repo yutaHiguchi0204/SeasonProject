@@ -48,7 +48,7 @@ bool TitleScene::init()
 
 	// ƒ{ƒ^ƒ“‰æ‘œ
 	ui::Button* m_tButton = ui::Button::create("object/start.png");
-	m_tButton->setPosition(Vec2(WINDOW_WIDTH_HERF, 128.0f));
+	m_tButton->setPosition(Vec2(WINDOW_WIDTH - 192.0f, 64.0f));
 	m_tButton->setScale(1.5f);
 	this->addChild(m_tButton);
 
