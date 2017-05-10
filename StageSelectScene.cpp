@@ -42,7 +42,7 @@ bool StageSelectScene::init()
 	// XVˆ—€”õ
 	scheduleUpdate();
 
-	Sprite* back = Sprite::create("background/back_spring.png");
+	Sprite* back = Sprite::create("background/back_stageSelect.png");
 	back->setPosition(480, 270);
 	this->addChild(back);
 
