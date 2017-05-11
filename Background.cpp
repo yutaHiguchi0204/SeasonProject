@@ -23,7 +23,7 @@ bool Background::init()
 	setTexture("background/back_spring.png");
 
 	// プリセットの初期設定
-	m_pParticle = ParticleSystemQuad::create("background/particle_spring.plist");
+	m_pParticle = ParticleSystemQuad::create("particle/particle_spring.plist");
 
 	// パーティクルのメモリリーク回避
 	m_pParticle->setAutoRemoveOnFinish(true);
@@ -72,10 +72,9 @@ void Background::Change(int season)
 		//パーティクルの表示
 		m_pParticle->setVisible(true);
 
-		sFileName << "background/particle_" << SEASON_NAME[season] << ".plist";
+		sFileName << "particle/particle_" << SEASON_NAME[season] << ".plist";
 
 		// パーティクルの変更
 		m_pParticle->initWithFile(sFileName.str());
-
 	}
 }
