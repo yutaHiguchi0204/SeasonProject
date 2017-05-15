@@ -8,7 +8,6 @@
 #include "StageSelectScene.h"
 #include "PlayScene.h"
 
-
 // 名前空間
 USING_NS_CC;
 using namespace std;
@@ -42,6 +41,10 @@ bool StageSelectScene::init()
 	// 更新処理準備
 	scheduleUpdate();
 
+	// メンバ変数の初期化
+	m_stageID = static_cast<int>(STAGE::FLOWER);
+
+	// 背景
 	Sprite* back = Sprite::create("background/back_stageSelect.png");
 	back->setPosition(480, 270);
 	this->addChild(back);
@@ -72,6 +75,26 @@ bool StageSelectScene::init()
 	EventListenerTouchOneByOne* listener = EventListenerTouchOneByOne::create();
 	selectButton->addTouchEventListener(CC_CALLBACK_2(StageSelectScene::onButtonTouch, this));
 
+	/// デバッグ用
+	keyListener = EventListenerKeyboard::create();
+	keyListener->onKeyPressed = [](EventKeyboard::KeyCode keyCode, Event* keyEvent)
+	{
+		if (keyCode == EventKeyboard::KeyCode::KEY_LEFT_ARROW)
+		{
+			m_stageID--;
+			if (m_stageID < static_cast<int>(STAGE::FLOWER)) m_stageID = static_cast<int>(STAGE::MOON);
+		}
+		else if (keyCode == EventKeyboard::KeyCode::KEY_RIGHT_ARROW)
+		{
+			m_stageID++;
+			if (m_stageID > static_cast<int>(STAGE::MOON)) m_stageID = static_cast<int>(STAGE::FLOWER);
+		}
+	};
+	this->getEventDispatcher()->addEventListenerWithSceneGraphPriority(keyListener, this);
+	text = Label::createWithSystemFont(STAGE_NAME[m_stageID], "Arial", 48);
+	text->setPosition(Vec2(WINDOW_WIDTH - 64.0f, 64.0f));
+	this->addChild(text);
+
 	return true;
 }
 
@@ -86,6 +109,8 @@ void StageSelectScene::update(float delta)
 	// 時間計測
 	m_time++;
 
+	/// デバッグ用 ///
+	text->setString(STAGE_NAME[m_stageID]);
 }
 
 void StageSelectScene::onButtonTouch(cocos2d::Ref * ref, cocos2d::ui::Widget::TouchEventType eventType)

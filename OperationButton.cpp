@@ -6,8 +6,6 @@
 
 // ヘッダファイルのインクルード
 #include "OperationButton.h"
-#include <fstream>
-#include <sstream>
 #include "PlayScene.h"
 
 // 名前空間

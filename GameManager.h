@@ -12,7 +12,8 @@
 const int				NUM_ROW					= 17;														// 行数
 const int				NUM_COLUMN				= 120;														// 列数
 const int				NUM_BUTTON				= 4;														// ボタン数
-const int				NUM_SEASON				= 4;														// 季節
+const int				NUM_STAGE				= 4;														// ステージ数
+const int				NUM_SEASON				= 4;														// 季節数
 const int				NUM_SECOND				= 60;														// １秒
 const float				WINDOW_WIDTH			= 960.0f;													// 画面の幅
 const float				WINDOW_HEIGHT			= 540.0f;													// 画面の高さ
@@ -26,6 +27,13 @@ const float				NUM_GRAVITY				= 0.4f;														// 重力
 const float				NUM_WATER_GRAVITY		= 0.05f;													// 浮力（水の重力）
 const cocos2d::Vec2		WINDOW_MIDDLE			= cocos2d::Vec2(WINDOW_WIDTH_HERF, WINDOW_HEIGHT_HERF);		// 画面の中心
 
+const std::string STAGE_NAME[NUM_STAGE] = {				// ステージ名
+	"flower",
+	"bird",
+	"wind",
+	"moon"
+};
+
 const std::string SEASON_NAME[NUM_SEASON] = {			// 季節名
 	"spring",
 	"summer",
@@ -34,6 +42,14 @@ const std::string SEASON_NAME[NUM_SEASON] = {			// 季節名
 };
 
 // 列挙型
+enum class STAGE			// ステージ
+{
+	FLOWER,
+	BIRD,
+	WIND,
+	MOON
+};
+
 enum class SEASON			// 季節
 {
 	SPRING,

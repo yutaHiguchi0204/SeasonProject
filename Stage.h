@@ -93,4 +93,11 @@ public:
 	static bool m_leftFlag;																		// 衝突判定用フラグ（左）
 	static bool m_rightFlag;																	// 衝突判定用フラグ（右）
 	static bool m_isPause;																		// ポーズ中かどうか
+
+
+	/// デバッグ用
+	void onKeyPressed(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Event* event);
+	void onKeyReleased(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Event* event);
+	cocos2d::EventListenerKeyboard* keyListener;
+	bool keyLeft, keyRight;
 };

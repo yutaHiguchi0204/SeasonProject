@@ -8,6 +8,7 @@
 #include "Player.h"
 #include "PlayScene.h"
 #include "Stage.h"
+#include "StageSelectScene.h"
 
 // –¼‘O‹óŠÔ
 USING_NS_CC;
@@ -33,7 +34,7 @@ bool Player::init()
 	m_isJump = false;
 	m_isDive = false;
 	m_time = 0;
-	m_numBookmark = 1;
+	m_numBookmark = StageSelectScene::m_stageID + 1;
 
 	return true;
 }

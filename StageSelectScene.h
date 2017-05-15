@@ -30,5 +30,12 @@ public:
 
 	void animationPlayer();	// プレイヤーアニメーション
 
+	// 静的メンバ
+	static int m_stageID;
+
+
+	/// デバッグ用メンバ変数
+	cocos2d::EventListenerKeyboard* keyListener;
+	cocos2d::Label* text;
 };
 

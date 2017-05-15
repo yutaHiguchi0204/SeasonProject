@@ -8,12 +8,14 @@
 #include "Stage.h"
 #include "ClearScene.h"
 #include "PlayScene.h"
+#include "StageSelectScene.h"
 
 // 名前空間
 USING_NS_CC;
 
 // 静的メンバの定義
 OperationButton* PlayScene::m_pButton[NUM_BUTTON];
+int StageSelectScene::m_stageID;
 int Player::m_numBookmark;
 bool Pollen::m_isPollenFlg;
 
@@ -45,7 +47,9 @@ bool Stage::init()
 	this->addChild(m_pBack);
 
 	// マップ描画
-	m_pMap = TMXTiledMap::create("mapData/map_flower.tmx");
+	std::stringstream sTMXFileName;
+	sTMXFileName << "mapData/map_" << STAGE_NAME[StageSelectScene::m_stageID] << ".tmx";
+	m_pMap = TMXTiledMap::create(sTMXFileName.str());
 	m_pMap->setAnchorPoint(Vec2(0, 0));
 	m_pMap->setPosition(Vec2(0, 0));
 	this->addChild(m_pMap);
@@ -59,7 +63,9 @@ bool Stage::init()
 	m_pSeasonBook = nullptr;
 
 	// レイヤー設定
-	for (int i = 0; i < NUM_SEASON - 2; i++)
+	int numLayer = Player::m_numBookmark + 1;
+	if (numLayer >= NUM_SEASON) numLayer = NUM_SEASON;
+	for (int i = 0; i < numLayer; i++)
 	{
 		std::stringstream sFileName;
 		sFileName << "tileLayer_" << SEASON_NAME[i];
@@ -86,13 +92,21 @@ bool Stage::init()
 	m_pMapObjectLayer = m_pMap->getLayer("objectLayer");
 
 	// レイヤー情報の設定
-	SetLayerInfo();
+	ReSetLayerInfo();
 
 	// 説明盤のＩＤ登録
 	SetSignBoardID();
 
 	// 新しい季節のしおりがマップ上にあれば描画
 	SetNewBookmark();
+
+
+	/// デバッグ用
+	keyListener = EventListenerKeyboard::create();
+	keyListener->onKeyPressed = CC_CALLBACK_2(Stage::onKeyPressed, this);
+	keyListener->onKeyReleased = CC_CALLBACK_2(Stage::onKeyReleased, this);
+	this->getEventDispatcher()->addEventListenerWithSceneGraphPriority(keyListener, this);
+	keyLeft = false;	keyRight = false;
 
 	return true;
 }
@@ -108,6 +122,38 @@ void Stage::update(float delta)
 	if (m_season != m_seasonBefore)
 	{
 		ChangeSeason();
+	}
+
+
+	/// デバッグ用
+	if (!Stage::m_isPause)
+	{
+		// ボタンが押されていたらプレイヤーを移動させる
+		if (!Stage::m_isShowObject)
+		{
+			if (keyLeft && !m_leftFlag)
+			{
+				// プレイヤーの向きを設定
+				m_pPlayer->setFlippedX(true);
+
+				// プレイヤーの移動
+				if (m_pPlayer->getPositionX() > SIZE_PLAYER_HERF)
+				{
+					m_pPlayer->Move(-SPEED_MOVE_PLAYER);
+				}
+			}
+			if (keyRight && !m_rightFlag)
+			{
+				// プレイヤーの向きを設定
+				m_pPlayer->setFlippedX(false);
+
+				// プレイヤーの移動
+				if (m_pPlayer->getPositionX() < STAGE_WIDTH - SIZE_PLAYER_HERF)
+				{
+					m_pPlayer->Move(SPEED_MOVE_PLAYER);
+				}
+			}
+		}
 	}
 }
 
@@ -295,14 +341,25 @@ void Stage::SetSignBoardID()
 ===================================================================== */
 void Stage::SetNewBookmark()
 {
-	// ステージによって作るしおりを変更
-
-	if (Player::m_numBookmark - 1 < static_cast<int>(SEASON::SUMMER))
+	switch (StageSelectScene::m_stageID)
 	{
-		m_pNewBookmark = Sprite::create("object/sprBookMark_summer.png");
-		m_pNewBookmark->retain();
+	case static_cast<int>(STAGE::FLOWER):				// 花ステージの設定
+		m_pNewBookmark = Sprite::create("object/sprBookmark_summer.png");
 		m_pNewBookmark->setPosition(Vec2(20 * SIZE_TILE - 16.0f, 10 * SIZE_TILE - 16.0f));
 		this->addChild(m_pNewBookmark);
+		break;
+
+	case static_cast<int>(STAGE::BIRD) :				// 鳥ステージの設定
+		m_pNewBookmark = Sprite::create("object/sprBookmark_autumn.png");
+		m_pNewBookmark->setPosition(Vec2(9 * SIZE_TILE - 16.0f, 7 * SIZE_TILE - 16.0f));
+		this->addChild(m_pNewBookmark);
+		break;
+
+	case static_cast<int>(STAGE::WIND) :				// 風ステージの設定
+		m_pNewBookmark = Sprite::create("object/sprBookmark_winter.png");
+		m_pNewBookmark->setPosition(Vec2(9 * SIZE_TILE - 16.0f, 7 * SIZE_TILE - 16.0f));
+		this->addChild(m_pNewBookmark);
+		break;
 	}
 }
 
@@ -464,7 +521,6 @@ void Stage::CheckCollision()
 			// 季節のしおりの持ち数を増やす
 			Player::m_numBookmark++;
 
-			m_pNewBookmark->release();
 			m_pNewBookmark->removeFromParent();
 			m_pNewBookmark = nullptr;
 		}
@@ -619,5 +675,46 @@ void Stage::ActionObject(int objID)
 		_director->replaceScene(nextScene);
 
 		break;
+	}
+}
+
+/* =====================================================================
+//! 内　容		キーデバッグ
+//! 引　数		いろいろ
+//! 戻り値		なし
+===================================================================== */
+void Stage::onKeyPressed(EventKeyboard::KeyCode keyCode, Event* event)
+{
+	if (!Stage::m_isPause)
+	{
+		// ボタンが押されていたらプレイヤーを移動させる
+		if (!Stage::m_isShowObject)
+		{
+			if (keyCode == EventKeyboard::KeyCode::KEY_LEFT_ARROW && !m_leftFlag)
+			{
+				keyLeft = true;
+			}
+			if (keyCode == EventKeyboard::KeyCode::KEY_RIGHT_ARROW && !m_rightFlag)
+			{
+				keyRight = true;
+			}
+		}
+	}
+}
+
+/* =====================================================================
+//! 内　容		キーデバッグ
+//! 引　数		いろいろ
+//! 戻り値		なし
+===================================================================== */
+void Stage::onKeyReleased(EventKeyboard::KeyCode keyCode, Event* event)
+{
+	if (keyCode == EventKeyboard::KeyCode::KEY_LEFT_ARROW)
+	{
+		keyLeft = false;
+	}
+	if (keyCode == EventKeyboard::KeyCode::KEY_RIGHT_ARROW)
+	{
+		keyRight = false;
 	}
 }
