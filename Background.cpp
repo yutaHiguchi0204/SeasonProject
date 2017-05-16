@@ -38,7 +38,7 @@ bool Background::init()
 	this->addChild(m_pParticle);
 
 	// 位置の初期設定
-	setPosition(WINDOW_MIDDLE);
+	setPosition(STAGE_MIDDLE);
 
 	return true;
 }
@@ -77,4 +77,14 @@ void Background::Change(int season)
 		// パーティクルの変更
 		m_pParticle->initWithFile(sFileName.str());
 	}
+}
+
+/* =====================================================================
+//! 内　容		パーティクルのスクロール
+//! 引　数		カメラの座標x（float）
+//! 戻り値		なし
+===================================================================== */
+void Background::ParticleScroll(float cameraX)
+{
+	m_pParticle->setPositionX(cameraX);
 }

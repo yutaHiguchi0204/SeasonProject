@@ -406,8 +406,8 @@ void Stage::Scroll()
 	// はみ出し確認
 	if (m_pPlayer->getPositionX() >= CAMERA_BORDER && m_pPlayer->getPositionX() <= STAGE_WIDTH - CAMERA_BORDER)
 	{
-		// 背景移動
-		m_pBack->setPositionX(GetCameraPosX());
+		// パーティクル移動
+		m_pBack->ParticleScroll(GetCameraPosX());
 
 		// 花粉移動
 		if (Pollen::m_isPollenFlg)
