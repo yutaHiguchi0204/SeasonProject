@@ -37,10 +37,10 @@ const std::string STAGE_NAME[NUM_STAGE] = {				// ステージ名
 };
 
 const std::string SEASON_NAME[NUM_SEASON] = {			// 季節名
+	"winter",
 	"spring",
 	"summer",
-	"autumn",
-	"winter"
+	"autumn"
 };
 
 // 列挙型
@@ -54,10 +54,10 @@ enum class STAGE			// ステージ
 
 enum class SEASON			// 季節
 {
+	WINTER,
 	SPRING,
 	SUMMER,
-	AUTUMN,
-	WINTER
+	AUTUMN
 };
 
 enum class TILE				// タイル
@@ -68,6 +68,7 @@ enum class TILE				// タイル
 	SIGN_BOARD,
 	SEASON_BOOK,
 	POLLEN,
+	SAND,
 	CLEAR
 };
 

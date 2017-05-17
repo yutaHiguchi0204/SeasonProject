@@ -20,10 +20,10 @@ bool Background::init()
 	}
 
 	// 画像の初期設定
-	setTexture("background/back_spring.png");
+	setTexture("background/back_winter.png");
 
 	// プリセットの初期設定
-	m_pParticle = ParticleSystemQuad::create("particle/particle_spring.plist");
+	m_pParticle = ParticleSystemQuad::create("particle/particle_winter.plist");
 
 	// パーティクルのメモリリーク回避
 	m_pParticle->setAutoRemoveOnFinish(true);

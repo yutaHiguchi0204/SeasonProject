@@ -32,7 +32,7 @@ bool Stage::init()
 	scheduleUpdate();
 
 	// メンバの初期設定
-	m_season = static_cast<int>(SEASON::SPRING);		// 季節
+	m_season = static_cast<int>(SEASON::WINTER);		// 季節
 	m_seasonBefore = m_season;							// 季節の確定
 	m_isShowObject = false;								// オブジェクトを参照しているかどうか
 	m_isPause = false;									// ポーズ中かどうか
@@ -344,19 +344,19 @@ void Stage::SetNewBookmark()
 	switch (StageSelectScene::m_stageID)
 	{
 	case static_cast<int>(STAGE::FLOWER):				// 花ステージの設定
-		m_pNewBookmark = Sprite::create("object/sprBookmark_summer.png");
+		m_pNewBookmark = Sprite::create("object/sprBookmark_winter.png");
 		m_pNewBookmark->setPosition(Vec2(20 * SIZE_TILE - 16.0f, 10 * SIZE_TILE - 16.0f));
 		this->addChild(m_pNewBookmark);
 		break;
 
 	case static_cast<int>(STAGE::BIRD) :				// 鳥ステージの設定
-		m_pNewBookmark = Sprite::create("object/sprBookmark_autumn.png");
+		m_pNewBookmark = Sprite::create("object/sprBookmark_summer.png");
 		m_pNewBookmark->setPosition(Vec2(9 * SIZE_TILE - 16.0f, 7 * SIZE_TILE - 16.0f));
 		this->addChild(m_pNewBookmark);
 		break;
 
 	case static_cast<int>(STAGE::WIND) :				// 風ステージの設定
-		m_pNewBookmark = Sprite::create("object/sprBookmark_winter.png");
+		m_pNewBookmark = Sprite::create("object/sprBookmark_autumn.png");
 		m_pNewBookmark->setPosition(Vec2(9 * SIZE_TILE - 16.0f, 7 * SIZE_TILE - 16.0f));
 		this->addChild(m_pNewBookmark);
 		break;
