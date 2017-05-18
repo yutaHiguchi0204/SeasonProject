@@ -44,18 +44,18 @@ bool OperationButton::init(BUTTON button)
 	{
 	case BUTTON::LEFT:
 		loadTextureNormal("object/button_arrow.png");
-		setPosition(Vec2(96.0f, 96.0f));
+		setPosition(Vec2(96.0f, 80.0f));
 		break;
 
 	case BUTTON::RIGHT:
 		loadTextureNormal("object/button_arrow.png");
-		setPosition(Vec2(288.0f, 96.0f));
+		setPosition(Vec2(288.0f, 80.0f));
 		setFlippedX(true);
 		break;
 
 	case BUTTON::ACTION:
 		loadTextureNormal("object/button_action.png");
-		setPosition(Vec2(WINDOW_WIDTH - 96.0f, 96.0f));
+		setPosition(Vec2(WINDOW_WIDTH - 96.0f, 80.0f));
 		break;
 
 	case BUTTON::PAUSE:
