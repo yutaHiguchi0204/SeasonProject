@@ -9,6 +9,8 @@
 #include "GameManager.h"
 #include "ui/CocosGUI.h"
 
+const int STAGEMAX_NUM = 4;	//ステージ用の配列
+
 class StageSelectScene : public cocos2d::Scene
 {
 private:
@@ -26,16 +28,27 @@ public:
 
 	void update(float delta);
 
-	void onButtonTouch(cocos2d::Ref* ref, cocos2d::ui::Widget::TouchEventType eventType);
+	void onButtonTouch(cocos2d::Ref* ref, cocos2d::ui::Widget::TouchEventType eventType)  { if (eventType == cocos2d::ui::Widget::TouchEventType::BEGAN){ m_touchID = 0;CharactorMove();} }
+	void onButtonTouch2(cocos2d::Ref* ref, cocos2d::ui::Widget::TouchEventType eventType) { if (eventType == cocos2d::ui::Widget::TouchEventType::BEGAN){ m_touchID = 1;CharactorMove();} }
+	void onButtonTouch3(cocos2d::Ref* ref, cocos2d::ui::Widget::TouchEventType eventType) { if (eventType == cocos2d::ui::Widget::TouchEventType::BEGAN){ m_touchID = 2;CharactorMove();} }
+	void onButtonTouch4(cocos2d::Ref* ref, cocos2d::ui::Widget::TouchEventType eventType) { if (eventType == cocos2d::ui::Widget::TouchEventType::BEGAN){ m_touchID = 3;CharactorMove();} }
+
 
 	void animationPlayer();	// プレイヤーアニメーション
+
+	void CharactorMove();	//プレイヤーの移動
 
 	// 静的メンバ
 	static int m_stageID;
 
+	//タッチしたID
+	int m_touchID;
+
+	cocos2d::ui::Button* selectButton[STAGEMAX_NUM];
 
 	/// デバッグ用メンバ変数
 	cocos2d::EventListenerKeyboard* keyListener;
 	cocos2d::Label* text;
+
 };
 

@@ -43,6 +43,7 @@ bool StageSelectScene::init()
 
 	// メンバ変数の初期化
 	m_stageID = static_cast<int>(STAGE::FLOWER);
+	m_touchID = 0;
 
 	// 背景
 	Sprite* back = Sprite::create("background/back_stageSelect.png");
@@ -50,56 +51,34 @@ bool StageSelectScene::init()
 	this->addChild(back);
 
 	// ボタン画像
-	cocos2d::ui::Button* selectButton = cocos2d::ui::Button::create("object/selectButton.png");
-	selectButton->setPosition(Vec2(128.0f, 96.0f));
-	this->addChild(selectButton);
-
-	cocos2d::ui::Button* notSelectButton1 = cocos2d::ui::Button::create("object/Not_selectButton.png");
-	notSelectButton1->setPosition(Vec2(WINDOW_WIDTH - 128.0f, 192.0f));
-	this->addChild(notSelectButton1);
-
-	cocos2d::ui::Button* notSelectButton2 = cocos2d::ui::Button::create("object/Not_selectButton.png");
-	notSelectButton2->setPosition(Vec2(128.0f, WINDOW_HEIGHT - 192.0f));
-	this->addChild(notSelectButton2);
-
-	cocos2d::ui::Button* notSelectButton3 = cocos2d::ui::Button::create("object/Not_selectButton.png");
-	notSelectButton3->setPosition(Vec2(WINDOW_WIDTH - 128.0f, WINDOW_HEIGHT - 96.0f));
-	this->addChild(notSelectButton3);
-
+	for (int i = 0; i < STAGEMAX_NUM; i++)
+	{
+		selectButton[i]= cocos2d::ui::Button::create("object/selectButton.png");
+		selectButton[i]->setPosition(Vec2(i % 2 * 704.0f + 128.0f, i*88.0f + 96.0f));
+		addChild(selectButton[i]);
+	}
+	
 	// プレイヤー
 	m_pSprPlayer = Sprite::create("object/player.png");
-	m_pSprPlayer->setPosition(selectButton->getPosition());
+	m_pSprPlayer->setPosition(selectButton[static_cast<int> (STAGE::FLOWER)]->getPosition());
 	this->addChild(m_pSprPlayer);
 
 	// タッチイベントリスナーを作成
 	EventListenerTouchOneByOne* listener = EventListenerTouchOneByOne::create();
-	selectButton->addTouchEventListener(CC_CALLBACK_2(StageSelectScene::onButtonTouch, this));
 
-	/// デバッグ用
-	keyListener = EventListenerKeyboard::create();
-	keyListener->onKeyPressed = [](EventKeyboard::KeyCode keyCode, Event* keyEvent)
-	{
-		if (keyCode == EventKeyboard::KeyCode::KEY_LEFT_ARROW)
-		{
-			m_stageID--;
-			if (m_stageID < static_cast<int>(STAGE::FLOWER)) m_stageID = static_cast<int>(STAGE::MOON);
-		}
-		else if (keyCode == EventKeyboard::KeyCode::KEY_RIGHT_ARROW)
-		{
-			m_stageID++;
-			if (m_stageID > static_cast<int>(STAGE::MOON)) m_stageID = static_cast<int>(STAGE::FLOWER);
-		}
-	};
-	this->getEventDispatcher()->addEventListenerWithSceneGraphPriority(keyListener, this);
-	text = Label::createWithSystemFont(STAGE_NAME[m_stageID], "Arial", 48);
-	text->setPosition(Vec2(WINDOW_WIDTH - 64.0f, 64.0f));
-	this->addChild(text);
+	
+	
+	selectButton[0]->addTouchEventListener(CC_CALLBACK_2(StageSelectScene::onButtonTouch, this));
+	selectButton[1]->addTouchEventListener(CC_CALLBACK_2(StageSelectScene::onButtonTouch2, this));
+	selectButton[2]->addTouchEventListener(CC_CALLBACK_2(StageSelectScene::onButtonTouch3, this));
+	selectButton[3]->addTouchEventListener(CC_CALLBACK_2(StageSelectScene::onButtonTouch4, this));
 
 	return true;
 }
 
 void StageSelectScene::update(float delta)
 {
+	
 	// プレイヤーアニメーション
 	if (m_time % SPEED_ANIMATION == 0) animationPlayer();
 
@@ -109,13 +88,22 @@ void StageSelectScene::update(float delta)
 	// 時間計測
 	m_time++;
 
-	/// デバッグ用 ///
-	text->setString(STAGE_NAME[m_stageID]);
 }
 
-void StageSelectScene::onButtonTouch(cocos2d::Ref * ref, cocos2d::ui::Widget::TouchEventType eventType)
+// プレイヤーアニメーション
+void StageSelectScene::animationPlayer()
 {
-	if (eventType == ui::Widget::TouchEventType::ENDED)
+	m_playerGrpX += SIZE_PLAYER;
+	if (m_playerGrpX >= SIZE_PLAYER * 3)
+	{
+		m_playerGrpX = 0;
+	}
+}
+
+//プレイヤーの移動
+void StageSelectScene::CharactorMove()
+{
+	if (m_pSprPlayer->getPosition() == selectButton[m_touchID]->getPosition())
 	{
 		// 次のシーンを作成する
 		Scene* nextScene = PlayScene::create();
@@ -125,14 +113,43 @@ void StageSelectScene::onButtonTouch(cocos2d::Ref * ref, cocos2d::ui::Widget::To
 
 		// 次のシーンに移行
 		_director->replaceScene(nextScene);
-	}
-}
 
-void StageSelectScene::animationPlayer()
-{
-	m_playerGrpX += SIZE_PLAYER;
-	if (m_playerGrpX >= SIZE_PLAYER * 3)
-	{
-		m_playerGrpX = 0;
+		return;
 	}
+
+	MoveTo* move_action[STAGEMAX_NUM - 1];
+	
+	int move_distance = m_touchID - m_stageID ;
+
+
+	for (int i = 0; i < STAGEMAX_NUM - 1; i++)
+	{
+		move_action[i] = nullptr;
+	}
+
+	if (move_distance > 0)
+	{
+
+		for (int i = 0; i < move_distance; i++)
+		{
+
+			move_action[i] = MoveTo::create(1.0f, selectButton[m_stageID + i + 1]->getPosition());
+
+		}
+	}
+	else
+	{
+		move_distance *= -1;
+
+		for (int i = 0; i < move_distance; i++)
+		{
+			move_action[i] = MoveTo::create(1.0f, selectButton[m_stageID - i - 1]->getPosition());
+		}
+	}
+
+	Sequence* move_action_sequence = Sequence::create(move_action[0], move_action[1], move_action[2],  nullptr);
+	m_pSprPlayer->runAction(move_action_sequence);
+
+	m_stageID = m_touchID;
+
 }
