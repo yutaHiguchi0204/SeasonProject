@@ -66,8 +66,6 @@ bool StageSelectScene::init()
 	// タッチイベントリスナーを作成
 	EventListenerTouchOneByOne* listener = EventListenerTouchOneByOne::create();
 
-	
-	
 	selectButton[0]->addTouchEventListener(CC_CALLBACK_2(StageSelectScene::onButtonTouch, this));
 	selectButton[1]->addTouchEventListener(CC_CALLBACK_2(StageSelectScene::onButtonTouch2, this));
 	selectButton[2]->addTouchEventListener(CC_CALLBACK_2(StageSelectScene::onButtonTouch3, this));
