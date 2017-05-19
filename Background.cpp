@@ -32,7 +32,7 @@ bool Background::init()
 	m_pParticle->resetSystem();
 
 	// パーティクルの座標設定（左上）
-	m_pParticle->setPosition(WINDOW_WIDTH / 3, WINDOW_HEIGHT);
+	m_pParticle->setPosition(WINDOW_WIDTH / 4, WINDOW_HEIGHT);
 
 	// パーティクルをノードにつなぐ
 	this->addChild(m_pParticle);

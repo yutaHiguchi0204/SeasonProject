@@ -118,9 +118,8 @@ void StageSelectScene::CharactorMove()
 	}
 
 	MoveTo* move_action[STAGEMAX_NUM - 1];
-	
-	int move_distance = m_touchID - m_stageID ;
 
+	int move_distance = m_touchID - m_stageID;
 
 	for (int i = 0; i < STAGEMAX_NUM - 1; i++)
 	{
@@ -147,9 +146,19 @@ void StageSelectScene::CharactorMove()
 		}
 	}
 
-	Sequence* move_action_sequence = Sequence::create(move_action[0], move_action[1], move_action[2],  nullptr);
-	m_pSprPlayer->runAction(move_action_sequence);
+	m_move_action_sequence = Sequence::create(move_action[0], move_action[1], move_action[2], nullptr);
 
-	m_stageID = m_touchID;
+	if (m_pSprPlayer->getActionByTag(1))
+	{
+
+	}
+	else
+	{
+		m_pSprPlayer->stopActionByTag(1);
+		m_move_action_sequence->setTag(1);
+		m_pSprPlayer->runAction(m_move_action_sequence);
+
+		m_stageID = m_touchID;
+	}
 
 }

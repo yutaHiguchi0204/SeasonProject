@@ -18,7 +18,6 @@ private:
 	
 	int m_playerGrpX;	// 画像のx座標
 	int m_time;			// 時間計測
-
 public:
 	CREATE_FUNC(StageSelectScene);
 	virtual bool init();
@@ -45,10 +44,7 @@ public:
 	int m_touchID;
 
 	cocos2d::ui::Button* selectButton[STAGEMAX_NUM];
-
-	/// デバッグ用メンバ変数
-	cocos2d::EventListenerKeyboard* keyListener;
-	cocos2d::Label* text;
+	cocos2d::Sequence* m_move_action_sequence;	//Sequenceアクション
 
 };
 
