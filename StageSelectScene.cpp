@@ -54,13 +54,13 @@ bool StageSelectScene::init()
 	for (int i = 0; i < STAGEMAX_NUM; i++)
 	{
 		selectButton[i]= cocos2d::ui::Button::create("object/selectButton.png");
-		selectButton[i]->setPosition(Vec2(i % 2 * 704.0f + 128.0f, i*88.0f + 96.0f));
+		selectButton[i]->setPosition(Vec2(i % 2 * 704.0f + 128.0f, i * 88.0f + 96.0f));
 		addChild(selectButton[i]);
 	}
 	
 	// プレイヤー
-	m_pSprPlayer = Sprite::create("object/player.png");
-	m_pSprPlayer->setPosition(selectButton[static_cast<int> (STAGE::FLOWER)]->getPosition());
+	m_pSprPlayer = Sprite::create("object/player1.png");
+	m_pSprPlayer->setPosition(selectButton[static_cast<int>(STAGE::FLOWER)]->getPosition());
 	this->addChild(m_pSprPlayer);
 
 	// タッチイベントリスナーを作成
@@ -148,11 +148,7 @@ void StageSelectScene::CharactorMove()
 
 	m_move_action_sequence = Sequence::create(move_action[0], move_action[1], move_action[2], nullptr);
 
-	if (m_pSprPlayer->getActionByTag(1))
-	{
-
-	}
-	else
+	if (!m_pSprPlayer->getActionByTag(1))
 	{
 		m_pSprPlayer->stopActionByTag(1);
 		m_move_action_sequence->setTag(1);
