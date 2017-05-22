@@ -44,7 +44,11 @@ bool Stage::init()
 
 	// 背景
 	m_pBack = Background::create();
-	this->addChild(m_pBack);
+	this->addChild(m_pBack,-1);
+
+	//パーティクル
+	m_pParticle = Particle::create();
+	this->addChild(m_pParticle);
 
 	// マップ描画
 	std::stringstream sTMXFileName;
@@ -121,6 +125,7 @@ void Stage::update(float delta)
 	// 季節の変更
 	if (m_season != m_seasonBefore)
 	{
+		m_pParticle->removeFromParent();
 		ChangeSeason();
 	}
 
@@ -376,6 +381,8 @@ void Stage::ChangeSeason()
 
 	// 背景を変える
 	m_pBack->Change(m_season);
+	m_pParticle = Particle::create();
+	this->addChild(m_pParticle,-1);
 
 	// レイヤー情報の再設定
 	ReSetLayerInfo();
@@ -407,7 +414,7 @@ void Stage::Scroll()
 	if (m_pPlayer->getPositionX() >= CAMERA_BORDER && m_pPlayer->getPositionX() <= STAGE_WIDTH - CAMERA_BORDER)
 	{
 		// パーティクル移動
-		m_pBack->ParticleScroll(GetCameraPosX());
+		m_pParticle->ParticleScroll(GetCameraPosX());
 
 		// 花粉移動
 		if (Pollen::m_isPollenFlg)

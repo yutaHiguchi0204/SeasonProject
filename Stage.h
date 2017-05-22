@@ -8,6 +8,7 @@
 // ヘッダファイルのインクルード
 #include <vector>
 #include "Background.h"
+#include "Particle.h"
 #include "GameManager.h"
 #include "OperationButton.h"
 #include "Pause.h"
@@ -42,6 +43,7 @@ private:
 	int m_numGimmicks;									// 総ギミック数
 
 	Background* m_pBack;								// 背景
+	Particle* m_pParticle;								//パーティクル
 	Player* m_pPlayer;									// プレイヤー
 	SeasonBook* m_pSeasonBook;							// 季節記
 	Pollen* m_pPollen;									// 花粉
