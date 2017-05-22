@@ -9,10 +9,33 @@
 
 USING_NS_CC;
 
-//オブジェクト番号の取得
-int SignBoard::GetObjectNumber()
+// 初期化
+bool SignBoard::init()
 {
-	return m_objNumber;
+	if (!Sprite::init())
+	{
+		return false;
+	}
+
+	// 説明盤の生成
+	m_blackBoard = Sprite::create();
+	m_blackBoard->setVisible(false);
+	this->addChild(m_blackBoard);
+
+	// 閉じるボタンの生成
+	m_pButtonClose = cocos2d::ui::Button::create("object/button_close.png");
+	m_pButtonClose->setPositionY(160.0f);
+	m_pButtonClose->setVisible(false);
+	this->addChild(m_pButtonClose);
+
+	// 閉じるボタンが押された時
+	m_pButtonClose->addClickEventListener([&](Ref* ref)
+	{
+		EnabledBlackBoard(false);
+		Stage::m_isShowObject = false;
+	});
+
+	return true;
 }
 
 //オブジェクト番号の追加(int)
@@ -51,32 +74,3 @@ void SignBoard::SetBlackBoardTexture(int num)
 	//看板のファイルを追加
 	m_blackBoard->setTexture(sFileName.str());
 }
-
-bool SignBoard::init()
-{
-	if (!Sprite::init())
-	{
-		return false;
-	}
-
-	// 説明盤の生成
-	m_blackBoard = Sprite::create();
-	m_blackBoard->setVisible(false);
-	this->addChild(m_blackBoard);
-
-	// 閉じるボタンの生成
-	m_pButtonClose = cocos2d::ui::Button::create("object/button_close.png");
-	m_pButtonClose->setPositionY(160.0f);
-	m_pButtonClose->setVisible(false);
-	this->addChild(m_pButtonClose);
-
-	// 閉じるボタンが押された時
-	m_pButtonClose->addClickEventListener([&](Ref* ref)
-	{
-		EnabledBlackBoard(false);
-		Stage::m_isShowObject = false;
-	});
-
-	return true;
-}
-

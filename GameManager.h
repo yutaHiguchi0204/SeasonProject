@@ -1,89 +1,61 @@
 /* =====================================================================
-//! @param		「GameManager」クラスのヘッダファイル
+//! @param		ゲームマネージャ
 //! @create		樋口　裕太
 //! @date		17/03/04
 ===================================================================== */
 #pragma once
 
 // ヘッダファイルのインクルード
-#include "cocos2d.h"
-
-// 定数
-const int				NUM_ROW					= 17;														// 行数
-const int				NUM_COLUMN				= 120;														// 列数
-const int				NUM_BUTTON				= 4;														// ボタン数
-const int				NUM_STAGE				= 4;														// ステージ数
-const int				NUM_SEASON				= 4;														// 季節数
-const int				NUM_SECOND				= 60;														// １秒
-const float				WINDOW_WIDTH			= 960.0f;													// 画面の幅
-const float				WINDOW_HEIGHT			= 540.0f;													// 画面の高さ
-const float				WINDOW_WIDTH_HERF		= WINDOW_WIDTH / 2;											// 画面の幅の半分
-const float				WINDOW_HEIGHT_HERF		= WINDOW_HEIGHT / 2;										// 画面の高さの半分
-const float				STAGE_WIDTH				= WINDOW_WIDTH * 4;											// ステージサイズ
-const float				STAGE_WIDTH_HERF		= STAGE_WIDTH / 2;											// ステージサイズの半分
-const float				SIZE_TILE				= 32.0f;													// タイルサイズ(32×32)
-const float				SIZE_PLAYER				= 48.0f;													// プレイヤーサイズ(48×48)
-const float				SIZE_PLAYER_HERF		= SIZE_PLAYER / 2;											// プレイヤーの半分のサイズ
-const float				NUM_GRAVITY				= 0.4f;														// 重力
-const float				NUM_WATER_GRAVITY		= 0.05f;													// 浮力（水の重力）
-const cocos2d::Vec2		WINDOW_MIDDLE			= cocos2d::Vec2(WINDOW_WIDTH_HERF, WINDOW_HEIGHT_HERF);		// 画面の中心
-const cocos2d::Vec2		STAGE_MIDDLE			= cocos2d::Vec2(STAGE_WIDTH_HERF, WINDOW_HEIGHT_HERF);		// ステージの中心
-
-const std::string STAGE_NAME[NUM_STAGE] = {				// ステージ名
-	"flower",
-	"bird",
-	"wind",
-	"moon"
-};
-
-const std::string SEASON_NAME[NUM_SEASON] = {			// 季節名
-	"winter",
-	"spring",
-	"summer",
-	"autumn"
-};
-
-// 列挙型
-enum class STAGE			// ステージ
-{
-	FLOWER,
-	BIRD,
-	WIND,
-	MOON
-};
-
-enum class SEASON			// 季節
-{
-	WINTER,
-	SPRING,
-	SUMMER,
-	AUTUMN
-};
-
-enum class TILE				// タイル
-{
-	NONE = -1,
-	BLOCK,
-	WATER,
-	SIGN_BOARD,
-	SEASON_BOOK,
-	POLLEN,
-	SAND,
-	CLEAR
-};
-
-enum class COLLISION
-{
-	NONE,
-	LEFT,
-	RIGHT
-};
+#include "Consant.h"
 
 // 共通関数をまとめたクラス
 class GameManager
 {
+private:
+	GameManager() {};
+
 public:
 
-	static bool isCollision(cocos2d::Vec2 tileVec, cocos2d::Vec2 playerVec);		// 着地判定
-	static int decisionCollision(cocos2d::Vec2 tileVec, cocos2d::Vec2 playerVec);	// 左右の衝突判定
+	// ゲームマネージャの生成
+	static GameManager& GetInstance()
+	{
+		static GameManager* gm = new GameManager;
+		return *gm;
+	};
+
+	// 着地判定（全体の当たり判定）
+	static bool isCollision(cocos2d::Vec2 tileVec, cocos2d::Vec2 playerVec)
+	{
+		if ((tileVec.x <= playerVec.x + SIZE_PLAYER_HERF) &&
+			(tileVec.x + SIZE_TILE >= playerVec.x - SIZE_PLAYER_HERF))
+		{
+			if ((tileVec.y <= playerVec.y + SIZE_PLAYER_HERF) &&
+				(tileVec.y + SIZE_TILE >= playerVec.y - SIZE_PLAYER_HERF))
+			{
+				return true;
+			}
+		}
+
+		return false;
+	};
+
+	// 左右の当たり判定
+	static int decisionCollision(cocos2d::Vec2 tileVec, cocos2d::Vec2 playerVec)
+	{
+		if (playerVec.y - tileVec.y <= SIZE_TILE)
+		{
+			// 右のあたり判定
+			if (playerVec.x + SIZE_PLAYER_HERF + SPEED_MOVE_PLAYER >= tileVec.x &&
+				playerVec.x - SIZE_PLAYER_HERF <= tileVec.x + SIZE_TILE)
+			{
+				return static_cast<int>(COLLISION::RIGHT);
+			}
+			// 左のあたり判定
+			else if (playerVec.x - SIZE_PLAYER_HERF - SPEED_MOVE_PLAYER <= tileVec.x + SIZE_TILE &&
+				playerVec.x + SIZE_PLAYER_HERF >= tileVec.x)
+			{
+				return static_cast<int>(COLLISION::LEFT);
+			}
+		}
+	};
 };

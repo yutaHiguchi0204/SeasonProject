@@ -37,16 +37,16 @@ bool Stage::init()
 	m_isShowObject = false;								// オブジェクトを参照しているかどうか
 	m_isPause = false;									// ポーズ中かどうか
 	Pollen::m_isPollenFlg = false;						// 花粉フラグをおろしておく
-	m_numTiles = 0;
-	m_numObjects = 0;
-	m_numSignBoards = 0;
-	m_numGimmicks = 0;
+	m_numTiles = 0;										// タイル数
+	m_numObjects = 0;									// オブジェクト数
+	m_numSignBoards = 0;								// 看板数
+	m_numGimmicks = 0;									// ギミック数
 
 	// 背景
 	m_pBack = Background::create();
 	this->addChild(m_pBack,-1);
 
-	//パーティクル
+	// パーティクル
 	m_pParticle = Particle::create();
 	this->addChild(m_pParticle);
 
@@ -66,37 +66,8 @@ bool Stage::init()
 	// 季節記
 	m_pSeasonBook = nullptr;
 
-	// レイヤー設定
-	int numLayer = Player::m_numBookmark + 1;
-	if (numLayer >= NUM_SEASON) numLayer = NUM_SEASON;
-	for (int i = 0; i < numLayer; i++)
-	{
-		std::stringstream sFileName;
-		sFileName << "tileLayer_" << SEASON_NAME[i];
-
-		// タイルレイヤー
-		m_pMapTileLayer[i] = m_pMap->getLayer(sFileName.str());
-		m_pMapTileLayer[i]->setVisible(false);
-
-		sFileName.str("");
-		sFileName.clear();
-
-		sFileName << "gimmickLayer_" << SEASON_NAME[i];
-
-		// ギミックレイヤー
-		m_pMapGimmickLayer[i] = m_pMap->getLayer(sFileName.str());
-		m_pMapGimmickLayer[i]->setVisible(false);
-	}
-
-	// 初期レイヤーを表示
-	m_pMapTileLayer[m_season]->setVisible(true);
-	m_pMapGimmickLayer[m_season]->setVisible(true);
-
-	// オブジェクトレイヤー
-	m_pMapObjectLayer = m_pMap->getLayer("objectLayer");
-
-	// レイヤー情報の設定
-	ReSetLayerInfo();
+	// レイヤー情報の初期設定
+	InitLayerInfo();
 
 	// 説明盤のＩＤ登録
 	SetSignBoardID();
@@ -160,6 +131,46 @@ void Stage::update(float delta)
 			}
 		}
 	}
+}
+
+/* =====================================================================
+//! 内　容		レイヤー情報の初期設定
+//! 引　数		なし
+//! 戻り値		なし
+===================================================================== */
+void Stage::InitLayerInfo()
+{
+	// レイヤー設定
+	int numLayer = Player::m_numBookmark + 1;
+	if (numLayer >= NUM_SEASON) numLayer = NUM_SEASON;
+	for (int i = 0; i < numLayer; i++)
+	{
+		std::stringstream sFileName;
+		sFileName << "tileLayer_" << SEASON_NAME[i];
+
+		// タイルレイヤー
+		m_pMapTileLayer[i] = m_pMap->getLayer(sFileName.str());
+		m_pMapTileLayer[i]->setVisible(false);
+
+		sFileName.str("");
+		sFileName.clear();
+
+		sFileName << "gimmickLayer_" << SEASON_NAME[i];
+
+		// ギミックレイヤー
+		m_pMapGimmickLayer[i] = m_pMap->getLayer(sFileName.str());
+		m_pMapGimmickLayer[i]->setVisible(false);
+	}
+
+	// 初期レイヤーを表示
+	m_pMapTileLayer[m_season]->setVisible(true);
+	m_pMapGimmickLayer[m_season]->setVisible(true);
+
+	// オブジェクトレイヤー
+	m_pMapObjectLayer = m_pMap->getLayer("objectLayer");
+
+	// レイヤー情報の設定
+	ReSetLayerInfo();
 }
 
 /* =====================================================================
@@ -349,7 +360,7 @@ void Stage::SetNewBookmark()
 	switch (StageSelectScene::m_stageID)
 	{
 	case static_cast<int>(STAGE::FLOWER):				// 花ステージの設定
-		m_pNewBookmark = Sprite::create("object/sprBookmark_winter.png");
+		m_pNewBookmark = Sprite::create("object/sprBookmark_spring.png");
 		m_pNewBookmark->setPosition(Vec2(20 * SIZE_TILE - 16.0f, 10 * SIZE_TILE - 16.0f));
 		this->addChild(m_pNewBookmark);
 		break;
@@ -434,16 +445,6 @@ void Stage::Scroll()
 
 	// カメラ移動
 	m_pCamera->setPositionX(cameraPos);
-}
-
-/* =====================================================================
-//! 内　容		カメラ座標xの取得
-//! 引　数		なし
-//! 戻り値		カメラ座標x（float）
-===================================================================== */
-float Stage::GetCameraPosX()
-{
-	return m_pCamera->getPositionX();
 }
 
 /* =====================================================================

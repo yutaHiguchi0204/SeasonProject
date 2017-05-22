@@ -24,7 +24,7 @@ class SignBoard : public cocos2d::Sprite
 		virtual bool init();
 
 		//オブジェクト番号の取得
-		int GetObjectNumber();
+		inline const int GetObjectNumber() { return m_objNumber; };
 		//オブジェクト番号の追加
 		void SetObjectNumber(int SetObj);
 

@@ -23,5 +23,6 @@ public:
 
 	void update(float delta);
 
+	// Ã“Iƒƒ“ƒo•Ï”
 	static bool m_isPollenFlg;
 };

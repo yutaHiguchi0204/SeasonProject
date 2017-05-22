@@ -70,6 +70,7 @@ public:
 
 	void update(float delta);
 
+	void InitLayerInfo();																		// レイヤー情報の初期設定
 	void ReSetLayerInfo();																		// タイル情報の初期化
 	void SetLayerInfo();																		// レイヤー情報の設定
 	void SetTileInfoWithLayer(cocos2d::TMXLayer* layer, KIND_TILE tile);						// レイヤーからタイル情報を設定
@@ -80,7 +81,7 @@ public:
 	void ChangeSeason();																		// 季節の変更
 
 	void Scroll();																				// マップのスクロール
-	float GetCameraPosX();																		// カメラ座標xの取得
+	inline const float GetCameraPosX() { return m_pCamera->getPositionX(); };					// カメラ座標xの取得
 
 	void CheckCollision();																		// 当たり判定チェック
 
