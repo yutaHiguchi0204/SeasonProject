@@ -52,10 +52,11 @@ bool PlayScene::init()
 	this->addChild(m_pStage);
 
 	// ボタン生成
-	m_pButton[static_cast<int>(BUTTON::LEFT)]	= OperationButton::create(BUTTON::LEFT);
-	m_pButton[static_cast<int>(BUTTON::RIGHT)]	= OperationButton::create(BUTTON::RIGHT);
-	m_pButton[static_cast<int>(BUTTON::ACTION)] = OperationButton::create(BUTTON::ACTION);
-	m_pButton[static_cast<int>(BUTTON::PAUSE)]	= OperationButton::create(BUTTON::PAUSE);
+	m_pButton[static_cast<int>(BUTTON::LEFT)]			= OperationButton::create(BUTTON::LEFT);
+	m_pButton[static_cast<int>(BUTTON::RIGHT)]			= OperationButton::create(BUTTON::RIGHT);
+	m_pButton[static_cast<int>(BUTTON::ACTION)]			= OperationButton::create(BUTTON::ACTION);
+	m_pButton[static_cast<int>(BUTTON::PAUSE)]			= OperationButton::create(BUTTON::PAUSE);
+	m_pButton[static_cast<int>(BUTTON::SEASON_BOOK)]	= OperationButton::create(BUTTON::SEASON_BOOK);
 
 	// ボタンをシーンにつなぐ
 	for (int i = 0; i < NUM_BUTTON; i++) this->addChild(m_pButton[i]);
@@ -97,6 +98,9 @@ void PlayScene::update(float delta)
 
 			// アクションボタンが押されたときの処理
 			m_pStage->CheckButtonHighlighted(BUTTON::ACTION);
+
+			// 季節記ボタンが押されたときの処理
+			m_pStage->CheckButtonHighlighted(BUTTON::SEASON_BOOK);
 		}
 
 		// ポーズボタンが押されたらポーズ画面を出す
@@ -111,7 +115,6 @@ void PlayScene::update(float delta)
 
 	// アクションボタンの明度を戻す
 	if ((!Player::m_isJump && m_pButton[static_cast<int>(BUTTON::ACTION)]->GetActionFlg() == ACTION::JUMP)				||
-		(!Stage::m_isShowObject && m_pButton[static_cast<int>(BUTTON::ACTION)]->GetActionFlg() == ACTION::SEASON_BOOK)	||
 		(!Stage::m_isShowObject && m_pButton[static_cast<int>(BUTTON::ACTION)]->GetActionFlg() == ACTION::SIGN_BOARD))
 	{
 		m_pButton[static_cast<int>(BUTTON::ACTION)]->SetFullBright();

@@ -31,10 +31,10 @@ bool Player::init()
 	// メンバの初期設定
 	m_spdX = 0.0f;
 	m_spdY = 0.0f;
+	m_isStand = false;
 	m_isJump = false;
 	m_isDive = false;
 	m_time = 0;
-	m_numBookmark = StageSelectScene::m_stageID + 1;
 
 	return true;
 }
@@ -53,7 +53,7 @@ void Player::update(float delta)
 		m_spdX = 0.0f;
 
 		// 重力
-		Gravity(m_isDive);
+		if (!m_isStand) Gravity(m_isDive);
 
 		// プレイヤーアニメーション
 		if (m_time % SPEED_ANIMATION == 0) AnimationPlayer();
@@ -64,6 +64,9 @@ void Player::update(float delta)
 		// 時間計測
 		m_time++;
 	}
+
+	// 着地フラグをおろす
+	m_isStand = false;
 }
 
 /* =====================================================================
@@ -101,13 +104,7 @@ void Player::Gravity(bool dive)
 ===================================================================== */
 void Player::Fall(int mapInfo, int season)
 {
-	if (mapInfo == static_cast<int>(TILE::BLOCK))
-	{
-		// ブロックのとき
-		m_spdY = 0.0f;
-		m_isJump = false;
-	}
-	else if (mapInfo == static_cast<int>(TILE::WATER))
+	if (mapInfo == static_cast<int>(TILE::WATER))
 	{
 		if (season == static_cast<int>(SEASON::WINTER))
 		{
@@ -167,8 +164,8 @@ void Player::Action(int tileID, Vec2 tileVec, int season)
 		// 調整
 		setPositionY(tileVec.y + SIZE_TILE + SIZE_PLAYER_HERF);
 
-		// 落下処理
-		Fall(static_cast<int>(TILE::BLOCK), season);
+		m_spdY = 0.0f;
+		m_isJump = false;
 
 		break;
 

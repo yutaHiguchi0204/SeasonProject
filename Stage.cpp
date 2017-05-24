@@ -16,7 +16,6 @@ USING_NS_CC;
 // 静的メンバの定義
 OperationButton* PlayScene::m_pButton[NUM_BUTTON];
 int StageSelectScene::m_stageID;
-int Player::m_numBookmark;
 bool Pollen::m_isPollenFlg;
 
 // メンバ関数の定義
@@ -32,7 +31,7 @@ bool Stage::init()
 	scheduleUpdate();
 
 	// メンバの初期設定
-	m_season = static_cast<int>(SEASON::WINTER);		// 季節
+	m_season = static_cast<int>(SEASON::SPRING);		// 季節
 	m_seasonBefore = m_season;							// 季節の確定
 	m_isShowObject = false;								// オブジェクトを参照しているかどうか
 	m_isPause = false;									// ポーズ中かどうか
@@ -53,7 +52,13 @@ bool Stage::init()
 	// マップ描画
 	std::stringstream sTMXFileName;
 	sTMXFileName << "mapData/map_" << STAGE_NAME[StageSelectScene::m_stageID] << ".tmx";
-	m_pMap = TMXTiledMap::create(sTMXFileName.str());
+
+	if (StageSelectScene::m_stageID != static_cast<int>(STAGE::FLOWER))
+		m_pMap = TMXTiledMap::create(sTMXFileName.str());
+	else
+		m_pMap = TMXTiledMap::create("mapData/map_flowerSub.tmx");
+
+
 	m_pMap->setAnchorPoint(Vec2(0, 0));
 	m_pMap->setPosition(Vec2(0, 0));
 	this->addChild(m_pMap);
@@ -73,7 +78,7 @@ bool Stage::init()
 	SetSignBoardID();
 
 	// 新しい季節のしおりがマップ上にあれば描画
-	SetNewBookmark();
+	//SetNewBookmark();
 
 
 	/// デバッグ用
@@ -141,9 +146,7 @@ void Stage::update(float delta)
 void Stage::InitLayerInfo()
 {
 	// レイヤー設定
-	int numLayer = Player::m_numBookmark + 1;
-	if (numLayer >= NUM_SEASON) numLayer = NUM_SEASON;
-	for (int i = 0; i < numLayer; i++)
+	for (int i = 0; i < NUM_SEASON; i++)
 	{
 		std::stringstream sFileName;
 		sFileName << "tileLayer_" << SEASON_NAME[i];
@@ -297,7 +300,6 @@ void Stage::SetTileInfoWithProperty(ValueMap map, int row, int col, KIND_TILE ti
 
 			id = static_cast<int>(TILE::SIGN_BOARD);
 		}
-		else if	(map["object"].asString() == "seasonBook")	id = static_cast<int>(TILE::SEASON_BOOK);
 		else if (map["clear"].asString() == "clear")		id = static_cast<int>(TILE::CLEAR);
 		else												id = static_cast<int>(TILE::NONE);
 
@@ -438,6 +440,7 @@ void Stage::Scroll()
 		PlayScene::m_pButton[static_cast<int>(BUTTON::RIGHT)]->setPositionX(m_pPlayer->getPositionX() - WINDOW_WIDTH_HERF + 288.0f);
 		PlayScene::m_pButton[static_cast<int>(BUTTON::ACTION)]->setPositionX(m_pPlayer->getPositionX() + WINDOW_WIDTH_HERF - 96.0f);
 		PlayScene::m_pButton[static_cast<int>(BUTTON::PAUSE)]->setPositionX(m_pPlayer->getPositionX() - WINDOW_WIDTH_HERF + 88.0f);
+		PlayScene::m_pButton[static_cast<int>(BUTTON::SEASON_BOOK)]->setPositionX(m_pPlayer->getPositionX() + WINDOW_WIDTH_HERF - 208.0f);
 
 		// カメラ設定
 		cameraPos = m_pPlayer->getPositionX();
@@ -457,21 +460,25 @@ void Stage::CheckCollision()
 	m_leftFlag = false;
 	m_rightFlag = false;
 
+	GameManager& gm = GameManager::GetInstance();
+
 	// タイルとの当たり判定
 	for (int i = 0; i < m_numTiles; i++)
 	{
-		if (GameManager::isCollision(m_tileInfo[i].pos, m_pPlayer->getPosition()))
+		// 着地判定
+		if (gm.CheckCollision(m_tileInfo[i].pos, m_pPlayer->getPosition()) == COLLISION::DOWN)
 		{
 			// タイルに応じたプレイヤーの処理
 			m_pPlayer->Action(m_tileInfo[i].ID, m_tileInfo[i].pos, m_season);
+			break;
 		}
 
 		// 左右の衝突判定
-		if (GameManager::decisionCollision(m_tileInfo[i].pos, m_pPlayer->getPosition()) == static_cast<int>(COLLISION::RIGHT) && !m_tileInfo[i].ID == static_cast<int>(TILE::WATER))
+		if (gm.CheckCollision(m_tileInfo[i].pos, m_pPlayer->getPosition()) == COLLISION::RIGHT && !m_tileInfo[i].ID == static_cast<int>(TILE::WATER))
 		{
 			m_rightFlag = true;
 		}
-		else if (GameManager::decisionCollision(m_tileInfo[i].pos, m_pPlayer->getPosition()) == static_cast<int>(COLLISION::LEFT) && !m_tileInfo[i].ID == static_cast<int>(TILE::WATER))
+		if (gm.CheckCollision(m_tileInfo[i].pos, m_pPlayer->getPosition()) == COLLISION::LEFT && !m_tileInfo[i].ID == static_cast<int>(TILE::WATER))
 		{
 			m_leftFlag = true;
 		}
@@ -480,7 +487,7 @@ void Stage::CheckCollision()
 	// オブジェクトとの当たり判定
 	for (int i = 0; i < m_numObjects; i++)
 	{
-		if (GameManager::isCollision(m_objectInfo[i].pos, m_pPlayer->getPosition()))
+		if (gm.isCollision(m_objectInfo[i].pos, m_pPlayer->getPosition()))
 		{
 			// オブジェクトの処理
 			ActionObject(m_objectInfo[i].ID);
@@ -493,7 +500,7 @@ void Stage::CheckCollision()
 	// ギミックとの当たり判定
 	for (int i = 0; i < m_numGimmicks; i++)
 	{
-		if (GameManager::isCollision(m_gimmickInfo[i].pos, m_pPlayer->getPosition()))
+		if (gm.isCollision(m_gimmickInfo[i].pos, m_pPlayer->getPosition()))
 		{
 			// 杉の場合花粉を出す
 			if (m_gimmickInfo[i].ID == static_cast<int>(TILE::POLLEN) && !Pollen::m_isPollenFlg)
@@ -510,27 +517,14 @@ void Stage::CheckCollision()
 		// 左右の衝突判定
 		if (m_gimmickInfo[i].ID == static_cast<int>(TILE::BLOCK))
 		{
-			if (GameManager::decisionCollision(m_gimmickInfo[i].pos, m_pPlayer->getPosition()) == static_cast<int>(COLLISION::RIGHT))
+			if (gm.CheckCollision(m_gimmickInfo[i].pos, m_pPlayer->getPosition()) == COLLISION::RIGHT)
 			{
 				m_rightFlag = true;
 			}
-			else if (GameManager::decisionCollision(m_gimmickInfo[i].pos, m_pPlayer->getPosition()) == static_cast<int>(COLLISION::LEFT))
+			if (gm.CheckCollision(m_gimmickInfo[i].pos, m_pPlayer->getPosition()) == COLLISION::LEFT)
 			{
 				m_leftFlag = true;
 			}
-		}
-	}
-
-	// 新しい季節のしおりとの当たり判定
-	if (m_pNewBookmark != nullptr)
-	{
-		if (GameManager::isCollision(m_pNewBookmark->getPosition(), m_pPlayer->getPosition()))
-		{
-			// 季節のしおりの持ち数を増やす
-			Player::m_numBookmark++;
-
-			m_pNewBookmark->removeFromParent();
-			m_pNewBookmark = nullptr;
 		}
 	}
 }
@@ -579,7 +573,7 @@ void Stage::CheckButtonHighlighted(BUTTON button)
 			}
 		}
 		// ポーズボタン
-		else
+		else if (button == BUTTON::PAUSE)
 		{
 			// ポーズ画面の生成
 			m_pPause = Pause::create();
@@ -588,6 +582,20 @@ void Stage::CheckButtonHighlighted(BUTTON button)
 
 			// ポーズ
 			m_isPause = true;
+		}
+		// 季節記ボタン
+		else
+		{
+			// 季節記の生成
+			m_pSeasonBook = SeasonBook::create();
+			m_pSeasonBook->setPosition(Vec2(GetCameraPosX(), WINDOW_HEIGHT_HERF));
+			this->addChild(m_pSeasonBook, 4);
+
+			// 明度を暗くする
+			PlayScene::m_pButton[static_cast<int>(BUTTON::SEASON_BOOK)]->SetFullBright(false);
+
+			// 季節記を見ている状態にする
+			m_isShowObject = true;
 		}
 	}
 }
@@ -599,6 +607,8 @@ void Stage::CheckButtonHighlighted(BUTTON button)
 ===================================================================== */
 void Stage::ActionButtonHighlighted(ACTION action)
 {
+	GameManager& gm = GameManager::GetInstance();
+
 	switch (action)
 	{
 	case ACTION::JUMP:				// ジャンプボタン
@@ -606,21 +616,6 @@ void Stage::ActionButtonHighlighted(ACTION action)
 
 		m_pPlayer->Jump();
 		PlayScene::m_pButton[static_cast<int>(BUTTON::ACTION)]->SetFullBright(false);
-		break;
-
-	case ACTION::SEASON_BOOK:		// 季節記ボタン
-
-		// 季節記の生成
-		m_pSeasonBook = SeasonBook::create();
-		m_pSeasonBook->setPosition(Vec2(GetCameraPosX(), WINDOW_HEIGHT_HERF));
-		this->addChild(m_pSeasonBook, 4);
-
-		// 明度を暗くする
-		PlayScene::m_pButton[static_cast<int>(BUTTON::ACTION)]->SetFullBright(false);
-
-		// 季節記を見ている状態にする
-		m_isShowObject = true;
-
 		break;
 
 	case ACTION::SIGN_BOARD:		// 看板ボタン
@@ -631,7 +626,7 @@ void Stage::ActionButtonHighlighted(ACTION action)
 		// 説明盤の生成（プレイヤーと当たっているものだけ）
 		for (int i = 0; i < m_numObjects; i++)
 		{
-			if (GameManager::isCollision(m_objectInfo[i].pos, m_pPlayer->getPosition()))
+			if (gm.isCollision(m_objectInfo[i].pos, m_pPlayer->getPosition()))
 			{
 				for (int j = 0; j < m_numSignBoards; j++)
 				{
@@ -657,13 +652,6 @@ void Stage::ActionObject(int objID)
 {
 	switch (objID)
 	{
-	case static_cast<int>(TILE::SEASON_BOOK):		// 季節記と当たった場合
-
-		// ボタンの画像を変える
-		PlayScene::m_pButton[static_cast<int>(BUTTON::ACTION)]->ChangeActionFlg(ACTION::SEASON_BOOK);
-
-		break;
-
 	case static_cast<int>(TILE::SIGN_BOARD):		// 看板と当たった場合
 
 		// ボタンの画像を変える

@@ -20,40 +20,64 @@ public:
 		return gm;
 	};
 
-	// 着地判定（全体の当たり判定）
-	static bool isCollision(cocos2d::Vec2 tileVec, cocos2d::Vec2 playerVec)
+	// 当たっているかどうか
+	bool isCollision(cocos2d::Vec2 tileVec, cocos2d::Vec2 playerVec)
 	{
-		if ((tileVec.x <= playerVec.x + SIZE_PLAYER_HERF) &&
-			(tileVec.x + SIZE_TILE >= playerVec.x - SIZE_PLAYER_HERF))
+		if ((playerVec.x - SIZE_PLAYER_COLLISION_HERF <= tileVec.x + SIZE_TILE) &&
+			(playerVec.x + SIZE_PLAYER_COLLISION_HERF >= tileVec.x))
 		{
-			if ((tileVec.y <= playerVec.y + SIZE_PLAYER_HERF) &&
-				(tileVec.y + SIZE_TILE >= playerVec.y - SIZE_PLAYER_HERF))
+			if ((playerVec.y - SIZE_PLAYER_HERF <= tileVec.y + SIZE_TILE) &&
+				(playerVec.y + SIZE_PLAYER_HERF >= tileVec.y))
 			{
 				return true;
 			}
 		}
 
 		return false;
-	};
+	}
 
-	// 左右の当たり判定
-	static int decisionCollision(cocos2d::Vec2 tileVec, cocos2d::Vec2 playerVec)
+	// 全体の当たり判定
+	COLLISION CheckCollision(cocos2d::Vec2 tileVec, cocos2d::Vec2 playerVec)
 	{
-		if (playerVec.y - tileVec.y <= SIZE_TILE)
+		// 上下の当たり判定
+		if ((playerVec.x - SIZE_PLAYER_COLLISION_HERF <= tileVec.x + SIZE_TILE) &&
+			(playerVec.x + SIZE_PLAYER_COLLISION_HERF >= tileVec.x))
 		{
-			// 右のあたり判定
-			if (playerVec.x + SIZE_PLAYER_HERF + SPEED_MOVE_PLAYER >= tileVec.x &&
-				playerVec.x - SIZE_PLAYER_HERF <= tileVec.x + SIZE_TILE)
+			// 下の当たり判定
+			if ((playerVec.y - SIZE_PLAYER_HERF >= tileVec.y + SIZE_TILE) &&
+				(playerVec.y - SIZE_PLAYER_HERF - SIZE_COLLIDER <= tileVec.y + SIZE_TILE))
 			{
-				return static_cast<int>(COLLISION::RIGHT);
+				return COLLISION::DOWN;
 			}
-			// 左のあたり判定
-			else if (playerVec.x - SIZE_PLAYER_HERF - SPEED_MOVE_PLAYER <= tileVec.x + SIZE_TILE &&
-				playerVec.x + SIZE_PLAYER_HERF >= tileVec.x)
+
+			// 上の当たり判定
+			if ((playerVec.y + SIZE_PLAYER_HERF <= tileVec.y + SIZE_TILE) &&
+				(playerVec.y + SIZE_PLAYER_HERF + SIZE_COLLIDER >= tileVec.y + SIZE_TILE))
 			{
-				return static_cast<int>(COLLISION::LEFT);
+				return COLLISION::UP;
 			}
 		}
+
+		// 左右の当たり判定
+		if ((playerVec.y - SIZE_PLAYER_HERF <= tileVec.y + SIZE_TILE) &&
+			(playerVec.y + SIZE_PLAYER_HERF >= tileVec.y))
+		{
+			// 右の当たり判定
+			if ((playerVec.x + SIZE_PLAYER_COLLISION_HERF + SIZE_COLLIDER >= tileVec.x) &&
+				(playerVec.x - SIZE_PLAYER_COLLISION_HERF <= tileVec.x + SIZE_TILE))
+			{
+				return COLLISION::RIGHT;
+			}
+
+			// 左の当たり判定
+			if ((playerVec.x - SIZE_PLAYER_COLLISION_HERF - SIZE_COLLIDER <= tileVec.x + SIZE_TILE) &&
+				(playerVec.x + SIZE_PLAYER_COLLISION_HERF >= tileVec.x))
+			{
+				return COLLISION::LEFT;
+			}
+		}
+
+		return COLLISION::NONE;
 	};
 
 private:

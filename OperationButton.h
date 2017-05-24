@@ -26,14 +26,14 @@ enum class BUTTON			// ボタン
 	LEFT,
 	RIGHT,
 	ACTION,
-	PAUSE
+	PAUSE,
+	SEASON_BOOK
 };
 
 enum class ACTION			// アクション
 {
 	JUMP,
 	SWIM,
-	SEASON_BOOK,
 	SIGN_BOARD
 };
 

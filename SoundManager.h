@@ -29,7 +29,7 @@ private:
 	int soundID;				// ‰¹ŠyŠi”[—p
 
 private:
-	SoundManager() {};
+	SoundManager() { LoadGameSound(); };
 
 public:
 

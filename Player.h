@@ -11,7 +11,6 @@
 // 定数
 const float		SPEED_MAX_FALL			= -10.0f;		// 最大落下速度
 const float		SPEED_MAX_FALL_WATER	= -5.0f;		// 最大水中落下速度
-const float		JUMP_PLAYER				= 10.0f;		// ジャンプの高さ
 const float		JUMP_WATER_PLAYER		= 3.0f;			// 水中ジャンプの高さ
 
 // クラスの定義
@@ -22,6 +21,7 @@ private:
 	float m_spdX;		// 移動速度x
 	float m_spdY;		// 移動速度y
 
+	bool m_isStand;		// 地面にたっているかどうか
 	bool m_isDive;		// 水中にいるかどうか
 
 	int m_time;			// 時間計測
@@ -43,5 +43,4 @@ public:
 
 	// 静的メンバ変数
 	static bool m_isJump;											// ジャンプをしているか
-	static int m_numBookmark;										// 持っているしおりの数
 };

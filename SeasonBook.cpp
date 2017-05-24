@@ -54,6 +54,7 @@ bool SeasonBook::init()
 	m_pButtonClose->addClickEventListener([&](Ref* ref)
 	{
 		removeFromParent();
+		PlayScene::m_pButton[static_cast<int>(BUTTON::SEASON_BOOK)]->SetFullBright(true);
 		Stage::m_isShowObject = false;
 	});
 
@@ -74,8 +75,8 @@ void SeasonBook::Change(int num)
 	Stage::m_season += num;
 
 	// í≤êÆ
-	if (Stage::m_season < static_cast<int>(SEASON::WINTER)) Stage::m_season = Player::m_numBookmark - 1;
-	if (Stage::m_season > Player::m_numBookmark - 1)		Stage::m_season = static_cast<int>(SEASON::WINTER);
+	if (Stage::m_season < static_cast<int>(SEASON::SPRING)) Stage::m_season = static_cast<int>(SEASON::WINTER);
+	if (Stage::m_season > static_cast<int>(SEASON::WINTER))	Stage::m_season = static_cast<int>(SEASON::SPRING);
 
 	// ãGêﬂÇÃÉyÅ[ÉWÇïœÇ¶ÇÈ
 	std::stringstream sFileName;

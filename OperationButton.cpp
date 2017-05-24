@@ -62,6 +62,11 @@ bool OperationButton::init(BUTTON button)
 		loadTextureNormal("object/button_pause.png");
 		setPosition(Vec2(88.0f, WINDOW_HEIGHT - 48.0f));
 		break;
+
+	case BUTTON::SEASON_BOOK:
+		loadTextureNormal("object/buttonSeasonBook.png");
+		setPosition(Vec2(WINDOW_WIDTH - 208.0f, 56.0f));
+		break;
 	}
 
 	// アクションフラグをデフォルト状態にする（ジャンプボタン）
