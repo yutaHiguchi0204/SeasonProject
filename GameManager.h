@@ -11,16 +11,13 @@
 // 共通関数をまとめたクラス
 class GameManager
 {
-private:
-	GameManager() {};
-
 public:
 
 	// ゲームマネージャの生成
 	static GameManager& GetInstance()
 	{
-		static GameManager* gm = new GameManager;
-		return *gm;
+		static GameManager gm;
+		return gm;
 	};
 
 	// 着地判定（全体の当たり判定）
@@ -58,4 +55,7 @@ public:
 			}
 		}
 	};
+
+private:
+	GameManager() {};
 };

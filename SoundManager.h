@@ -36,8 +36,8 @@ public:
 	// サウンドマネージャの生成
 	static SoundManager& getInstance()
 	{
-		static SoundManager* sm = new SoundManager;
-		return *sm;
+		static SoundManager sm;
+		return sm;
 	}
 
 	// 音楽のオフロード
