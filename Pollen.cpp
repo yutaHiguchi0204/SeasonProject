@@ -32,6 +32,10 @@ bool Pollen::init()
 
 	// ‰æ‘œ‚Ì‰Šúİ’è
 	setOpacity(0x00);
+	
+	//‰¹‚Ì“Ç‚İ‚İ
+	SoundManager& sm = SoundManager::getInstance();
+	sm.PlayGameSound(static_cast<int>(SOUND::SE_KAFUN), false);
 
 	return true;
 }

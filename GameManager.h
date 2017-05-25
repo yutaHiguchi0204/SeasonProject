@@ -7,6 +7,7 @@
 
 // ヘッダファイルのインクルード
 #include "Consant.h"
+#include "SoundManager.h"
 
 // 共通関数をまとめたクラス
 class GameManager

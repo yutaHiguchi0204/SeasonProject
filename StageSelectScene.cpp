@@ -71,6 +71,11 @@ bool StageSelectScene::init()
 	selectButton[2]->addTouchEventListener(CC_CALLBACK_2(StageSelectScene::onButtonTouch3, this));
 	selectButton[3]->addTouchEventListener(CC_CALLBACK_2(StageSelectScene::onButtonTouch4, this));
 
+	//ステージセレクト画面での音生成
+	SoundManager& sm = SoundManager::getInstance();
+	sm.StopGameSound();
+	sm.PlayGameSound(static_cast<int>(SOUND::SE_DECISION), false);
+
 	return true;
 }
 
@@ -103,6 +108,12 @@ void StageSelectScene::CharactorMove()
 {
 	if (m_pSprPlayer->getPosition() == selectButton[m_touchID]->getPosition())
 	{
+
+		//ステージ決定音の生成
+		SoundManager& sm = SoundManager::getInstance();
+		sm.UncacheGameSound(SOUND::SE_STAGESELECT);
+		sm.PlayGameSound(static_cast<int>(SOUND::SE_DECISION), false);
+
 		// 次のシーンを作成する
 		Scene* nextScene = PlayScene::create();
 
@@ -153,6 +164,11 @@ void StageSelectScene::CharactorMove()
 		m_pSprPlayer->runAction(m_move_action_sequence);
 
 		m_stageID = m_touchID;
+
+		//ステージセレクト音の生成
+		SoundManager& sm = SoundManager::getInstance();
+		sm.PlayGameSound(static_cast<int>(SOUND::SE_STAGESELECT), false);
+
 	}
 
 }

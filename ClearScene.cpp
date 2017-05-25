@@ -51,6 +51,10 @@ bool ClearScene::init()
 	listener->onTouchBegan = CC_CALLBACK_2(ClearScene::onTouchBegan, this);
 	_director->getEventDispatcher()->addEventListenerWithSceneGraphPriority(listener, this);
 
+	//ƒNƒŠƒA‚ÌBGM¶¬
+	SoundManager& sm = SoundManager::getInstance();
+	sm.PlayGameSound(static_cast<int>(SOUND::BGM_CLEAR), false);
+
 	return true;
 }
 

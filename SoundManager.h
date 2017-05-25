@@ -11,15 +11,45 @@
 
 // 定数
 /* サウンドを追加したい場合は用途とファイル名をここに登録してください */
-const int NUM_SOUND = 5;
+const int NUM_SOUND =17;
 
 enum class SOUND
 {
-	
+	BGM_TITLE,
+	BGM_FLOWER,
+	BGM_BIRD,
+	BGM_WIND,
+	BGM_MOON,
+	BGM_CLEAR,
+
+	SE_DECISION,
+	SE_SELECT,
+	SE_CLOSE,
+	SE_JUMP,
+	SE_SWIM,
+	SE_GET,
+	SE_KAFUN,
+	SE_CHANGE,
+	SE_STAGESELECT,
 };
 
 const std::string SOUND_NAME[NUM_SOUND] = {
-	
+	"title",
+	"flower_stage",
+	"bird_stage",
+	"wind_stage",
+	"moon_stage",
+	"clear",
+
+	"decision",
+	"select",
+	"close",
+	"jump",
+	"swim",		
+	"item_get",	
+	"kafun",
+	"change",
+	"stage_select",
 };
 
 // クラスの定義

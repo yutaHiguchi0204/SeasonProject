@@ -65,6 +65,10 @@ bool TitleScene::init()
 	listener->onTouchEnded = CC_CALLBACK_2(TitleScene::onTouchEnded, this);
 	this->getEventDispatcher()->addEventListenerWithSceneGraphPriority(listener, this);
 
+	//ƒ^ƒCƒgƒ‹‚ÌBGM¶¬
+	SoundManager& sm = SoundManager::getInstance();
+	sm.PlayGameSound(static_cast<int>(SOUND::BGM_TITLE), false);
+
 	return true;
 }
 
