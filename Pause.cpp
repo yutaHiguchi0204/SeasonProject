@@ -73,11 +73,13 @@ void Pause::update(float delta)
 		// 次のシーンを作成する
 		Scene* nextScene = TitleScene::createScene();
 
-		//フェードトランジション
+		// フェードトランジション
 		nextScene = TransitionFade::create(1.0f, nextScene, Color3B(255, 255, 255));
 
 		// 次のシーンに移行
 		_director->replaceScene(nextScene);
+
+		unscheduleUpdate();
 	}
 	// ステージ選択画面に戻るボタンが押されたら
 	else if (m_pPauseButtonSelect->isHighlighted())
@@ -85,10 +87,12 @@ void Pause::update(float delta)
 		// 次のシーンを作成する
 		Scene* nextScene = StageSelectScene::createScene();
 
-		//フェードトランジション
+		// フェードトランジション
 		nextScene = TransitionFade::create(1.0f, nextScene, Color3B(255, 255, 255));
 
 		// 次のシーンに移行
 		_director->replaceScene(nextScene);
+
+		unscheduleUpdate();
 	}
 }

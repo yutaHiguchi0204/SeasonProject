@@ -61,7 +61,8 @@ bool TitleScene::init()
 
 	// タッチイベントリスナーを作成
 	EventListenerTouchOneByOne* listener = EventListenerTouchOneByOne::create();
-	listener->onTouchBegan = CC_CALLBACK_2(TitleScene::onButtonTouch, this);
+	listener->onTouchBegan = CC_CALLBACK_2(TitleScene::onTouchBegan, this);
+	listener->onTouchEnded = CC_CALLBACK_2(TitleScene::onTouchEnded, this);
 	this->getEventDispatcher()->addEventListenerWithSceneGraphPriority(listener, this);
 
 	return true;
@@ -77,7 +78,7 @@ void TitleScene::update(float delta)
 	m_time++;
 }
 
-bool TitleScene::onButtonTouch(Touch* touch, Event* event)
+void TitleScene::onTouchEnded(Touch* touch, Event* event)
 {
 	// 次のシーンを作成する
 	Scene* nextScene = StageSelectScene::create();
@@ -87,6 +88,4 @@ bool TitleScene::onButtonTouch(Touch* touch, Event* event)
 
 	// 次のシーンに移行
 	_director->replaceScene(nextScene);
-
-	return true;
 }

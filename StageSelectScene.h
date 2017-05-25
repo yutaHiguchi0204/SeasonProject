@@ -27,10 +27,10 @@ public:
 
 	void update(float delta);
 
-	void onButtonTouch(cocos2d::Ref* ref, cocos2d::ui::Widget::TouchEventType eventType)  { if (eventType == cocos2d::ui::Widget::TouchEventType::BEGAN){ m_touchID = 0;CharactorMove();} }
-	void onButtonTouch2(cocos2d::Ref* ref, cocos2d::ui::Widget::TouchEventType eventType) { if (eventType == cocos2d::ui::Widget::TouchEventType::BEGAN){ m_touchID = 1;CharactorMove();} }
-	void onButtonTouch3(cocos2d::Ref* ref, cocos2d::ui::Widget::TouchEventType eventType) { if (eventType == cocos2d::ui::Widget::TouchEventType::BEGAN){ m_touchID = 2;CharactorMove();} }
-	void onButtonTouch4(cocos2d::Ref* ref, cocos2d::ui::Widget::TouchEventType eventType) { if (eventType == cocos2d::ui::Widget::TouchEventType::BEGAN){ m_touchID = 3;CharactorMove();} }
+	void onButtonTouch(cocos2d::Ref* ref, cocos2d::ui::Widget::TouchEventType eventType)  { if (eventType == cocos2d::ui::Widget::TouchEventType::ENDED){ m_touchID = 0;CharactorMove();} }
+	void onButtonTouch2(cocos2d::Ref* ref, cocos2d::ui::Widget::TouchEventType eventType) { if (eventType == cocos2d::ui::Widget::TouchEventType::ENDED){ m_touchID = 1;CharactorMove();} }
+	void onButtonTouch3(cocos2d::Ref* ref, cocos2d::ui::Widget::TouchEventType eventType) { if (eventType == cocos2d::ui::Widget::TouchEventType::ENDED){ m_touchID = 2;CharactorMove();} }
+	void onButtonTouch4(cocos2d::Ref* ref, cocos2d::ui::Widget::TouchEventType eventType) { if (eventType == cocos2d::ui::Widget::TouchEventType::ENDED){ m_touchID = 3;CharactorMove();} }
 
 
 	void animationPlayer();	// プレイヤーアニメーション

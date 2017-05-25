@@ -59,7 +59,7 @@ bool StageSelectScene::init()
 	}
 	
 	// ƒvƒŒƒCƒ„[
-	m_pSprPlayer = Sprite::create("object/player1.png");
+	m_pSprPlayer = Sprite::create("object/player.png");
 	m_pSprPlayer->setPosition(selectButton[static_cast<int>(STAGE::FLOWER)]->getPosition());
 	this->addChild(m_pSprPlayer);
 

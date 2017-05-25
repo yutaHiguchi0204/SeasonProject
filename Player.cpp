@@ -26,7 +26,7 @@ bool Player::init()
 	scheduleUpdate();
 
 	// プレイヤーの画像設定
-	setTexture("object/player1.png");
+	setTexture("object/player.png");
 
 	// メンバの初期設定
 	m_spdX = 0.0f;

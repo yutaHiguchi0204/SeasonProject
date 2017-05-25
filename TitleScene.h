@@ -26,6 +26,7 @@ public:
 	
 	void update(float delta);
 
-	bool onButtonTouch(cocos2d::Touch* touch, cocos2d::Event* event);
+	bool onTouchBegan(cocos2d::Touch* touch, cocos2d::Event* event) { return true; };
+	void onTouchEnded(cocos2d::Touch* touch, cocos2d::Event* event);
 };
 
