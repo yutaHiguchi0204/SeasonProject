@@ -39,6 +39,8 @@ public:
 
 	void Action(int tile, cocos2d::Vec2 tileVec, int season);		// タイルに対しての行動
 
+	void SetSpdY(float spdY);										// 上下のスピードを取得
+
 	void AnimationPlayer();											// プレイヤーアニメーション
 
 	// 静的メンバ変数

@@ -11,9 +11,6 @@
 // 名前空間
 USING_NS_CC;
 
-// 静的メンバの定義
-int Stage::m_season;
-
 // メンバ関数の定義
 
 bool SeasonBook::init()

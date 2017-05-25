@@ -12,6 +12,9 @@
 USING_NS_CC;
 using namespace std;
 
+// 静的メンバの定義
+int StageSelectScene::m_stageID;
+
 // シーン管理
 Scene* StageSelectScene::createScene()
 {

@@ -7,6 +7,7 @@
 
 // ヘッダファイルのインクルード
 #include "Consant.h"
+#include "SoundManager.h"
 
 // 共通関数をまとめたクラス
 class GameManager
@@ -52,7 +53,7 @@ public:
 
 			// 上の当たり判定
 			if ((playerVec.y + SIZE_PLAYER_HERF <= tileVec.y + SIZE_TILE) &&
-				(playerVec.y + SIZE_PLAYER_HERF + SIZE_COLLIDER >= tileVec.y + SIZE_TILE))
+				(playerVec.y + SIZE_PLAYER_HERF >= tileVec.y))
 			{
 				return COLLISION::UP;
 			}
@@ -63,14 +64,14 @@ public:
 			(playerVec.y + SIZE_PLAYER_HERF >= tileVec.y))
 		{
 			// 右の当たり判定
-			if ((playerVec.x + SIZE_PLAYER_COLLISION_HERF + SIZE_COLLIDER >= tileVec.x) &&
+			if ((playerVec.x + SIZE_PLAYER_COLLISION_HERF >= tileVec.x) &&
 				(playerVec.x - SIZE_PLAYER_COLLISION_HERF <= tileVec.x + SIZE_TILE))
 			{
 				return COLLISION::RIGHT;
 			}
 
 			// 左の当たり判定
-			if ((playerVec.x - SIZE_PLAYER_COLLISION_HERF - SIZE_COLLIDER <= tileVec.x + SIZE_TILE) &&
+			if ((playerVec.x - SIZE_PLAYER_COLLISION_HERF <= tileVec.x + SIZE_TILE) &&
 				(playerVec.x + SIZE_PLAYER_COLLISION_HERF >= tileVec.x))
 			{
 				return COLLISION::LEFT;

@@ -31,14 +31,14 @@ const float				STAGE_WIDTH					= WINDOW_WIDTH * 4;											// ステージサイズ
 const float				STAGE_WIDTH_HERF			= STAGE_WIDTH / 2;											// ステージサイズの半分
 const cocos2d::Vec2		STAGE_MIDDLE				= cocos2d::Vec2(STAGE_WIDTH_HERF, WINDOW_HEIGHT_HERF);		// ステージの中心
 const float				SIZE_TILE					= 32.0f;													// タイルサイズ(32×32)
-const float				SIZE_COLLIDER				= 8.0f;														// 当たり判定調整用
+const float				SIZE_COLLIDER				= 10.0f;														// 当たり判定調整用
 const float				NUM_GRAVITY					= 0.4f;														// 重力
 const float				NUM_WATER_GRAVITY			= 0.05f;													// 浮力（水の重力）
 
 // プレイヤー関係
 const float				SIZE_PLAYER					= 48.0f;													// プレイヤーサイズ(48×48)
 const float				SIZE_PLAYER_HERF			= SIZE_PLAYER / 2;											// プレイヤーの半分のサイズ
-const float				SIZE_PLAYER_COLLISION		= 24.0f;													// プレイヤーの当たり判定
+const float				SIZE_PLAYER_COLLISION		= 32.0f;													// プレイヤーの当たり判定
 const float				SIZE_PLAYER_COLLISION_HERF	= SIZE_PLAYER_COLLISION / 2;								// プレイヤーの当たり判定の半分
 const float				SPEED_MOVE_PLAYER			= 4.0f;														// 移動速度
 const float				JUMP_PLAYER					= 10.0f;													// ジャンプの高さ

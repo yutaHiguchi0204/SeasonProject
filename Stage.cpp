@@ -14,9 +14,12 @@
 USING_NS_CC;
 
 // 静的メンバの定義
-OperationButton* PlayScene::m_pButton[NUM_BUTTON];
-int StageSelectScene::m_stageID;
-bool Pollen::m_isPollenFlg;
+int Stage::m_season;
+bool Stage::m_isLeftCollision;
+bool Stage::m_isRightCollision;
+bool Stage::m_isTopCollision;
+bool Stage::m_isShowObject;
+bool Stage::m_isPause;
 
 // メンバ関数の定義
 
@@ -33,6 +36,9 @@ bool Stage::init()
 	// メンバの初期設定
 	m_season = static_cast<int>(SEASON::SPRING);		// 季節
 	m_seasonBefore = m_season;							// 季節の確定
+	m_isLeftCollision = false;							// 左判定フラグ
+	m_isRightCollision = false;							// 右判定フラグ
+	m_isTopCollision = false;							// 上判定フラグ
 	m_isShowObject = false;								// オブジェクトを参照しているかどうか
 	m_isPause = false;									// ポーズ中かどうか
 	Pollen::m_isPollenFlg = false;						// 花粉フラグをおろしておく
@@ -99,31 +105,30 @@ void Stage::update(float delta)
 		ChangeSeason();
 	}
 
-
 	/// デバッグ用
 	if (!m_isPause)
 	{
 		// ボタンが押されていたらプレイヤーを移動させる
 		if (!m_isShowObject)
 		{
-			if (keyLeft && !m_leftFlag)
+			if (keyLeft)
 			{
 				// プレイヤーの向きを設定
 				m_pPlayer->setFlippedX(true);
 
 				// プレイヤーの移動
-				if (m_pPlayer->getPositionX() > SIZE_PLAYER_HERF)
+				if (m_pPlayer->getPositionX() > SIZE_PLAYER_HERF && !m_isLeftCollision)
 				{
 					m_pPlayer->Move(-SPEED_MOVE_PLAYER);
 				}
 			}
-			if (keyRight && !m_rightFlag)
+			if (keyRight)
 			{
 				// プレイヤーの向きを設定
 				m_pPlayer->setFlippedX(false);
 
 				// プレイヤーの移動
-				if (m_pPlayer->getPositionX() < STAGE_WIDTH - SIZE_PLAYER_HERF)
+				if (m_pPlayer->getPositionX() < STAGE_WIDTH - SIZE_PLAYER_HERF && !m_isRightCollision)
 				{
 					m_pPlayer->Move(SPEED_MOVE_PLAYER);
 				}
@@ -366,8 +371,10 @@ void Stage::Scroll()
 ===================================================================== */
 void Stage::CheckCollision()
 {
-	m_leftFlag = false;
-	m_rightFlag = false;
+	// 当たり判定フラグの初期化
+	Stage::m_isLeftCollision = false;
+	Stage::m_isRightCollision = false;
+	Stage::m_isTopCollision = false;
 
 	GameManager& gm = GameManager::GetInstance();
 
@@ -382,44 +389,46 @@ void Stage::CheckCollision()
 			break;
 		}
 
-		// 左右の衝突判定
-		if (gm.CheckCollision(m_tileInfo[i].pos, m_pPlayer->getPosition()) == COLLISION::RIGHT && !m_tileInfo[i].ID == static_cast<int>(TILE::WATER))
+		// 各当たり判定
+		if (gm.CheckCollision(m_tileInfo[i].pos, m_pPlayer->getPosition()) == COLLISION::LEFT)				m_isLeftCollision = true;
+		else if (gm.CheckCollision(m_tileInfo[i].pos, m_pPlayer->getPosition()) == COLLISION::RIGHT)		m_isRightCollision = true;
+		else if (gm.CheckCollision(m_tileInfo[i].pos, m_pPlayer->getPosition()) == COLLISION::UP)
 		{
-			m_rightFlag = true;
-		}
-		if (gm.CheckCollision(m_tileInfo[i].pos, m_pPlayer->getPosition()) == COLLISION::LEFT && !m_tileInfo[i].ID == static_cast<int>(TILE::WATER))
-		{
-			m_leftFlag = true;
+			m_pPlayer->SetSpdY(-0.01f);
+			m_isTopCollision = true;
 		}
 	}
 
 	// ギミックとの当たり判定
 	for (int i = 0; i < m_numGimmicks; i++)
 	{
-		if (gm.isCollision(m_gimmickInfo[i].pos, m_pPlayer->getPosition()))
+		// 杉の場合花粉を出す
+		if (m_gimmickInfo[i].ID == static_cast<int>(TILE::POLLEN) && !Pollen::m_isPollenFlg)
 		{
-			// 杉の場合花粉を出す
-			if (m_gimmickInfo[i].ID == static_cast<int>(TILE::POLLEN) && !Pollen::m_isPollenFlg)
+			if (gm.isCollision(m_gimmickInfo[i].pos, m_pPlayer->getPosition()))
 			{
 				m_pPollen = Pollen::create();
 				m_pPollen->setPosition(Vec2(GetCameraPosX(), WINDOW_HEIGHT_HERF));
 				this->addChild(m_pPollen, 5);
 			}
-
-			// ギミックに応じたプレイヤーの処理
-			m_pPlayer->Action(m_gimmickInfo[i].ID, m_gimmickInfo[i].pos, m_season);
 		}
-
-		// 左右の衝突判定
-		if (m_gimmickInfo[i].ID == static_cast<int>(TILE::BLOCK))
+		else
 		{
-			if (gm.CheckCollision(m_gimmickInfo[i].pos, m_pPlayer->getPosition()) == COLLISION::RIGHT)
+			// 着地判定
+			if (m_gimmickInfo[i].ID == static_cast<int>(TILE::BLOCK) && gm.CheckCollision(m_gimmickInfo[i].pos, m_pPlayer->getPosition()) == COLLISION::DOWN)
 			{
-				m_rightFlag = true;
+				// タイルに応じたプレイヤーの処理
+				m_pPlayer->Action(m_gimmickInfo[i].ID, m_gimmickInfo[i].pos, m_season);
+				break;
 			}
-			if (gm.CheckCollision(m_gimmickInfo[i].pos, m_pPlayer->getPosition()) == COLLISION::LEFT)
+
+			// 各当たり判定
+			if		(m_gimmickInfo[i].ID == static_cast<int>(TILE::BLOCK) && gm.CheckCollision(m_gimmickInfo[i].pos, m_pPlayer->getPosition()) == COLLISION::LEFT)		m_isLeftCollision = true;
+			else if (m_gimmickInfo[i].ID == static_cast<int>(TILE::BLOCK) && gm.CheckCollision(m_gimmickInfo[i].pos, m_pPlayer->getPosition()) == COLLISION::RIGHT)		m_isRightCollision = true;
+			else if (m_gimmickInfo[i].ID == static_cast<int>(TILE::BLOCK) && gm.CheckCollision(m_gimmickInfo[i].pos, m_pPlayer->getPosition()) == COLLISION::UP)
 			{
-				m_leftFlag = true;
+				m_pPlayer->SetSpdY(-0.01f);
+				m_isTopCollision = true;
 			}
 		}
 	}
@@ -442,7 +451,7 @@ void Stage::CheckButtonHighlighted(BUTTON button)
 			m_pPlayer->setFlippedX(true);
 
 			// プレイヤーの移動
-			if (m_pPlayer->getPositionX() > SIZE_PLAYER_HERF)
+			if (m_pPlayer->getPositionX() > SIZE_PLAYER_HERF && !m_isLeftCollision)
 			{
 				m_pPlayer->Move(-SPEED_MOVE_PLAYER);
 			}
@@ -454,7 +463,7 @@ void Stage::CheckButtonHighlighted(BUTTON button)
 			m_pPlayer->setFlippedX(false);
 
 			// プレイヤーの移動
-			if (m_pPlayer->getPositionX() < STAGE_WIDTH - SIZE_PLAYER_HERF)
+			if (m_pPlayer->getPositionX() < STAGE_WIDTH - SIZE_PLAYER_HERF && !m_isRightCollision)
 			{
 				m_pPlayer->Move(SPEED_MOVE_PLAYER);
 			}
@@ -463,9 +472,10 @@ void Stage::CheckButtonHighlighted(BUTTON button)
 		else if (button == BUTTON::ACTION)
 		{
 			// ジャンプしてないときに処理
-			if (!Player::m_isJump)
+			if (!Player::m_isJump && !m_isTopCollision)
 			{
-				ActionButtonHighlighted(PlayScene::m_pButton[static_cast<int>(BUTTON::ACTION)]->GetActionFlg());
+				m_pPlayer->Jump();
+				PlayScene::m_pButton[static_cast<int>(BUTTON::ACTION)]->SetFullBright(false);
 			}
 		}
 		// 季節記ボタン
@@ -489,46 +499,19 @@ void Stage::CheckButtonHighlighted(BUTTON button)
 }
 
 /* =====================================================================
-//! 内　容		アクションボタンが押された時の処理
-//! 引　数		アクション（ACTION）
-//! 戻り値		なし
-===================================================================== */
-void Stage::ActionButtonHighlighted(ACTION action)
-{
-	GameManager& gm = GameManager::GetInstance();
-
-	switch (action)
-	{
-	case ACTION::JUMP:				// ジャンプボタン
-	case ACTION::SWIM:				// 泳ぐボタン
-
-		m_pPlayer->Jump();
-		PlayScene::m_pButton[static_cast<int>(BUTTON::ACTION)]->SetFullBright(false);
-		break;
-	}
-}
-
-/* =====================================================================
 //! 内　容		キーデバッグ
 //! 引　数		いろいろ
 //! 戻り値		なし
 ===================================================================== */
 void Stage::onKeyPressed(EventKeyboard::KeyCode keyCode, Event* event)
 {
-	if (!Stage::m_isPause)
+	if (keyCode == EventKeyboard::KeyCode::KEY_LEFT_ARROW)
 	{
-		// ボタンが押されていたらプレイヤーを移動させる
-		if (!Stage::m_isShowObject)
-		{
-			if (keyCode == EventKeyboard::KeyCode::KEY_LEFT_ARROW && !m_leftFlag)
-			{
-				keyLeft = true;
-			}
-			if (keyCode == EventKeyboard::KeyCode::KEY_RIGHT_ARROW && !m_rightFlag)
-			{
-				keyRight = true;
-			}
-		}
+		keyLeft = true;
+	}
+	if (keyCode == EventKeyboard::KeyCode::KEY_RIGHT_ARROW)
+	{
+		keyRight = true;
 	}
 }
 

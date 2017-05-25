@@ -10,6 +10,9 @@
 // 名前空間
 USING_NS_CC;
 
+// 静的メンバの定義
+bool Pollen::m_isPollenFlg;
+
 // メンバ関数の定義
 
 // 初期設定

@@ -13,6 +13,9 @@
 // 名前空間
 USING_NS_CC;
 
+// 静的メンバの定義
+bool Player::m_isJump;
+
 // メンバ関数の定義
 
 bool Player::init()
@@ -147,6 +150,7 @@ void Player::Jump()
 	{
 		m_spdY = JUMP_PLAYER;
 		m_isJump = true;
+		m_isStand = false;
 	}
 }
 
@@ -161,11 +165,15 @@ void Player::Action(int tileID, Vec2 tileVec, int season)
 	{
 	case static_cast<int>(TILE::BLOCK):		// ブロック
 
-		// 調整
-		setPositionY(tileVec.y + SIZE_TILE + SIZE_PLAYER_HERF);
-
-		m_spdY = 0.0f;
-		m_isJump = false;
+		if (m_spdY <= 0.0f)
+		{
+			// 調整
+			setPositionY(tileVec.y + SIZE_TILE + SIZE_PLAYER_HERF);
+		
+			m_spdY = 0.0f;
+			m_isJump = false;
+			m_isStand = true;
+		}
 
 		break;
 
@@ -176,6 +184,16 @@ void Player::Action(int tileID, Vec2 tileVec, int season)
 
 		break;
 	}
+}
+
+/* =====================================================================
+//! 内　容		上下のスピードを取得
+//! 引　数		なし
+//! 戻り値		スピード（float）
+===================================================================== */
+void Player::SetSpdY(float spdY)
+{
+	m_spdY = spdY;
 }
 
 /* =====================================================================
