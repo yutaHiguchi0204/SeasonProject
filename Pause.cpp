@@ -63,6 +63,11 @@ void Pause::update(float delta)
 	// ゲームに戻るボタンが押されたら
 	if (m_pPauseButtonBack->isHighlighted())
 	{
+
+		//ポーズを閉じる音の生成
+		SoundManager& sm = SoundManager::getInstance();
+		sm.PlayGameSound(static_cast<int>(SOUND::SE_CLOSE), false);
+
 		// 後処理
 		Stage::m_isPause = false;
 		removeFromParent();
@@ -70,6 +75,12 @@ void Pause::update(float delta)
 	// タイトルに戻るボタンが押されたら
 	else if (m_pPauseButtonTitle->isHighlighted())
 	{
+
+		//タイトルに戻る音の生成
+		SoundManager& sm = SoundManager::getInstance();
+		sm.UncacheGameSoundAll();
+		sm.PlayGameSound(static_cast<int>(SOUND::BGM_TITLE), false);
+
 		// 次のシーンを作成する
 		Scene* nextScene = TitleScene::createScene();
 
@@ -84,6 +95,12 @@ void Pause::update(float delta)
 	// ステージ選択画面に戻るボタンが押されたら
 	else if (m_pPauseButtonSelect->isHighlighted())
 	{
+
+		//ポーズを閉じる音の生成
+		SoundManager& sm = SoundManager::getInstance();
+		sm.UncacheGameSoundAll();
+		sm.PlayGameSound(static_cast<int>(SOUND::SE_DECISION), false);
+
 		// 次のシーンを作成する
 		Scene* nextScene = StageSelectScene::createScene();
 

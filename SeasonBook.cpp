@@ -59,6 +59,10 @@ bool SeasonBook::init()
 	m_pButtonArrowLeft->addClickEventListener([&](Ref* ref) { Change(-1); });
 	m_pButtonArrowRight->addClickEventListener([&](Ref* ref) { Change(1); });
 
+	//ƒy[ƒW‚ß‚­‚é‰¹‚Ì¶¬
+	SoundManager& sm = SoundManager::getInstance();
+	sm.PlayGameSound(static_cast<int>(SOUND::SE_SELECT), false);
+
 	return true;
 }
 
@@ -79,4 +83,9 @@ void SeasonBook::Change(int num)
 	std::stringstream sFileName;
 	sFileName << "object/page_" << SEASON_NAME[Stage::m_season] << ".png";
 	m_pPage->setTexture(sFileName.str());
+
+	//‹GßØ‚è‘Ö‚¦‚Ì‰¹¶¬
+	SoundManager& sm = SoundManager::getInstance();
+	sm.PlayGameSound(static_cast<int>(SOUND::SE_CHANGE), false);
+
 }

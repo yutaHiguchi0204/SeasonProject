@@ -46,6 +46,10 @@ bool Stage::init()
 	m_numSignBoards = 0;								// 看板数
 	m_numGimmicks = 0;									// ギミック数
 
+	//各ステージの音の生成
+	SoundManager& sm = SoundManager::getInstance();
+	sm.PlayGameSound(StageSelectScene::m_stageID + static_cast<int>(SOUND::BGM_FLOWER), false);
+
 	// 背景
 	m_pBack = Background::create();
 	this->addChild(m_pBack,-1);
