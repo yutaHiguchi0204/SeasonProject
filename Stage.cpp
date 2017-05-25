@@ -37,7 +37,6 @@ bool Stage::init()
 	m_isPause = false;									// ポーズ中かどうか
 	Pollen::m_isPollenFlg = false;						// 花粉フラグをおろしておく
 	m_numTiles = 0;										// タイル数
-	m_numObjects = 0;									// オブジェクト数
 	m_numSignBoards = 0;								// 看板数
 	m_numGimmicks = 0;									// ギミック数
 
@@ -52,13 +51,7 @@ bool Stage::init()
 	// マップ描画
 	std::stringstream sTMXFileName;
 	sTMXFileName << "mapData/map_" << STAGE_NAME[StageSelectScene::m_stageID] << ".tmx";
-
-	if (StageSelectScene::m_stageID != static_cast<int>(STAGE::FLOWER))
-		m_pMap = TMXTiledMap::create(sTMXFileName.str());
-	else
-		m_pMap = TMXTiledMap::create("mapData/map_flowerSub.tmx");
-
-
+	m_pMap = TMXTiledMap::create(sTMXFileName.str());
 	m_pMap->setAnchorPoint(Vec2(0, 0));
 	m_pMap->setPosition(Vec2(0, 0));
 	this->addChild(m_pMap);
@@ -73,12 +66,6 @@ bool Stage::init()
 
 	// レイヤー情報の初期設定
 	InitLayerInfo();
-
-	// 説明盤のＩＤ登録
-	SetSignBoardID();
-
-	// 新しい季節のしおりがマップ上にあれば描画
-	//SetNewBookmark();
 
 
 	/// デバッグ用
@@ -101,16 +88,23 @@ void Stage::update(float delta)
 	// 季節の変更
 	if (m_season != m_seasonBefore)
 	{
-		m_pParticle->removeFromParent();
+		// パーティクルの破棄
+		if (m_pParticle != nullptr)
+		{
+			m_pParticle->removeFromParent();
+			m_pParticle = nullptr;
+		}
+
+		// 季節を変える
 		ChangeSeason();
 	}
 
 
 	/// デバッグ用
-	if (!Stage::m_isPause)
+	if (!m_isPause)
 	{
 		// ボタンが押されていたらプレイヤーを移動させる
-		if (!Stage::m_isShowObject)
+		if (!m_isShowObject)
 		{
 			if (keyLeft && !m_leftFlag)
 			{
@@ -169,9 +163,6 @@ void Stage::InitLayerInfo()
 	m_pMapTileLayer[m_season]->setVisible(true);
 	m_pMapGimmickLayer[m_season]->setVisible(true);
 
-	// オブジェクトレイヤー
-	m_pMapObjectLayer = m_pMap->getLayer("objectLayer");
-
 	// レイヤー情報の設定
 	ReSetLayerInfo();
 }
@@ -189,12 +180,6 @@ void Stage::ReSetLayerInfo()
 		m_tileInfo.pop_back();
 	}
 
-	// オブジェクト情報の初期化
-	while (!m_objectInfo.empty())
-	{
-		m_objectInfo.pop_back();
-	}
-
 	// ギミック情報の初期化
 	while (!m_gimmickInfo.empty())
 	{
@@ -203,7 +188,6 @@ void Stage::ReSetLayerInfo()
 
 	// タイル数の初期化
 	m_numTiles = 0;
-	m_numObjects = 0;
 	m_numGimmicks = 0;
 
 	// タイル情報の設定
@@ -219,9 +203,6 @@ void Stage::SetLayerInfo()
 {
 	// タイル情報の設定
 	SetTileInfoWithLayer(m_pMapTileLayer[m_season], KIND_TILE::TILE);
-
-	// オブジェクト情報の設定
-	SetTileInfoWithLayer(m_pMapObjectLayer, KIND_TILE::OBJECT);
 
 	// ギミック情報の設定
 	SetTileInfoWithLayer(m_pMapGimmickLayer[m_season], KIND_TILE::GIMMICK);
@@ -288,29 +269,6 @@ void Stage::SetTileInfoWithProperty(ValueMap map, int row, int col, KIND_TILE ti
 
 		break;
 
-	case KIND_TILE::OBJECT:		// オブジェクト
-
-		// 各オブジェクト設定
-		if (map["object"].asString() == "signBoard")
-		{
-			// 看板クラスの生成
-			m_pSignBoard.push_back(SignBoard::create());
-			this->addChild(m_pSignBoard[m_numSignBoards], 4);
-			m_numSignBoards++;
-
-			id = static_cast<int>(TILE::SIGN_BOARD);
-		}
-		else if (map["clear"].asString() == "clear")		id = static_cast<int>(TILE::CLEAR);
-		else												id = static_cast<int>(TILE::NONE);
-
-		// オブジェクト数加算
-		m_numObjects++;
-
-		// オブジェクトIDの設定
-		m_objectInfo.push_back(StageInfo{ id, pos });
-
-		break;
-
 	case KIND_TILE::GIMMICK:	// ギミック
 
 		// 各ギミック設定
@@ -330,58 +288,6 @@ void Stage::SetTileInfoWithProperty(ValueMap map, int row, int col, KIND_TILE ti
 }
 
 /* =====================================================================
-//! 内　容		説明盤のＩＤを登録
-//! 引　数		なし
-//! 戻り値		なし
-===================================================================== */
-void Stage::SetSignBoardID()
-{
-	// 看板数の初期化
-	m_numSignBoards = 0;
-
-	for (int i = 0; i < m_numObjects; i++)
-	{
-		if (m_objectInfo[i].ID == static_cast<int>(TILE::SIGN_BOARD))
-		{
-			m_numSignBoards++;
-
-			// オブジェクト情報中の看板情報を登録
-			m_pSignBoard[m_numSignBoards - 1]->SetObjectNumber(i);
-			m_pSignBoard[m_numSignBoards - 1]->SetBlackBoardTexture(m_numSignBoards);
-		}
-	}
-}
-
-/* =====================================================================
-//! 内　容		新しい季節のしおりを配置
-//! 引　数		なし（別ステージができた場合はステージを必要とする（staticなら必要なし）
-//! 戻り値		なし
-===================================================================== */
-void Stage::SetNewBookmark()
-{
-	switch (StageSelectScene::m_stageID)
-	{
-	case static_cast<int>(STAGE::FLOWER):				// 花ステージの設定
-		m_pNewBookmark = Sprite::create("object/sprBookmark_spring.png");
-		m_pNewBookmark->setPosition(Vec2(20 * SIZE_TILE - 16.0f, 10 * SIZE_TILE - 16.0f));
-		this->addChild(m_pNewBookmark);
-		break;
-
-	case static_cast<int>(STAGE::BIRD) :				// 鳥ステージの設定
-		m_pNewBookmark = Sprite::create("object/sprBookmark_summer.png");
-		m_pNewBookmark->setPosition(Vec2(9 * SIZE_TILE - 16.0f, 7 * SIZE_TILE - 16.0f));
-		this->addChild(m_pNewBookmark);
-		break;
-
-	case static_cast<int>(STAGE::WIND) :				// 風ステージの設定
-		m_pNewBookmark = Sprite::create("object/sprBookmark_autumn.png");
-		m_pNewBookmark->setPosition(Vec2(9 * SIZE_TILE - 16.0f, 7 * SIZE_TILE - 16.0f));
-		this->addChild(m_pNewBookmark);
-		break;
-	}
-}
-
-/* =====================================================================
 //! 内　容		季節の変更
 //! 引　数		なし
 //! 戻り値		なし
@@ -394,8 +300,11 @@ void Stage::ChangeSeason()
 
 	// 背景を変える
 	m_pBack->Change(m_season);
-	m_pParticle = Particle::create();
-	this->addChild(m_pParticle,-1);
+	if (m_season != static_cast<int>(SEASON::SUMMER))
+	{
+		m_pParticle = Particle::create();
+		this->addChild(m_pParticle, -1);
+	}
 
 	// レイヤー情報の再設定
 	ReSetLayerInfo();
@@ -427,7 +336,7 @@ void Stage::Scroll()
 	if (m_pPlayer->getPositionX() >= CAMERA_BORDER && m_pPlayer->getPositionX() <= STAGE_WIDTH - CAMERA_BORDER)
 	{
 		// パーティクル移動
-		m_pParticle->ParticleScroll(GetCameraPosX());
+		if (m_pParticle != nullptr) m_pParticle->ParticleScroll(GetCameraPosX());
 
 		// 花粉移動
 		if (Pollen::m_isPollenFlg)
@@ -481,19 +390,6 @@ void Stage::CheckCollision()
 		if (gm.CheckCollision(m_tileInfo[i].pos, m_pPlayer->getPosition()) == COLLISION::LEFT && !m_tileInfo[i].ID == static_cast<int>(TILE::WATER))
 		{
 			m_leftFlag = true;
-		}
-	}
-
-	// オブジェクトとの当たり判定
-	for (int i = 0; i < m_numObjects; i++)
-	{
-		if (gm.isCollision(m_objectInfo[i].pos, m_pPlayer->getPosition()))
-		{
-			// オブジェクトの処理
-			ActionObject(m_objectInfo[i].ID);
-			
-			// オブジェクトに応じたプレイヤーの処理
-			//m_pPlayer->Action(m_objectInfo[i].ID, m_objectInfo[i].pos, m_season);
 		}
 	}
 
@@ -572,30 +468,22 @@ void Stage::CheckButtonHighlighted(BUTTON button)
 				ActionButtonHighlighted(PlayScene::m_pButton[static_cast<int>(BUTTON::ACTION)]->GetActionFlg());
 			}
 		}
-		// ポーズボタン
-		else if (button == BUTTON::PAUSE)
-		{
-			// ポーズ画面の生成
-			m_pPause = Pause::create();
-			m_pPause->setPosition(Vec2(GetCameraPosX(), WINDOW_HEIGHT_HERF));
-			this->addChild(m_pPause);
-
-			// ポーズ
-			m_isPause = true;
-		}
 		// 季節記ボタン
-		else
+		else if (button == BUTTON::SEASON_BOOK)
 		{
-			// 季節記の生成
-			m_pSeasonBook = SeasonBook::create();
-			m_pSeasonBook->setPosition(Vec2(GetCameraPosX(), WINDOW_HEIGHT_HERF));
-			this->addChild(m_pSeasonBook, 4);
+			if (!m_isShowObject)
+			{
+				// 季節記の生成
+				m_pSeasonBook = SeasonBook::create();
+				m_pSeasonBook->setPosition(Vec2(GetCameraPosX(), WINDOW_HEIGHT_HERF));
+				this->addChild(m_pSeasonBook, 4);
 
-			// 明度を暗くする
-			PlayScene::m_pButton[static_cast<int>(BUTTON::SEASON_BOOK)]->SetFullBright(false);
+				// 明度を暗くする
+				PlayScene::m_pButton[static_cast<int>(BUTTON::SEASON_BOOK)]->SetFullBright(false);
 
-			// 季節記を見ている状態にする
-			m_isShowObject = true;
+				// 季節記を見ている状態にする
+				m_isShowObject = true;
+			}
 		}
 	}
 }
@@ -616,60 +504,6 @@ void Stage::ActionButtonHighlighted(ACTION action)
 
 		m_pPlayer->Jump();
 		PlayScene::m_pButton[static_cast<int>(BUTTON::ACTION)]->SetFullBright(false);
-		break;
-
-	case ACTION::SIGN_BOARD:		// 看板ボタン
-
-		// 明度を暗くする
-		PlayScene::m_pButton[static_cast<int>(BUTTON::ACTION)]->SetFullBright(false);
-
-		// 説明盤の生成（プレイヤーと当たっているものだけ）
-		for (int i = 0; i < m_numObjects; i++)
-		{
-			if (gm.isCollision(m_objectInfo[i].pos, m_pPlayer->getPosition()))
-			{
-				for (int j = 0; j < m_numSignBoards; j++)
-				{
-					m_pSignBoard[j]->setPosition(Vec2(GetCameraPosX(), WINDOW_HEIGHT_HERF));
-					m_pSignBoard[j]->DrawBlackBoard(i);
-				}
-			}
-		}
-
-		// 看板を見ている状態にする
-		m_isShowObject = true;
-
-		break;
-	}
-}
-
-/* =====================================================================
-//! 内　容		オブジェクトアクション
-//! 引　数		オブジェクトＩＤ（int）
-//! 戻り値		なし
-===================================================================== */
-void Stage::ActionObject(int objID)
-{
-	switch (objID)
-	{
-	case static_cast<int>(TILE::SIGN_BOARD):		// 看板と当たった場合
-
-		// ボタンの画像を変える
-		PlayScene::m_pButton[static_cast<int>(BUTTON::ACTION)]->ChangeActionFlg(ACTION::SIGN_BOARD);
-
-		break;
-
-	case static_cast<int>(TILE::CLEAR) :				// クリアオブジェクトと当たった場合
-
-		// 次のシーンを作成する
-		Scene* nextScene = ClearScene::create();
-
-		// フェードトランジション
-		//nextScene = TransitionFade::create(1.0f, nextScene, Color3B(255, 255, 255));
-
-		// 次のシーンに移行
-		_director->replaceScene(nextScene);
-
 		break;
 	}
 }

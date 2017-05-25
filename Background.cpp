@@ -20,23 +20,7 @@ bool Background::init()
 	}
 
 	// 画像の初期設定
-	setTexture("background/back_winter.png");
-
-	/*// プリセットの初期設定
-	m_pParticle = ParticleSystemQuad::create("particle/particle_winter.plist");
-
-	// パーティクルのメモリリーク回避
-	m_pParticle->setAutoRemoveOnFinish(true);
-
-	// パーティクル開始
-	m_pParticle->resetSystem();
-
-	// パーティクルの座標設定（左上）
-	m_pParticle->setPosition(WINDOW_WIDTH / 4, WINDOW_HEIGHT);
-
-	// パーティクルをノードにつなぐ
-	this->addChild(m_pParticle);
-	*/
+	setTexture("background/back_spring.png");
 
 	// 位置の初期設定
 	setPosition(STAGE_MIDDLE);
@@ -56,38 +40,4 @@ void Background::Change(int season)
 
 	// 背景の変更
 	setTexture(sFileName.str());
-
-	//夏の季節だけ非表示
-	/*if (season == static_cast<int>(SEASON::SUMMER))
-	{
-		m_pParticle->setVisible(false);
-	}
-
-	// 夏以外はパーティクルを出す
-	if (season != static_cast<int>(SEASON::SUMMER))
-	{
-
-		// ファイル名のリセット
-		sFileName.str("");
-		sFileName.clear();
-
-		//パーティクルの表示
-		m_pParticle->setVisible(true);
-
-		sFileName << "particle/particle_" << SEASON_NAME[season] << ".plist";
-
-		// パーティクルの変更
-		m_pParticle->initWithFile(sFileName.str());
-
-	}*/
 }
-
-/* =====================================================================
-//! 内　容		パーティクルのスクロール
-//! 引　数		カメラの座標x（float）
-//! 戻り値		なし
-===================================================================== */
-/*void Background::ParticleScroll(float cameraX)
-{
-	m_pParticle->setPositionX(cameraX);
-}*/

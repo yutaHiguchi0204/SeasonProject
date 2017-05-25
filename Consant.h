@@ -80,10 +80,7 @@ enum class TILE				// ƒ^ƒCƒ‹
 	NONE = -1,
 	BLOCK,
 	WATER,
-	SIGN_BOARD,
-	POLLEN,
-	SAND,
-	CLEAR
+	POLLEN
 };
 
 enum class COLLISION

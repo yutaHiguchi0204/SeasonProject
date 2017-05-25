@@ -11,15 +11,15 @@
 
 // 定数
 /* サウンドを追加したい場合は用途とファイル名をここに登録してください */
-const int NUM_SOUND = 1;
+const int NUM_SOUND = 5;
 
 enum class SOUND
 {
-
+	
 };
 
 const std::string SOUND_NAME[NUM_SOUND] = {
-	""
+	
 };
 
 // クラスの定義
@@ -57,10 +57,10 @@ public:
 	}
 
 	// 使用する音楽の登録と再生
-	void PlayGameSound(SOUND id, bool loop)
+	void PlayGameSound(int id, bool loop)
 	{
 		std::stringstream soundFileName;
-		soundFileName << "sound/" << SOUND_NAME[static_cast<int>(id)] << ".ogg";
+		soundFileName << "sound/" << SOUND_NAME[id] << ".ogg";
 
 		// 音楽を登録
 		soundID = cocos2d::experimental::AudioEngine::play2d(soundFileName.str());

@@ -12,6 +12,9 @@
 USING_NS_CC;
 using namespace std;
 
+// 定数
+const int HERF_COLOR = 127;
+
 // シーン管理
 Scene* TitleScene::createScene()
 {
@@ -41,41 +44,49 @@ bool TitleScene::init()
 	// 更新処理準備
 	scheduleUpdate();
 
+	// メンバ変数の初期化
+	m_time = 0;
+
 	// 背景画像
 	Sprite* back = Sprite::create("background/back_title.png");
 	back->setPosition(WINDOW_WIDTH_HERF, WINDOW_HEIGHT_HERF);
 	this->addChild(back);
 
 	// ボタン画像
-	ui::Button* m_tButton = ui::Button::create("object/start.png");
-	m_tButton->setPosition(Vec2(WINDOW_WIDTH - 192.0f, 64.0f));
-	m_tButton->setScale(1.5f);
-	this->addChild(m_tButton);
+	m_pMsgTitle = Sprite::create("object/start.png");
+	m_pMsgTitle->setPosition(Vec2(WINDOW_WIDTH - 192.0f, 64.0f));
+	m_pMsgTitle->setScale(1.5f);
+	m_pMsgTitle->setOpacity(0x80);
+	this->addChild(m_pMsgTitle);
 
 	// タッチイベントリスナーを作成
 	EventListenerTouchOneByOne* listener = EventListenerTouchOneByOne::create();
-
-	m_tButton->addTouchEventListener(CC_CALLBACK_2(TitleScene::onButtonTouch, this));
+	listener->onTouchBegan = CC_CALLBACK_2(TitleScene::onButtonTouch, this);
+	this->getEventDispatcher()->addEventListenerWithSceneGraphPriority(listener, this);
 
 	return true;
 }
 
 void TitleScene::update(float delta)
 {
+	// フェード
+	if (m_time / HERF_COLOR % 2 == 0)	m_pMsgTitle->setOpacity(m_pMsgTitle->getOpacity() + 0x01);
+	else								m_pMsgTitle->setOpacity(m_pMsgTitle->getOpacity() - 0x01);
 
+	// 時間計測
+	m_time++;
 }
 
-void TitleScene::onButtonTouch(cocos2d::Ref * ref, cocos2d::ui::Widget::TouchEventType eventType)
+bool TitleScene::onButtonTouch(Touch* touch, Event* event)
 {
-	if (eventType == ui::Widget::TouchEventType::ENDED)
-	{
-		// 次のシーンを作成する
-		Scene* nextScene = StageSelectScene::create();
+	// 次のシーンを作成する
+	Scene* nextScene = StageSelectScene::create();
 
-		//フェードトランジション
-		nextScene = TransitionFade::create(1.0f, nextScene, Color3B(255, 255, 255));
+	//フェードトランジション
+	nextScene = TransitionFade::create(1.0f, nextScene, Color3B(255, 255, 255));
 
-		// 次のシーンに移行
-		_director->replaceScene(nextScene);
-	}
+	// 次のシーンに移行
+	_director->replaceScene(nextScene);
+
+	return true;
 }

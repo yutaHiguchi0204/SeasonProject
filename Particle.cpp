@@ -40,41 +40,6 @@ bool Particle::init()
 }
 
 /* =====================================================================
-//! 内　容		背景の変更
-//! 引　数		季節（int）
-//! 戻り値		なし
-===================================================================== */
-/*void Particle::Change(int season)
-{
-	std::stringstream sFileName;
-
-	//夏の季節だけ非表示
-	if (season == static_cast<int>(SEASON::SUMMER))
-	{
-		m_pParticle->setVisible(false);
-	}
-
-	// 夏以外はパーティクルを出す
-	if (season != static_cast<int>(SEASON::SUMMER))
-	{
-
-		// ファイル名のリセット
-		sFileName.str("");
-		sFileName.clear();
-
-		//パーティクルの表示
-		m_pParticle->setVisible(true);
-
-		sFileName << "particle/particle_" << SEASON_NAME[season] << ".plist";
-
-		// パーティクルの変更
-		m_pParticle->initWithFile(sFileName.str());
-
-	}
-
-}:/
-
-/* =====================================================================
 //! 内　容		パーティクルのスクロール
 //! 引　数		カメラの座標x（float）
 //! 戻り値		なし
@@ -83,4 +48,3 @@ void Particle::ParticleScroll(float cameraX)
 {
 	m_pParticle->setPositionX(cameraX);
 }
-

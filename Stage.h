@@ -15,7 +15,6 @@
 #include "Player.h"
 #include "Pollen.h"
 #include "SeasonBook.h"
-#include "SignBoard.h"
 
 // 列挙型
 enum class KIND_TILE
@@ -38,12 +37,11 @@ class Stage : public cocos2d::Node
 private:
 	int m_seasonBefore;									// 変更前の季節
 	int m_numTiles;										// 総タイル数
-	int m_numObjects;									// 総オブジェクト数
 	int m_numSignBoards;								// 総看板数
 	int m_numGimmicks;									// 総ギミック数
 
 	Background* m_pBack;								// 背景
-	Particle* m_pParticle;								//パーティクル
+	Particle* m_pParticle;								// パーティクル
 	Player* m_pPlayer;									// プレイヤー
 	SeasonBook* m_pSeasonBook;							// 季節記
 	Pollen* m_pPollen;									// 花粉
@@ -51,16 +49,10 @@ private:
 	cocos2d::TMXTiledMap* m_pMap;						// マップ
 	cocos2d::TMXLayer* m_pMapTileLayer[NUM_SEASON];		// マップレイヤー（タイル）
 	cocos2d::TMXLayer* m_pMapGimmickLayer[NUM_SEASON];	// マップレイヤー（ギミック）
-	cocos2d::TMXLayer* m_pMapObjectLayer;				// マップレイヤー（オブジェクト）
 
 	std::vector<StageInfo> m_tileInfo;					// タイル情報
-	std::vector<StageInfo> m_objectInfo;				// オブジェクト情報
 	std::vector<StageInfo> m_gimmickInfo;				// ギミック情報
-	std::vector<SignBoard*> m_pSignBoard;				// 看板
 
-	cocos2d::Sprite* m_pNewBookmark;					// 新しい季節のしおり
-
-	Pause* m_pPause;									// ポーズ
 	cocos2d::Camera* m_pCamera;							// カメラ
 
 public:
@@ -75,8 +67,6 @@ public:
 	void SetLayerInfo();																		// レイヤー情報の設定
 	void SetTileInfoWithLayer(cocos2d::TMXLayer* layer, KIND_TILE tile);						// レイヤーからタイル情報を設定
 	void SetTileInfoWithProperty(cocos2d::ValueMap map, int row, int col, KIND_TILE tile);		// プロパティからタイル情報を設定
-	void SetSignBoardID();																		// 説明盤のＩＤを登録
-	void SetNewBookmark();																		// 新しい季節のしおりを配置
 
 	void ChangeSeason();																		// 季節の変更
 
@@ -87,8 +77,6 @@ public:
 
 	void CheckButtonHighlighted(BUTTON button);													// ボタンが押された時の処理
 	void ActionButtonHighlighted(ACTION action);												// アクションボタンが押された時の処理
-
-	void ActionObject(int objID);																// オブジェクトアクション
 
 	// 静的メンバ
 	static int m_season;																		// 季節

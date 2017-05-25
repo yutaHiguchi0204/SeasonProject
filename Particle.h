@@ -18,6 +18,5 @@ public:
 	CREATE_FUNC(Particle);
 	virtual bool init();
 
-	void Change(int season);						// 背景の変更
 	void ParticleScroll(float cameraX);				// パーティクルのスクロール
 };

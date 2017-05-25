@@ -98,13 +98,13 @@ void PlayScene::update(float delta)
 
 			// アクションボタンが押されたときの処理
 			m_pStage->CheckButtonHighlighted(BUTTON::ACTION);
-
-			// 季節記ボタンが押されたときの処理
-			m_pStage->CheckButtonHighlighted(BUTTON::SEASON_BOOK);
 		}
 
 		// ポーズボタンが押されたらポーズ画面を出す
-		m_pStage->CheckButtonHighlighted(BUTTON::PAUSE);
+		CheckPauseButtonHighlighted();
+
+		// 季節記ボタンが押されたら季節を変えられる
+		m_pStage->CheckButtonHighlighted(BUTTON::SEASON_BOOK);
 	}
 
 	// 左右で進めない場合はその時に応じてボタンの明度を変える
@@ -114,9 +114,31 @@ void PlayScene::update(float delta)
 		m_pButton[static_cast<int>(BUTTON::RIGHT)]->SetFullBright(false);
 
 	// アクションボタンの明度を戻す
-	if ((!Player::m_isJump && m_pButton[static_cast<int>(BUTTON::ACTION)]->GetActionFlg() == ACTION::JUMP)				||
-		(!Stage::m_isShowObject && m_pButton[static_cast<int>(BUTTON::ACTION)]->GetActionFlg() == ACTION::SIGN_BOARD))
+	if (!Player::m_isJump && m_pButton[static_cast<int>(BUTTON::ACTION)]->GetActionFlg() == ACTION::JUMP)
 	{
 		m_pButton[static_cast<int>(BUTTON::ACTION)]->SetFullBright();
+	}
+}
+
+/* =====================================================================
+//! 内　容		ポーズボタンが押された時の処理
+//! 引　数		ダミー引数（float）
+//! 戻り値		なし
+===================================================================== */
+void PlayScene::CheckPauseButtonHighlighted()
+{
+	// ポーズボタン
+	if (m_pButton[static_cast<int>(BUTTON::PAUSE)]->isHighlighted())
+	{
+		if (!Stage::m_isPause && !Stage::m_isShowObject)
+		{
+			// ポーズ画面の生成
+			m_pPause = Pause::create();
+			m_pPause->setPosition(Vec2(m_pStage->GetCameraPosX(), WINDOW_HEIGHT_HERF));
+			this->addChild(m_pPause, 2);
+
+			// ポーズ
+			Stage::m_isPause = true;
+		}
 	}
 }

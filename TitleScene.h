@@ -12,6 +12,9 @@
 class TitleScene : public cocos2d::Scene
 {
 private:
+	cocos2d::Sprite* m_pMsgTitle;
+	int m_time;
+
 public:
 
 	CREATE_FUNC(TitleScene);
@@ -23,9 +26,6 @@ public:
 	
 	void update(float delta);
 
-	void onButtonTouch(cocos2d::Ref* ref, cocos2d::ui::Widget::TouchEventType eventType);
-
-	cocos2d::ui::Button* m_tButton; //ƒ{ƒ^ƒ“
-
+	bool onButtonTouch(cocos2d::Touch* touch, cocos2d::Event* event);
 };
 
