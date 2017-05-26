@@ -20,7 +20,7 @@
 enum class KIND_TILE
 {
 	TILE,
-	OBJECT,
+	ITEM,
 	GIMMICK
 };
 
@@ -37,7 +37,7 @@ class Stage : public cocos2d::Node
 private:
 	int m_seasonBefore;									// 変更前の季節
 	int m_numTiles;										// 総タイル数
-	int m_numSignBoards;								// 総看板数
+	int m_numItems;										// 総アイテム数
 	int m_numGimmicks;									// 総ギミック数
 
 	Background* m_pBack;								// 背景
@@ -48,9 +48,11 @@ private:
 
 	cocos2d::TMXTiledMap* m_pMap;						// マップ
 	cocos2d::TMXLayer* m_pMapTileLayer[NUM_SEASON];		// マップレイヤー（タイル）
+	cocos2d::TMXLayer* m_pMapItemLayer[NUM_SEASON];		// マップレイヤー（アイテム）
 	cocos2d::TMXLayer* m_pMapGimmickLayer[NUM_SEASON];	// マップレイヤー（ギミック）
 
 	std::vector<StageInfo> m_tileInfo;					// タイル情報
+	std::vector<StageInfo> m_itemInfo;					// アイテム情報
 	std::vector<StageInfo> m_gimmickInfo;				// ギミック情報
 
 	cocos2d::Camera* m_pCamera;							// カメラ
@@ -67,6 +69,7 @@ public:
 	void SetLayerInfo();																		// レイヤー情報の設定
 	void SetTileInfoWithLayer(cocos2d::TMXLayer* layer, KIND_TILE tile);						// レイヤーからタイル情報を設定
 	void SetTileInfoWithProperty(cocos2d::ValueMap map, int row, int col, KIND_TILE tile);		// プロパティからタイル情報を設定
+	void SetItem();																				// アイテム情報を設定
 
 	void ChangeSeason();																		// 季節の変更
 

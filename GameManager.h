@@ -12,6 +12,10 @@
 // 共通関数をまとめたクラス
 class GameManager
 {
+private:
+	bool m_isGetPage[NUM_ITEM];
+	int m_numPage;
+
 public:
 
 	// ゲームマネージャの生成
@@ -81,6 +85,31 @@ public:
 		return COLLISION::NONE;
 	};
 
+	void SetPage(int pageID)
+	{
+		m_isGetPage[pageID] = true;
+	}
+
+	bool* GetPage()
+	{
+		return m_isGetPage;
+	}
+
+	int GetPageNum()
+	{
+		int num = 0;
+		for (int i = 0; i < NUM_ITEM; i++)
+		{
+			if (m_isGetPage[i]) num++;
+		}
+
+		return num;
+	}
+
 private:
-	GameManager() {};
+	GameManager()
+	{
+		for (int i = 0; i < NUM_ITEM; i++) m_isGetPage[i] = false;
+		m_numPage = 0;
+	};
 };
