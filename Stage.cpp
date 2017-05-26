@@ -204,6 +204,10 @@ void Stage::ReSetLayerInfo()
 	{
 		m_itemInfo.pop_back();
 	}
+	while (!m_item.empty())
+	{
+		m_item.pop_back();
+	}
 
 	// ギミック情報の初期化
 	while (!m_gimmickInfo.empty())
@@ -217,6 +221,9 @@ void Stage::ReSetLayerInfo()
 
 	// タイル情報の設定
 	SetLayerInfo();
+
+	// アイテム設定
+	SetItem();
 }
 
 /* =====================================================================
@@ -335,12 +342,21 @@ void Stage::SetItem()
 {
 	GameManager& gm = GameManager::GetInstance();
 
-	for (int i = 0; i < NUM_ITEM; i++)
+	// アイテムのＩＤがどの要素番号から始まるかを調べる
+	int idStart = 0;
+	for (int i = 0; i < StageSelectScene::m_stageID + m_season; i++)
+	{
+		idStart += NUM_ITEM_PLACE[i];
+	}
+
+	for (int i = 0; i < NUM_ITEM_PLACE[StageSelectScene::m_stageID + m_season]; i++)
 	{
 		// とってないアイテムのみセット
-		if (!gm.GetPage()[i])
+		if (!gm.GetPage()[idStart + i])
 		{
-			
+			m_item.push_back(Item::create());
+			m_item[m_item.size() - 1]->setPosition(Vec2(m_itemInfo[i].pos.x + SIZE_TILE / 2, m_tileInfo[i].pos.y + SIZE_TILE));
+			this->addChild(m_item[m_item.size() - 1], -1);
 		}
 	}
 }
@@ -452,15 +468,28 @@ void Stage::CheckCollision()
 		}
 	}
 
-	// アイテムとの当たり判定
-	for (int i = 0; i < m_numItems; i++)
+	if (m_season == m_seasonBefore)
 	{
-		if (!gm.GetPage()[StageSelectScene::m_stageID * NUM_STAGE_ITEM + i])
+		// アイテムのＩＤがどの要素番号から始まるかを調べる
+		int idStart = 0;
+		for (int i = 0; i < StageSelectScene::m_stageID + m_season; i++)
 		{
-			if (gm.isCollision(m_itemInfo[i].pos, m_pPlayer->getPosition()))
+			idStart += NUM_ITEM_PLACE[i];
+		}
+
+		// アイテムとの当たり判定
+		for (int i = 0; i < NUM_ITEM_PLACE[StageSelectScene::m_stageID + m_season]; i++)
+		{
+			if (!gm.GetPage()[idStart + i])
 			{
-				// ページ取得
-				gm.SetPage(StageSelectScene::m_stageID * NUM_STAGE_ITEM + i);
+				if (gm.isCollision(m_itemInfo[i].pos, m_pPlayer->getPosition()))
+				{
+					// ページ取得
+					gm.SetPage(idStart + i);
+
+					// ページを消す
+					m_item[i]->removeFromParent();
+				}
 			}
 		}
 	}

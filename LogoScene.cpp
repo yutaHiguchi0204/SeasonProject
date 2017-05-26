@@ -44,32 +44,24 @@ bool LogoScene::init()
 	m_time = 0;
 
 	// ロゴ画像
-	m_pLogo = Sprite::create("background/back_logo");
+	m_pLogo = Sprite::create("background/back_logo.png");
 	m_pLogo->setPosition(WINDOW_MIDDLE);
 	m_pLogo->setOpacity(0x00);
 	this->addChild(m_pLogo);
 
-	return true;
-}
-
-/* =====================================================================
-//! 内　容		更新処理
-//! 引　数		ダミー引数（float）
-//! 戻り値		なし
-===================================================================== */
-void LogoScene::update(float delta)
-{
 	// フェード
 	m_pLogo->runAction(Sequence::create(
 		FadeIn::create(2.0f),
 		FadeOut::create(2.0f),
-		[&]() {
+		CallFunc::create([&]() {
 			// 次のシーンを作成する
 			Scene* nextScene = TitleScene::create();
 			// 次のシーンに移行
 			_director->replaceScene(nextScene);
-		},
+		}),
 		nullptr
 		)
 	);
+
+	return true;
 }

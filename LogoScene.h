@@ -21,6 +21,4 @@ public:
 
 	// ƒV[ƒ“‚ğì¬‚·‚é
 	static cocos2d::Scene* createScene();
-
-	void update(float delta);
 };

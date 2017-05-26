@@ -10,6 +10,7 @@
 #include "Background.h"
 #include "Particle.h"
 #include "GameManager.h"
+#include "Item.h"
 #include "OperationButton.h"
 #include "Pause.h"
 #include "Player.h"
@@ -45,6 +46,7 @@ private:
 	Player* m_pPlayer;									// プレイヤー
 	SeasonBook* m_pSeasonBook;							// 季節記
 	Pollen* m_pPollen;									// 花粉
+	std::vector<Item*> m_item;							// アイテム
 
 	cocos2d::TMXTiledMap* m_pMap;						// マップ
 	cocos2d::TMXLayer* m_pMapTileLayer[NUM_SEASON];		// マップレイヤー（タイル）
