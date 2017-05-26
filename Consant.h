@@ -27,6 +27,8 @@ const int				NUM_COLUMN					= 120;														// 列数
 const int				NUM_STAGE					= 4;														// ステージ数
 const int				NUM_SEASON					= 4;														// 季節数
 const int				NUM_BUTTON					= 5;														// ボタン数
+const int				NUM_ITEM					= 100;														// アイテム数
+const int				NUM_STAGE_ITEM				= 25;														// ステージのアイテム数
 const float				STAGE_WIDTH					= WINDOW_WIDTH * 4;											// ステージサイズ
 const float				STAGE_WIDTH_HERF			= STAGE_WIDTH / 2;											// ステージサイズの半分
 const cocos2d::Vec2		STAGE_MIDDLE				= cocos2d::Vec2(STAGE_WIDTH_HERF, WINDOW_HEIGHT_HERF);		// ステージの中心
@@ -80,7 +82,8 @@ enum class TILE				// タイル
 	NONE = -1,
 	BLOCK,
 	WATER,
-	POLLEN
+	POLLEN,
+	ITEM
 };
 
 enum class COLLISION

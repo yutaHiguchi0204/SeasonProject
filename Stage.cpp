@@ -20,6 +20,7 @@ bool Pollen::m_isPollenFlg;
 
 // メンバ関数の定義
 
+// 初期化
 bool Stage::init()
 {
 	if (!Node::init())
@@ -37,7 +38,7 @@ bool Stage::init()
 	m_isPause = false;									// ポーズ中かどうか
 	Pollen::m_isPollenFlg = false;						// 花粉フラグをおろしておく
 	m_numTiles = 0;										// タイル数
-	m_numSignBoards = 0;								// 看板数
+	m_numItems = 0;										// アイテム数
 	m_numGimmicks = 0;									// ギミック数
 
 	// 背景
@@ -152,7 +153,16 @@ void Stage::InitLayerInfo()
 		sFileName.str("");
 		sFileName.clear();
 
-		sFileName << "gimmickLayer_" << SEASON_NAME[i];
+		sFileName << "itemLayer_" << SEASON_NAME[i];
+
+		// アイテムレイヤー
+		m_pMapItemLayer[i] = m_pMap->getLayer(sFileName.str());
+		m_pMapItemLayer[i]->setVisible(false);
+
+		sFileName.str("");
+		sFileName.clear();
+
+		sFileName << "gimmickLayer_" << SEASON_NAME[i];		
 
 		// ギミックレイヤー
 		m_pMapGimmickLayer[i] = m_pMap->getLayer(sFileName.str());
@@ -180,6 +190,12 @@ void Stage::ReSetLayerInfo()
 		m_tileInfo.pop_back();
 	}
 
+	// アイテム情報の初期化
+	while (!m_itemInfo.empty())
+	{
+		m_itemInfo.pop_back();
+	}
+
 	// ギミック情報の初期化
 	while (!m_gimmickInfo.empty())
 	{
@@ -203,6 +219,9 @@ void Stage::SetLayerInfo()
 {
 	// タイル情報の設定
 	SetTileInfoWithLayer(m_pMapTileLayer[m_season], KIND_TILE::TILE);
+
+	// アイテム情報の設定
+	SetTileInfoWithLayer(m_pMapItemLayer[m_season], KIND_TILE::ITEM);
 
 	// ギミック情報の設定
 	SetTileInfoWithLayer(m_pMapGimmickLayer[m_season], KIND_TILE::GIMMICK);
@@ -269,6 +288,17 @@ void Stage::SetTileInfoWithProperty(ValueMap map, int row, int col, KIND_TILE ti
 
 		break;
 
+	case KIND_TILE::ITEM:		// アイテム
+
+		// アイテム設定
+		if		(map["item"].asString() == "page")			id = static_cast<int>(TILE::ITEM);
+
+		// アイテム数加算
+		m_numItems++;
+
+		// アイテムIDの設定
+		m_itemInfo.push_back(StageInfo{ id, pos });
+
 	case KIND_TILE::GIMMICK:	// ギミック
 
 		// 各ギミック設定
@@ -284,6 +314,25 @@ void Stage::SetTileInfoWithProperty(ValueMap map, int row, int col, KIND_TILE ti
 		m_gimmickInfo.push_back(StageInfo{ id, pos });
 
 		break;
+	}
+}
+
+/* =====================================================================
+//! 内　容		アイテム情報を設定
+//! 引　数		なし
+//! 戻り値		なし
+===================================================================== */
+void Stage::SetItem()
+{
+	GameManager& gm = GameManager::GetInstance();
+
+	for (int i = 0; i < NUM_ITEM; i++)
+	{
+		// とってないアイテムのみセット
+		if (!gm.GetPage()[i])
+		{
+			
+		}
 	}
 }
 
@@ -390,6 +439,19 @@ void Stage::CheckCollision()
 		if (gm.CheckCollision(m_tileInfo[i].pos, m_pPlayer->getPosition()) == COLLISION::LEFT && !m_tileInfo[i].ID == static_cast<int>(TILE::WATER))
 		{
 			m_leftFlag = true;
+		}
+	}
+
+	// アイテムとの当たり判定
+	for (int i = 0; i < m_numItems; i++)
+	{
+		if (!gm.GetPage()[StageSelectScene::m_stageID * NUM_STAGE_ITEM + i])
+		{
+			if (gm.isCollision(m_itemInfo[i].pos, m_pPlayer->getPosition()))
+			{
+				// ページ取得
+				gm.SetPage(StageSelectScene::m_stageID * NUM_STAGE_ITEM + i);
+			}
 		}
 	}
 
