@@ -106,6 +106,17 @@ public:
 		return num;
 	}
 
+	int GetPageStageNum(int stageID)
+	{
+		int num = 0;
+		for (int i = 0; i < NUM_STAGE_ITEM; i++)
+		{
+			if (m_isGetPage[stageID * NUM_STAGE_ITEM + i]) num++;
+		}
+
+		return num;
+	}
+
 private:
 	GameManager()
 	{

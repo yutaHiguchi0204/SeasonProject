@@ -69,11 +69,25 @@ bool Stage::init()
 
 	// プレイヤー
 	m_pPlayer = Player::create();
-	m_pPlayer->setPosition(Vec2(192.0f, 216.0f));
+	if		(StageSelectScene::m_stageID == static_cast<int>(STAGE::FLOWER))	m_pPlayer->setPosition(Vec2(192.0f, 216.0f));
+	else if (StageSelectScene::m_stageID == static_cast<int>(STAGE::BIRD))		m_pPlayer->setPosition(Vec2(64.0f, 440.0f));
+	else if (StageSelectScene::m_stageID == static_cast<int>(STAGE::WIND))		m_pPlayer->setPosition(Vec2(192.0f, 216.0f));
+	else if (StageSelectScene::m_stageID == static_cast<int>(STAGE::MOON))		m_pPlayer->setPosition(Vec2(192.0f, 216.0f));
 	this->addChild(m_pPlayer, 1);
 
 	// 季節記
 	m_pSeasonBook = nullptr;
+
+	// アイテムＵＩ設定
+	m_pItemUIspr = Sprite::create("object/item_page.png");
+	m_pItemUInum = Label::create("0 /25", "HGP行書体", 60);
+	m_pItemUIspr->setPosition(192.0f, WINDOW_HEIGHT - 48.0f);
+	m_pItemUInum->setPosition(320.0f, WINDOW_HEIGHT - 48.0f);
+	m_pItemUIspr->setScale(2.0f);
+	m_pItemUInum->setColor(Color3B(0, 0, 0));
+	this->addChild(m_pItemUIspr);
+	this->addChild(m_pItemUInum);
+	m_pItemUIspr->runAction(RepeatForever::create(RotateBy::create(4.0f, Vec3(0.0f, 360.0f, 0.0f))));
 
 	// レイヤー情報の初期設定
 	InitLayerInfo();
@@ -109,6 +123,12 @@ void Stage::update(float delta)
 		// 季節を変える
 		ChangeSeason();
 	}
+
+	// アイテムＵＩラベルの変更
+	GameManager& gm = GameManager::GetInstance();
+	std::stringstream strNum;
+	strNum << gm.GetPageStageNum(StageSelectScene::m_stageID) << " /25";
+	m_pItemUInum->setString(strNum.str());
 
 	/// デバッグ用
 	if (!m_isPause)
@@ -206,6 +226,11 @@ void Stage::ReSetLayerInfo()
 	}
 	while (!m_item.empty())
 	{
+		if (m_item[m_item.size() - 1] != nullptr)
+		{
+			m_item[m_item.size() - 1]->removeFromParent();
+			m_item[m_item.size() - 1] = nullptr;
+		}
 		m_item.pop_back();
 	}
 
@@ -217,6 +242,7 @@ void Stage::ReSetLayerInfo()
 
 	// タイル数の初期化
 	m_numTiles = 0;
+	m_numItems = 0;
 	m_numGimmicks = 0;
 
 	// タイル情報の設定
@@ -309,9 +335,6 @@ void Stage::SetTileInfoWithProperty(ValueMap map, int row, int col, KIND_TILE ti
 		// アイテム設定
 		if		(map["item"].asString() == "page")			id = static_cast<int>(TILE::ITEM);
 
-		// アイテム数加算
-		m_numItems++;
-
 		// アイテムIDの設定
 		m_itemInfo.push_back(StageInfo{ id, pos });
 
@@ -344,20 +367,25 @@ void Stage::SetItem()
 
 	// アイテムのＩＤがどの要素番号から始まるかを調べる
 	int idStart = 0;
-	for (int i = 0; i < StageSelectScene::m_stageID + m_season; i++)
+	for (int i = 0; i < StageSelectScene::m_stageID * NUM_STAGE + m_season; i++)
 	{
 		idStart += NUM_ITEM_PLACE[i];
 	}
 
-	for (int i = 0; i < NUM_ITEM_PLACE[StageSelectScene::m_stageID + m_season]; i++)
+	for (int i = 0; i < NUM_ITEM_PLACE[StageSelectScene::m_stageID * NUM_STAGE + m_season]; i++)
 	{
-		// とってないアイテムのみセット
-		if (!gm.GetPage()[idStart + i])
+		m_item.push_back(Item::create());
+		m_item[m_item.size() - 1]->setPosition(Vec2(m_itemInfo[i].pos.x + SIZE_TILE / 2, m_itemInfo[i].pos.y));
+		this->addChild(m_item[m_item.size() - 1], -1);
+
+		if (gm.GetPage()[idStart + i])
 		{
-			m_item.push_back(Item::create());
-			m_item[m_item.size() - 1]->setPosition(Vec2(m_itemInfo[i].pos.x + SIZE_TILE / 2, m_tileInfo[i].pos.y + SIZE_TILE));
-			this->addChild(m_item[m_item.size() - 1], -1);
+			m_item[m_item.size() - 1]->removeFromParent();
+			m_item[m_item.size() - 1] = nullptr;
 		}
+
+		// アイテム数加算
+		m_numItems++;
 	}
 }
 
@@ -409,6 +437,10 @@ void Stage::Scroll()
 	// はみ出し確認
 	if (m_pPlayer->getPositionX() >= CAMERA_BORDER && m_pPlayer->getPositionX() <= STAGE_WIDTH - CAMERA_BORDER)
 	{
+		// アイテムＵＩ移動
+		m_pItemUIspr->setPositionX(m_pPlayer->getPositionX() - WINDOW_WIDTH_HERF + 192.0f);
+		m_pItemUInum->setPositionX(m_pPlayer->getPositionX() - WINDOW_WIDTH_HERF + 320.0f);
+
 		// パーティクル移動
 		if (m_pParticle != nullptr) m_pParticle->ParticleScroll(GetCameraPosX());
 
@@ -459,7 +491,7 @@ void Stage::CheckCollision()
 		}
 
 		// 各当たり判定
-		if (gm.CheckCollision(m_tileInfo[i].pos, m_pPlayer->getPosition()) == COLLISION::LEFT)				m_isLeftCollision = true;
+		if		(gm.CheckCollision(m_tileInfo[i].pos, m_pPlayer->getPosition()) == COLLISION::LEFT)			m_isLeftCollision = true;
 		else if (gm.CheckCollision(m_tileInfo[i].pos, m_pPlayer->getPosition()) == COLLISION::RIGHT)		m_isRightCollision = true;
 		else if (gm.CheckCollision(m_tileInfo[i].pos, m_pPlayer->getPosition()) == COLLISION::UP)
 		{
@@ -472,13 +504,13 @@ void Stage::CheckCollision()
 	{
 		// アイテムのＩＤがどの要素番号から始まるかを調べる
 		int idStart = 0;
-		for (int i = 0; i < StageSelectScene::m_stageID + m_season; i++)
+		for (int i = 0; i < StageSelectScene::m_stageID * NUM_STAGE + m_season; i++)
 		{
 			idStart += NUM_ITEM_PLACE[i];
 		}
 
 		// アイテムとの当たり判定
-		for (int i = 0; i < NUM_ITEM_PLACE[StageSelectScene::m_stageID + m_season]; i++)
+		for (int i = 0; i < m_numItems; i++)
 		{
 			if (!gm.GetPage()[idStart + i])
 			{
@@ -489,6 +521,7 @@ void Stage::CheckCollision()
 
 					// ページを消す
 					m_item[i]->removeFromParent();
+					m_item[i] = nullptr;
 				}
 			}
 		}

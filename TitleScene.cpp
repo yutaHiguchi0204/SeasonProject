@@ -87,7 +87,7 @@ void TitleScene::onTouchEnded(Touch* touch, Event* event)
 	// 次のシーンを作成する
 	Scene* nextScene = StageSelectScene::create();
 
-	//フェードトランジション
+	// フェードトランジション
 	nextScene = TransitionFade::create(1.0f, nextScene, Color3B(255, 255, 255));
 
 	// 次のシーンに移行

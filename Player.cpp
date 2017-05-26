@@ -56,7 +56,10 @@ void Player::update(float delta)
 		m_spdX = 0.0f;
 
 		// 重力
-		if (!m_isStand) Gravity(m_isDive);
+		if (getPositionY() > 0)
+		{
+			if (!m_isStand) Gravity(m_isDive);
+		}
 
 		// プレイヤーアニメーション
 		if (m_time % SPEED_ANIMATION == 0) AnimationPlayer();

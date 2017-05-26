@@ -66,6 +66,23 @@ bool StageSelectScene::init()
 	m_pSprPlayer->setPosition(selectButton[static_cast<int>(STAGE::FLOWER)]->getPosition());
 	this->addChild(m_pSprPlayer);
 
+	// アイテムＵＩ設定
+	GameManager& gm = GameManager::GetInstance();
+	m_pItemUIspr = Sprite::create("object/item_page.png");
+	m_pItemUInum = Label::create("0 /100", "HGP行書体", 60);
+
+	std::stringstream strNum;
+	strNum << gm.GetPageNum() << " /100";
+	m_pItemUInum->setString(strNum.str());
+
+	m_pItemUIspr->setPosition(48.0f, WINDOW_HEIGHT - 48.0f);
+	m_pItemUInum->setPosition(192.0f, WINDOW_HEIGHT - 48.0f);
+	m_pItemUIspr->setScale(2.0f);
+	m_pItemUInum->setColor(Color3B(255, 255, 255));
+	this->addChild(m_pItemUIspr);
+	this->addChild(m_pItemUInum);
+	m_pItemUIspr->runAction(RepeatForever::create(RotateBy::create(4.0f, Vec3(0.0f, 360.0f, 0.0f))));
+
 	// タッチイベントリスナーを作成
 	EventListenerTouchOneByOne* listener = EventListenerTouchOneByOne::create();
 

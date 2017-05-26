@@ -14,10 +14,14 @@ const int STAGEMAX_NUM = 4;	//ステージ用の配列
 class StageSelectScene : public cocos2d::Scene
 {
 private:
-	cocos2d::Sprite* m_pSprPlayer;
+	cocos2d::Sprite* m_pSprPlayer;						// プレイヤー画像
 	
-	int m_playerGrpX;	// 画像のx座標
-	int m_time;			// 時間計測
+	int m_playerGrpX;									// 画像のx座標
+	int m_time;											// 時間計測
+
+	cocos2d::Sprite* m_pItemUIspr;						// アイテムＵＩの画像
+	cocos2d::Label* m_pItemUInum;						// アイテムＵＩのアイテム所持数
+
 public:
 	CREATE_FUNC(StageSelectScene);
 	virtual bool init();
@@ -31,7 +35,6 @@ public:
 	void onButtonTouch2(cocos2d::Ref* ref, cocos2d::ui::Widget::TouchEventType eventType) { if (eventType == cocos2d::ui::Widget::TouchEventType::ENDED){ m_touchID = 1;CharactorMove();} }
 	void onButtonTouch3(cocos2d::Ref* ref, cocos2d::ui::Widget::TouchEventType eventType) { if (eventType == cocos2d::ui::Widget::TouchEventType::ENDED){ m_touchID = 2;CharactorMove();} }
 	void onButtonTouch4(cocos2d::Ref* ref, cocos2d::ui::Widget::TouchEventType eventType) { if (eventType == cocos2d::ui::Widget::TouchEventType::ENDED){ m_touchID = 3;CharactorMove();} }
-
 
 	void animationPlayer();	// プレイヤーアニメーション
 
