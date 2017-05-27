@@ -49,6 +49,12 @@ bool Player::init()
 ===================================================================== */
 void Player::update(float delta)
 {
+	// 画面外防止
+	if (getPositionY() <= SIZE_PLAYER_HERF)
+	{
+		m_spdY = 0.0f;
+	}
+
 	if (!Stage::m_isPause)
 	{
 		// 移動
@@ -56,10 +62,7 @@ void Player::update(float delta)
 		m_spdX = 0.0f;
 
 		// 重力
-		if (getPositionY() > 0)
-		{
-			if (!m_isStand) Gravity(m_isDive);
-		}
+		if (!m_isStand) Gravity(m_isDive);
 
 		// プレイヤーアニメーション
 		if (m_time % SPEED_ANIMATION == 0) AnimationPlayer();

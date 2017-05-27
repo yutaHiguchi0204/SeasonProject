@@ -47,7 +47,7 @@ bool Stage::init()
 	m_numItems = 0;										// アイテム数
 	m_numGimmicks = 0;									// ギミック数
 
-	//各ステージの音の生成
+	// 各ステージの音の生成
 	SoundManager& sm = SoundManager::getInstance();
 	sm.PlayGameSound(StageSelectScene::m_stageID + static_cast<int>(SOUND::BGM_FLOWER), false);
 
@@ -71,8 +71,8 @@ bool Stage::init()
 	m_pPlayer = Player::create();
 	if		(StageSelectScene::m_stageID == static_cast<int>(STAGE::FLOWER))	m_pPlayer->setPosition(Vec2(192.0f, 216.0f));
 	else if (StageSelectScene::m_stageID == static_cast<int>(STAGE::BIRD))		m_pPlayer->setPosition(Vec2(64.0f, 440.0f));
-	else if (StageSelectScene::m_stageID == static_cast<int>(STAGE::WIND))		m_pPlayer->setPosition(Vec2(192.0f, 216.0f));
-	else if (StageSelectScene::m_stageID == static_cast<int>(STAGE::MOON))		m_pPlayer->setPosition(Vec2(192.0f, 216.0f));
+	else if (StageSelectScene::m_stageID == static_cast<int>(STAGE::WIND))		m_pPlayer->setPosition(Vec2(64.0f, 216.0f));
+	else if (StageSelectScene::m_stageID == static_cast<int>(STAGE::MOON))		m_pPlayer->setPosition(Vec2(64.0f, 504.0f));
 	this->addChild(m_pPlayer, 1);
 
 	// 季節記
@@ -85,8 +85,8 @@ bool Stage::init()
 	m_pItemUInum->setPosition(320.0f, WINDOW_HEIGHT - 48.0f);
 	m_pItemUIspr->setScale(2.0f);
 	m_pItemUInum->setColor(Color3B(0, 0, 0));
-	this->addChild(m_pItemUIspr);
-	this->addChild(m_pItemUInum);
+	this->addChild(m_pItemUIspr, 2);
+	this->addChild(m_pItemUInum, 2);
 	m_pItemUIspr->runAction(RepeatForever::create(RotateBy::create(4.0f, Vec3(0.0f, 360.0f, 0.0f))));
 
 	// レイヤー情報の初期設定
