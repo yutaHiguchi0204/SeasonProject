@@ -95,9 +95,12 @@ bool StageSelectScene::init()
 	if (gm.GetPageNum() == NUM_ITEM)
 	{
 		// ƒNƒŠƒA
-		cocos2d::ui::Button* clearButton = cocos2d::ui::Button::create("object/item_page.png");
+		cocos2d::ui::Button* clearButton = cocos2d::ui::Button::create("object/clearObj.png");
 		clearButton->setPosition(WINDOW_MIDDLE);
 		this->addChild(clearButton);
+
+		// ‰ñ“]‚³‚¹‚é
+		clearButton->runAction(RepeatForever::create(RotateBy::create(2.0f, Vec3(0.0f, 0.0f, 360.0f))));
 
 		// ƒNƒŠƒA‘JˆÚ
 		clearButton->addClickEventListener([&](Ref* ref) {

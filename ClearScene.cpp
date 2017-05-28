@@ -12,6 +12,9 @@
 USING_NS_CC;
 using namespace std;
 
+// 定数
+const int HERF_COLOR = 127;
+
 // メンバ関数の定義
 
 // シーン管理
@@ -41,10 +44,19 @@ bool ClearScene::init()
 	// 更新処理準備
 	scheduleUpdate();
 
+	// メンバ変数の初期化
+	m_time = 0;
+
 	// 背景
 	m_pBack = Sprite::create("background/back_clear.png");
 	m_pBack->setPosition(WINDOW_MIDDLE);
 	this->addChild(m_pBack);
+
+	// ボタン画像
+	m_pMsgBack = Sprite::create("object/button_clearBack.png");
+	m_pMsgBack->setPosition(Vec2(WINDOW_WIDTH - 80.0f, WINDOW_HEIGHT - 32.0f));
+	m_pMsgBack->setOpacity(0x80);
+	this->addChild(m_pMsgBack);
 
 	// タッチイベントリスナーを作成
 	EventListenerTouchOneByOne* listener = EventListenerTouchOneByOne::create();
@@ -56,6 +68,21 @@ bool ClearScene::init()
 	sm.PlayGameSound(static_cast<int>(SOUND::BGM_CLEAR), false);
 
 	return true;
+}
+
+/* =====================================================================
+//! 内　容		更新処理
+//! 引　数		ダミー引数（float）
+//! 戻り値		なし
+===================================================================== */
+void ClearScene::update(float delta)
+{
+	// フェード
+	if (m_time / HERF_COLOR % 2 == 0)	m_pMsgBack->setOpacity(m_pMsgBack->getOpacity() + 0x01);
+	else								m_pMsgBack->setOpacity(m_pMsgBack->getOpacity() - 0x01);
+
+	// 時間計測
+	m_time++;
 }
 
 /* =====================================================================
