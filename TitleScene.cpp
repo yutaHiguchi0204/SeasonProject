@@ -7,6 +7,7 @@
 // ヘッダファイルのインクルード
 #include "TitleScene.h"
 #include "StageSelectScene.h"
+#include "TwoOptionWindow.h"
 
 // 名前空間
 USING_NS_CC;
@@ -67,8 +68,12 @@ bool TitleScene::init()
 	// データリセット
 	m_pResetButton->addClickEventListener([&](Ref* ref) {
 
-		GameManager& gm = GameManager::GetInstance();
-		gm.ResetPageInfo();
+		// ウインドウ表示
+		TwoOptionWindow* window = TwoOptionWindow::create();
+		window->setPosition(WINDOW_MIDDLE);
+		window->setScale(0.0f);
+		this->addChild(window);
+		window->runAction(ScaleTo::create(0.5f, 1.0f));
 
 	});
 
@@ -97,12 +102,15 @@ void TitleScene::update(float delta)
 
 void TitleScene::onTouchEnded(Touch* touch, Event* event)
 {
-	// 次のシーンを作成する
-	Scene* nextScene = StageSelectScene::create();
+	if (!TwoOptionWindow::m_isResetCheck)
+	{
+		// 次のシーンを作成する
+		Scene* nextScene = StageSelectScene::create();
 
-	// フェードトランジション
-	nextScene = TransitionFade::create(1.0f, nextScene, Color3B(255, 255, 255));
+		// フェードトランジション
+		nextScene = TransitionFade::create(1.0f, nextScene, Color3B(255, 255, 255));
 
-	// 次のシーンに移行
-	_director->replaceScene(nextScene);
+		// 次のシーンに移行
+		_director->replaceScene(nextScene);
+	}
 }

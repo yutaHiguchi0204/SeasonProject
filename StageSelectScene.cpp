@@ -7,6 +7,7 @@
 // ヘッダファイルのインクルード
 #include "StageSelectScene.h"
 #include "ClearScene.h"
+#include "MessageWindow.h"
 #include "PlayScene.h"
 
 // 名前空間
@@ -90,7 +91,19 @@ bool StageSelectScene::init()
 	this->addChild(m_pSaveButton);
 
 	// データの保存
-	m_pSaveButton->addClickEventListener([&](Ref* ref) { gm.ExportPageInfo(); });
+	m_pSaveButton->addClickEventListener([&](Ref* ref) {
+
+		// 保存
+		gm.ExportPageInfo();
+
+		// ウインドウ表示
+		MessageWindow* window = MessageWindow::create();
+		window->setPosition(WINDOW_MIDDLE);
+		window->setScale(0.0f);
+		this->addChild(window);
+		window->runAction(ScaleTo::create(0.5f, 1.0f));
+
+	});
 
 	if (gm.GetPageNum() == NUM_ITEM)
 	{
@@ -119,7 +132,7 @@ bool StageSelectScene::init()
 	selectButton[2]->addTouchEventListener(CC_CALLBACK_2(StageSelectScene::onButtonTouch3, this));
 	selectButton[3]->addTouchEventListener(CC_CALLBACK_2(StageSelectScene::onButtonTouch4, this));
 
-	//ステージセレクト画面での音生成
+	// ステージセレクト画面での音生成
 	SoundManager& sm = SoundManager::getInstance();
 	sm.UncacheGameSound(SOUND::BGM_TITLE);
 	sm.PlayGameSound(static_cast<int>(SOUND::SE_DECISION), false);
@@ -152,83 +165,85 @@ void StageSelectScene::animationPlayer()
 // プレイヤーの移動
 void StageSelectScene::CharactorMove()
 {
-	if (m_pSprPlayer->getPosition() == selectButton[m_touchID]->getPosition())
+	if (!MessageWindow::m_isSaveCheck)
 	{
-		// ステージ決定音の生成
-		SoundManager& sm = SoundManager::getInstance();
-		sm.PlayGameSound(static_cast<int>(SOUND::SE_DECISION), false);
-		
-		// 次のシーンを作成する
-		Scene* nextScene = PlayScene::create();
-
-		// フェードトランジション
-		nextScene = TransitionFade::create(1.0f, nextScene, Color3B(255, 255, 255));
-
-		// 次のシーンに移行
-		_director->replaceScene(nextScene);
-
-		return;
-	}
-
-	//MoveTo* move_action[STAGEMAX_NUM - 1];
-	Spawn* move_action[STAGEMAX_NUM - 1];
-
-	int move_distance = m_touchID - m_stageID;
-
-	for (int i = 0; i < STAGEMAX_NUM - 1; i++)
-	{
-		move_action[i] = nullptr;
-	}
-
-	if (move_distance > 0)
-	{
-		for (int i = 0; i < move_distance; i++)
+		if (m_pSprPlayer->getPosition() == selectButton[m_touchID]->getPosition())
 		{
-			MoveTo* move = MoveTo::create(1.0f, selectButton[m_stageID + i + 1]->getPosition());
-			
-			CallFunc* func = nullptr;
+			// ステージ決定音の生成
+			SoundManager& sm = SoundManager::getInstance();
+			sm.PlayGameSound(static_cast<int>(SOUND::SE_DECISION), false);
 
-			if (selectButton[m_stageID + i]->getPositionX() > selectButton[m_stageID + i + 1]->getPositionX())
-				func = CallFunc::create([&]() { m_pSprPlayer->setFlippedX(true); });
-			else
-				func = CallFunc::create([&]() { m_pSprPlayer->setFlippedX(false); });
+			// 次のシーンを作成する
+			Scene* nextScene = PlayScene::create();
 
-			move_action[i] = Spawn::create(move, func, nullptr);
+			// フェードトランジション
+			nextScene = TransitionFade::create(1.0f, nextScene, Color3B(255, 255, 255));
+
+			// 次のシーンに移行
+			_director->replaceScene(nextScene);
+
+			return;
+		}
+
+		//MoveTo* move_action[STAGEMAX_NUM - 1];
+		Spawn* move_action[STAGEMAX_NUM - 1];
+
+		int move_distance = m_touchID - m_stageID;
+
+		for (int i = 0; i < STAGEMAX_NUM - 1; i++)
+		{
+			move_action[i] = nullptr;
+		}
+
+		if (move_distance > 0)
+		{
+			for (int i = 0; i < move_distance; i++)
+			{
+				MoveTo* move = MoveTo::create(1.0f, selectButton[m_stageID + i + 1]->getPosition());
+
+				CallFunc* func = nullptr;
+
+				if (selectButton[m_stageID + i]->getPositionX() > selectButton[m_stageID + i + 1]->getPositionX())
+					func = CallFunc::create([&]() { m_pSprPlayer->setFlippedX(true); });
+				else
+					func = CallFunc::create([&]() { m_pSprPlayer->setFlippedX(false); });
+
+				move_action[i] = Spawn::create(move, func, nullptr);
+			}
+		}
+		else
+		{
+			move_distance *= -1;
+
+			for (int i = 0; i < move_distance; i++)
+			{
+				MoveTo* move = MoveTo::create(1.0f, selectButton[m_stageID - i - 1]->getPosition());
+
+				CallFunc* func = nullptr;
+
+				if (selectButton[m_stageID - i]->getPositionX() > selectButton[m_stageID - i - 1]->getPositionX())
+					func = CallFunc::create([&]() { m_pSprPlayer->setFlippedX(true); });
+				else
+					func = CallFunc::create([&]() { m_pSprPlayer->setFlippedX(false); });
+
+				move_action[i] = Spawn::create(move, func, nullptr);
+			}
+		}
+
+		m_move_action_sequence = Sequence::create(move_action[0], move_action[1], move_action[2], nullptr);
+
+		if (!m_pSprPlayer->getActionByTag(1))
+		{
+			m_pSprPlayer->stopActionByTag(1);
+			m_move_action_sequence->setTag(1);
+			m_pSprPlayer->runAction(m_move_action_sequence);
+
+			m_stageID = m_touchID;
+
+			// ステージセレクト音の生成
+			SoundManager& sm = SoundManager::getInstance();
+			sm.UncacheGameSound(SOUND::SE_DECISION);
+			sm.PlayGameSound(static_cast<int>(SOUND::SE_STAGESELECT), false);
 		}
 	}
-	else
-	{
-		move_distance *= -1;
-
-		for (int i = 0; i < move_distance; i++)
-		{
-			MoveTo* move = MoveTo::create(1.0f, selectButton[m_stageID - i - 1]->getPosition());
-
-			CallFunc* func = nullptr;
-
-			if (selectButton[m_stageID - i]->getPositionX() > selectButton[m_stageID - i - 1]->getPositionX())
-				func = CallFunc::create([&]() { m_pSprPlayer->setFlippedX(true); });
-			else
-				func = CallFunc::create([&]() { m_pSprPlayer->setFlippedX(false); });
-
-			move_action[i] = Spawn::create(move, func, nullptr);
-		}
-	}
-
-	m_move_action_sequence = Sequence::create(move_action[0], move_action[1], move_action[2], nullptr);
-
-	if (!m_pSprPlayer->getActionByTag(1))
-	{
-		m_pSprPlayer->stopActionByTag(1);
-		m_move_action_sequence->setTag(1);
-		m_pSprPlayer->runAction(m_move_action_sequence);
-
-		m_stageID = m_touchID;
-
-		// ステージセレクト音の生成
-		SoundManager& sm = SoundManager::getInstance();
-		sm.UncacheGameSound(SOUND::SE_DECISION);
-		sm.PlayGameSound(static_cast<int>(SOUND::SE_STAGESELECT), false);
-	}
-
 }
