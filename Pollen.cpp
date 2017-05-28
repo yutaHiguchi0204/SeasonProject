@@ -6,6 +6,7 @@
 
 // ヘッダファイルのインクルード
 #include "Pollen.h"
+#include "Stage.h"
 
 // 名前空間
 USING_NS_CC;
@@ -69,6 +70,13 @@ void Pollen::update(float delta)
 		{
 			m_isPollenFlg = false;
 			removeFromParent();
+		}
+
+		//春以外は花粉の音を消す
+		if (Stage::m_season != static_cast<int>(SEASON::SPRING))
+		{
+			SoundManager& sm = SoundManager::getInstance();
+			sm.UncacheGameSound(SOUND::SE_KAFUN);
 		}
 	}
 	

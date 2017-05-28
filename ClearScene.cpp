@@ -43,7 +43,7 @@ bool ClearScene::init()
 
 	// 背景
 	m_pBack = Sprite::create("background/back_clear.png");
-	m_pBack->setPosition(Vec2(WINDOW_WIDTH_HERF, WINDOW_HEIGHT_HERF));
+	m_pBack->setPosition(WINDOW_MIDDLE);
 	this->addChild(m_pBack);
 
 	// タッチイベントリスナーを作成
@@ -51,7 +51,7 @@ bool ClearScene::init()
 	listener->onTouchBegan = CC_CALLBACK_2(ClearScene::onTouchBegan, this);
 	_director->getEventDispatcher()->addEventListenerWithSceneGraphPriority(listener, this);
 
-	//クリアのBGM生成
+	// クリアのBGM生成
 	SoundManager& sm = SoundManager::getInstance();
 	sm.PlayGameSound(static_cast<int>(SOUND::BGM_CLEAR), false);
 

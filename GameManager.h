@@ -45,18 +45,18 @@ public:
 	COLLISION CheckCollision(cocos2d::Vec2 tileVec, cocos2d::Vec2 playerVec)
 	{
 		// è„â∫ÇÃìñÇΩÇËîªíË
-		if ((playerVec.x - SIZE_PLAYER_COLLISION_HERF <= tileVec.x + SIZE_TILE) &&
+		if ((playerVec.x - SIZE_PLAYER_COLLISION_HERF <= tileVec.x + SIZE_TILE / 2) &&
 			(playerVec.x + SIZE_PLAYER_COLLISION_HERF >= tileVec.x))
 		{
 			// â∫ÇÃìñÇΩÇËîªíË
-			if ((playerVec.y - SIZE_PLAYER_HERF >= tileVec.y + SIZE_TILE) &&
+			if ((playerVec.y - SIZE_PLAYER_HERF >= tileVec.y + SIZE_TILE / 2) &&
 				(playerVec.y - SIZE_PLAYER_HERF - SIZE_COLLIDER <= tileVec.y + SIZE_TILE))
 			{
 				return COLLISION::DOWN;
 			}
 
 			// è„ÇÃìñÇΩÇËîªíË
-			if ((playerVec.y + SIZE_PLAYER_HERF <= tileVec.y + SIZE_TILE) &&
+			if ((playerVec.y + SIZE_PLAYER_HERF <= tileVec.y + SIZE_TILE / 2) &&
 				(playerVec.y + SIZE_PLAYER_HERF >= tileVec.y))
 			{
 				return COLLISION::UP;
@@ -64,18 +64,18 @@ public:
 		}
 
 		// ç∂âEÇÃìñÇΩÇËîªíË
-		if ((playerVec.y - SIZE_PLAYER_HERF <= tileVec.y + SIZE_TILE) &&
+		if ((playerVec.y - SIZE_PLAYER_HERF <= tileVec.y + SIZE_TILE / 2) &&
 			(playerVec.y + SIZE_PLAYER_HERF >= tileVec.y))
 		{
 			// âEÇÃìñÇΩÇËîªíË
-			if ((playerVec.x + SIZE_PLAYER_COLLISION_HERF >= tileVec.x) &&
-				(playerVec.x - SIZE_PLAYER_COLLISION_HERF <= tileVec.x + SIZE_TILE))
+			if ((playerVec.x + SIZE_PLAYER_COLLISION_HERF + SPEED_MOVE_PLAYER >= tileVec.x) &&
+				(playerVec.x - SIZE_PLAYER_COLLISION_HERF <= tileVec.x + SIZE_TILE / 2))
 			{
 				return COLLISION::RIGHT;
 			}
 
 			// ç∂ÇÃìñÇΩÇËîªíË
-			if ((playerVec.x - SIZE_PLAYER_COLLISION_HERF <= tileVec.x + SIZE_TILE) &&
+			if ((playerVec.x - SIZE_PLAYER_COLLISION_HERF - SPEED_MOVE_PLAYER<= tileVec.x + SIZE_TILE) &&
 				(playerVec.x + SIZE_PLAYER_COLLISION_HERF >= tileVec.x))
 			{
 				return COLLISION::LEFT;

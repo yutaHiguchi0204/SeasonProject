@@ -15,9 +15,14 @@ class StageSelectScene : public cocos2d::Scene
 {
 private:
 	cocos2d::Sprite* m_pSprPlayer;						// プレイヤー画像
+
+	int m_touchID;										// タッチしたＩＤ
 	
 	int m_playerGrpX;									// 画像のx座標
 	int m_time;											// 時間計測
+
+	cocos2d::ui::Button* selectButton[STAGEMAX_NUM];
+	cocos2d::Sequence* m_move_action_sequence;			// Sequenceアクション
 
 	cocos2d::Sprite* m_pItemUIspr;						// アイテムＵＩの画像
 	cocos2d::Label* m_pItemUInum;						// アイテムＵＩのアイテム所持数
@@ -44,12 +49,5 @@ public:
 
 	// 静的メンバ
 	static int m_stageID;
-
-	//タッチしたID
-	int m_touchID;
-
-	cocos2d::ui::Button* selectButton[STAGEMAX_NUM];
-	cocos2d::Sequence* m_move_action_sequence;	//Sequenceアクション
-
 };
 

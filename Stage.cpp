@@ -49,7 +49,8 @@ bool Stage::init()
 
 	// 各ステージの音の生成
 	SoundManager& sm = SoundManager::getInstance();
-	sm.PlayGameSound(StageSelectScene::m_stageID + static_cast<int>(SOUND::BGM_FLOWER), false);
+	sm.PlayGameSound(static_cast<int>(SOUND::SE_DECISION), false);
+	sm.PlayGameSound(StageSelectScene::m_stageID + static_cast<int>(SOUND::BGM_FLOWER), true);
 
 	// 背景
 	m_pBack = Background::create();
@@ -491,11 +492,11 @@ void Stage::CheckCollision()
 		}
 
 		// 各当たり判定
-		if		(gm.CheckCollision(m_tileInfo[i].pos, m_pPlayer->getPosition()) == COLLISION::LEFT)			m_isLeftCollision = true;
-		else if (gm.CheckCollision(m_tileInfo[i].pos, m_pPlayer->getPosition()) == COLLISION::RIGHT)		m_isRightCollision = true;
-		else if (gm.CheckCollision(m_tileInfo[i].pos, m_pPlayer->getPosition()) == COLLISION::UP)
+		if		(gm.CheckCollision(m_tileInfo[i].pos, m_pPlayer->getPosition()) == COLLISION::LEFT && m_tileInfo[i].ID != static_cast<int>(TILE::WATER))			m_isLeftCollision = true;
+		else if (gm.CheckCollision(m_tileInfo[i].pos, m_pPlayer->getPosition()) == COLLISION::RIGHT && m_tileInfo[i].ID != static_cast<int>(TILE::WATER))		m_isRightCollision = true;
+		else if (gm.CheckCollision(m_tileInfo[i].pos, m_pPlayer->getPosition()) == COLLISION::UP && m_tileInfo[i].ID != static_cast<int>(TILE::WATER))
 		{
-			m_pPlayer->SetSpdY(-0.01f);
+			m_pPlayer->SetSpdY(-1.0f);
 			m_isTopCollision = true;
 		}
 	}
@@ -555,7 +556,7 @@ void Stage::CheckCollision()
 			else if (m_gimmickInfo[i].ID == static_cast<int>(TILE::BLOCK) && gm.CheckCollision(m_gimmickInfo[i].pos, m_pPlayer->getPosition()) == COLLISION::RIGHT)		m_isRightCollision = true;
 			else if (m_gimmickInfo[i].ID == static_cast<int>(TILE::BLOCK) && gm.CheckCollision(m_gimmickInfo[i].pos, m_pPlayer->getPosition()) == COLLISION::UP)
 			{
-				m_pPlayer->SetSpdY(-0.01f);
+				m_pPlayer->SetSpdY(-1.0f);
 				m_isTopCollision = true;
 			}
 		}

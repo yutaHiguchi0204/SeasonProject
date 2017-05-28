@@ -49,12 +49,6 @@ bool Player::init()
 ===================================================================== */
 void Player::update(float delta)
 {
-	// 画面外防止
-	if (getPositionY() <= SIZE_PLAYER_HERF)
-	{
-		m_spdY = 0.0f;
-	}
-
 	if (!Stage::m_isPause)
 	{
 		// 移動
@@ -63,6 +57,18 @@ void Player::update(float delta)
 
 		// 重力
 		if (!m_isStand) Gravity(m_isDive);
+
+		// 画面外防止
+		if (getPositionY() <= SIZE_PLAYER_HERF)
+		{
+			m_isJump = false;
+			m_spdY = 0.0f;
+		}
+
+		if (this->getPositionY() >= WINDOW_HEIGHT)
+		{
+			SetSpdY(-1.0f);
+		}
 
 		// プレイヤーアニメーション
 		if (m_time % SPEED_ANIMATION == 0) AnimationPlayer();
@@ -151,12 +157,22 @@ void Player::Jump()
 	if (m_isDive)
 	{
 		m_spdY = JUMP_WATER_PLAYER;
+
+		//泳ぐ音の生成
+		SoundManager& sm = SoundManager::getInstance();
+		sm.PlayGameSound(static_cast<int>(SOUND::SE_SWIM),false);
 	}
 	else
 	{
 		m_spdY = JUMP_PLAYER;
 		m_isJump = true;
 		m_isStand = false;
+
+		//ジャンプ音の生成
+		SoundManager& sm = SoundManager::getInstance();
+		sm.PlayGameSound(static_cast<int>(SOUND::SE_JUMP), false);
+		sm.UncacheGameSound(SOUND::SE_SWIM);
+
 	}
 }
 

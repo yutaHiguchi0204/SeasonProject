@@ -75,7 +75,6 @@ void Pause::update(float delta)
 	// タイトルに戻るボタンが押されたら
 	else if (m_pPauseButtonTitle->isHighlighted())
 	{
-
 		//タイトルに戻る音の生成
 		SoundManager& sm = SoundManager::getInstance();
 		sm.UncacheGameSoundAll();
