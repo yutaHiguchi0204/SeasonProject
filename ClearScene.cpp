@@ -63,8 +63,11 @@ bool ClearScene::init()
 	listener->onTouchBegan = CC_CALLBACK_2(ClearScene::onTouchBegan, this);
 	_director->getEventDispatcher()->addEventListenerWithSceneGraphPriority(listener, this);
 
-	// クリアのBGM生成
+	
+	//決定音の生成
 	SoundManager& sm = SoundManager::getInstance();
+	sm.PlayGameSound(static_cast<int>(SOUND::SE_DECISION), false);
+	// クリアのBGM生成
 	sm.PlayGameSound(static_cast<int>(SOUND::BGM_CLEAR), false);
 
 	return true;
@@ -92,6 +95,11 @@ void ClearScene::update(float delta)
 ===================================================================== */
 bool ClearScene::onTouchBegan(Touch* touch, Event* pEvent)
 {
+	//決定音を生成
+	SoundManager& sm = SoundManager::getInstance();
+	sm.UncacheGameSound(SOUND::BGM_CLEAR);
+	sm.PlayGameSound(static_cast<int>(SOUND::SE_DECISION), false);
+
 	// 次のシーンを作成する
 	Scene* nextScene = StageSelectScene::create();
 

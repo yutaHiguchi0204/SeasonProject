@@ -123,6 +123,10 @@ public:
 
 		std::stringstream key;
 
+		//Œˆ’è‰¹‚Ì¶¬
+		SoundManager& sm = SoundManager::getInstance();
+		sm.PlayGameSound(static_cast<int>(SOUND::SE_DECISION), false);
+
 		for (int i = 0; i < NUM_ITEM; i++)
 		{
 			key.str("");
@@ -140,6 +144,10 @@ public:
 		cocos2d::UserDefault* _userDefault = cocos2d::UserDefault::getInstance();
 
 		std::stringstream key;
+
+		//Œˆ’è‰¹‚Ì¶¬
+		SoundManager& sm = SoundManager::getInstance();
+		sm.PlayGameSound(static_cast<int>(SOUND::SE_DECISION), false);
 
 		for (int i = 0; i < NUM_ITEM; i++)
 		{
