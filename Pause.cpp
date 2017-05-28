@@ -83,9 +83,6 @@ void Pause::update(float delta)
 		// 次のシーンを作成する
 		Scene* nextScene = TitleScene::createScene();
 
-		// フェードトランジション
-		nextScene = TransitionFade::create(1.0f, nextScene, Color3B(255, 255, 255));
-
 		// 次のシーンに移行
 		_director->replaceScene(nextScene);
 
@@ -102,9 +99,6 @@ void Pause::update(float delta)
 
 		// 次のシーンを作成する
 		Scene* nextScene = StageSelectScene::createScene();
-
-		// フェードトランジション
-		nextScene = TransitionFade::create(1.0f, nextScene, Color3B(255, 255, 255));
 
 		// 次のシーンに移行
 		_director->replaceScene(nextScene);
