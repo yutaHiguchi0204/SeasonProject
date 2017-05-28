@@ -134,7 +134,6 @@ bool StageSelectScene::init()
 
 	// ステージセレクト画面での音生成
 	SoundManager& sm = SoundManager::getInstance();
-	sm.UncacheGameSound(SOUND::BGM_TITLE);
 	sm.PlayGameSound(static_cast<int>(SOUND::SE_DECISION), false);
 	
 	return true;
@@ -171,6 +170,7 @@ void StageSelectScene::CharactorMove()
 		{
 			// ステージ決定音の生成
 			SoundManager& sm = SoundManager::getInstance();
+			sm.UncacheGameSound(SOUND::BGM_TITLE);
 			sm.PlayGameSound(static_cast<int>(SOUND::SE_DECISION), false);
 
 			// 次のシーンを作成する
