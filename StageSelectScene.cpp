@@ -136,7 +136,7 @@ bool StageSelectScene::init()
 	SoundManager& sm = SoundManager::getInstance();
 	sm.UncacheGameSound(SOUND::BGM_TITLE);
 	sm.PlayGameSound(static_cast<int>(SOUND::SE_DECISION), false);
-
+	
 	return true;
 }
 

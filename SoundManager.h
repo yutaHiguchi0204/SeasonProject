@@ -11,7 +11,7 @@
 
 // 定数
 /* サウンドを追加したい場合は用途とファイル名をここに登録してください */
-const int NUM_SOUND =17;
+const int NUM_SOUND =15;
 
 enum class SOUND
 {

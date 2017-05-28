@@ -46,6 +46,11 @@ bool TwoOptionWindow::init()
 		GameManager& gm = GameManager::GetInstance();
 		gm.ResetPageInfo();
 
+		// 決定音の生成
+		SoundManager& sm = SoundManager::getInstance();
+		sm.PlayGameSound(static_cast<int>(SOUND::SE_DECISION), false);
+		sm.UncacheGameSound(SOUND::SE_DECISION);
+
 		// 後処理
 		runAction(Sequence::create(
 			ScaleTo::create(0.5f, 0.0f),
@@ -57,6 +62,10 @@ bool TwoOptionWindow::init()
 
 	// キャンセルボタンタップ
 	m_pButtonCancel->addClickEventListener([&](Ref* ref) {
+
+		// キャンセル音の生成
+		SoundManager& sm = SoundManager::getInstance();
+		sm.PlayGameSound(static_cast<int>(SOUND::SE_CLOSE), false);
 
 		// 後処理
 		runAction(Sequence::create(

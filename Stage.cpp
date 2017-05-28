@@ -520,6 +520,10 @@ void Stage::CheckCollision()
 					// ページ取得
 					gm.SetPage(idStart + i);
 
+					// アイテムを取得した時の音の生成
+					SoundManager& sm = SoundManager::getInstance();
+					sm.PlayGameSound(static_cast<int>(SOUND::SE_GET), false);
+
 					// ページを消す
 					m_item[i]->removeFromParent();
 					m_item[i] = nullptr;

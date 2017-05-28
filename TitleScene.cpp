@@ -68,6 +68,11 @@ bool TitleScene::init()
 	// データリセット
 	m_pResetButton->addClickEventListener([&](Ref* ref) {
 
+		// 決定音の生成
+		SoundManager& sm = SoundManager::getInstance();
+		sm.PlayGameSound(static_cast<int>(SOUND::SE_DECISION), false);
+		
+
 		// ウインドウ表示
 		TwoOptionWindow* window = TwoOptionWindow::create();
 		window->setPosition(WINDOW_MIDDLE);
@@ -86,7 +91,7 @@ bool TitleScene::init()
 	// タイトルのBGM生成
 	SoundManager& sm = SoundManager::getInstance();
 	sm.PlayGameSound(static_cast<int>(SOUND::BGM_TITLE), false);
-
+	
 	return true;
 }
 
