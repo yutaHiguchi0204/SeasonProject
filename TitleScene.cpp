@@ -59,13 +59,26 @@ bool TitleScene::init()
 	m_pMsgTitle->setOpacity(0x80);
 	this->addChild(m_pMsgTitle);
 
+	// リセットボタン
+	m_pResetButton = cocos2d::ui::Button::create("object/button_dataReset.png");
+	m_pResetButton->setPosition(Vec2(WINDOW_WIDTH - 80.0f, WINDOW_HEIGHT - 32.0f));
+	this->addChild(m_pResetButton);
+	
+	// データリセット
+	m_pResetButton->addClickEventListener([&](Ref* ref) {
+
+		GameManager& gm = GameManager::GetInstance();
+		gm.ResetPageInfo();
+
+	});
+
 	// タッチイベントリスナーを作成
 	EventListenerTouchOneByOne* listener = EventListenerTouchOneByOne::create();
 	listener->onTouchBegan = CC_CALLBACK_2(TitleScene::onTouchBegan, this);
 	listener->onTouchEnded = CC_CALLBACK_2(TitleScene::onTouchEnded, this);
 	this->getEventDispatcher()->addEventListenerWithSceneGraphPriority(listener, this);
 
-	//タイトルのBGM生成
+	// タイトルのBGM生成
 	SoundManager& sm = SoundManager::getInstance();
 	sm.PlayGameSound(static_cast<int>(SOUND::BGM_TITLE), false);
 

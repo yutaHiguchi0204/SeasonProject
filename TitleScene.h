@@ -13,6 +13,7 @@ class TitleScene : public cocos2d::Scene
 {
 private:
 	cocos2d::Sprite* m_pMsgTitle;
+	cocos2d::ui::Button* m_pResetButton;
 	int m_time;
 
 public:

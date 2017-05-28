@@ -85,27 +85,26 @@ public:
 		return COLLISION::NONE;
 	};
 
+	// アイテム情報のセット
 	void SetPage(int pageID)
 	{
 		m_isGetPage[pageID] = true;
+		m_numPage++;
 	}
 
+	// アイテム情報の取得
 	bool* GetPage()
 	{
 		return m_isGetPage;
 	}
-
+	
+	// 取得アイテム数の取得
 	int GetPageNum()
 	{
-		int num = 0;
-		for (int i = 0; i < NUM_ITEM; i++)
-		{
-			if (m_isGetPage[i]) num++;
-		}
-
-		return num;
+		return m_numPage;
 	}
 
+	// ステージ内の取得アイテム数の取得
 	int GetPageStageNum(int stageID)
 	{
 		int num = 0;
@@ -117,10 +116,67 @@ public:
 		return num;
 	}
 
+	// アイテム情報のデータをインポート
+	void ImportPageInfo()
+	{
+		cocos2d::UserDefault* _userDefault = cocos2d::UserDefault::getInstance();
+
+		std::stringstream key;
+
+		for (int i = 0; i < NUM_ITEM; i++)
+		{
+			key.str("");
+			key.clear();
+			key << "key_" << i;
+
+			if (_userDefault->getBoolForKey(key.str().c_str()))
+				SetPage(i);
+		}
+	}
+
+	// アイテム情報のエクスポート
+	void ExportPageInfo()
+	{
+		cocos2d::UserDefault* _userDefault = cocos2d::UserDefault::getInstance();
+
+		std::stringstream key;
+
+		for (int i = 0; i < NUM_ITEM; i++)
+		{
+			key.str("");
+			key.clear();
+			key << "key_" << i;
+
+			_userDefault->setBoolForKey(key.str().c_str(), GetPage()[i]);
+		}
+	}
+
+	// アイテム情報の初期化
+	void ResetPageInfo()
+	{
+		cocos2d::UserDefault* _userDefault = cocos2d::UserDefault::getInstance();
+
+		std::stringstream key;
+
+		for (int i = 0; i < NUM_ITEM; i++)
+		{
+			key.str("");
+			key.clear();
+			key << "key_" << i;
+
+			_userDefault->setBoolForKey(key.str().c_str(), false);
+			m_isGetPage[i] = false;
+		}
+
+		m_numPage = 0;
+	}
+
 private:
 	GameManager()
 	{
 		for (int i = 0; i < NUM_ITEM; i++) m_isGetPage[i] = false;
 		m_numPage = 0;
+
+		ImportPageInfo();
 	};
 };

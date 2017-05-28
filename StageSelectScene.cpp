@@ -83,6 +83,19 @@ bool StageSelectScene::init()
 	this->addChild(m_pItemUInum);
 	m_pItemUIspr->runAction(RepeatForever::create(RotateBy::create(4.0f, Vec3(0.0f, 360.0f, 0.0f))));
 
+	// セーブボタン
+	m_pSaveButton = cocos2d::ui::Button::create("object/button_dataSave.png");
+	m_pSaveButton->setPosition(Vec2(WINDOW_WIDTH - 80.0f, 48.0f));
+	this->addChild(m_pSaveButton);
+
+	// データの保存
+	m_pSaveButton->addClickEventListener([&](Ref* ref) {
+
+		GameManager& gm = GameManager::GetInstance();
+		gm.ExportPageInfo();
+
+	});
+
 	// タッチイベントリスナーを作成
 	EventListenerTouchOneByOne* listener = EventListenerTouchOneByOne::create();
 
@@ -123,13 +136,13 @@ void StageSelectScene::animationPlayer()
 	}
 }
 
-//プレイヤーの移動
+// プレイヤーの移動
 void StageSelectScene::CharactorMove()
 {
 	if (m_pSprPlayer->getPosition() == selectButton[m_touchID]->getPosition())
 	{
 
-		//ステージ決定音の生成
+		// ステージ決定音の生成
 		SoundManager& sm = SoundManager::getInstance();
 		sm.UncacheGameSound(SOUND::SE_STAGESELECT);
 		sm.PlayGameSound(static_cast<int>(SOUND::SE_DECISION), false);
@@ -137,7 +150,7 @@ void StageSelectScene::CharactorMove()
 		// 次のシーンを作成する
 		Scene* nextScene = PlayScene::create();
 
-		//フェードトランジション
+		// フェードトランジション
 		nextScene = TransitionFade::create(1.0f, nextScene, Color3B(255, 255, 255));
 
 		// 次のシーンに移行
@@ -160,9 +173,7 @@ void StageSelectScene::CharactorMove()
 
 		for (int i = 0; i < move_distance; i++)
 		{
-
 			move_action[i] = MoveTo::create(1.0f, selectButton[m_stageID + i + 1]->getPosition());
-
 		}
 	}
 	else
@@ -171,7 +182,7 @@ void StageSelectScene::CharactorMove()
 
 		for (int i = 0; i < move_distance; i++)
 		{
-			move_action[i] = MoveTo::create(1.0f, selectButton[m_stageID - i - 1]->getPosition());
+			move_action[i] = MoveTo::create(1.0f, selectButton[m_stageID + i + 1]->getPosition());
 		}
 	}
 
@@ -185,10 +196,9 @@ void StageSelectScene::CharactorMove()
 
 		m_stageID = m_touchID;
 
-		//ステージセレクト音の生成
+		// ステージセレクト音の生成
 		SoundManager& sm = SoundManager::getInstance();
 		sm.PlayGameSound(static_cast<int>(SOUND::SE_STAGESELECT), false);
-
 	}
 
 }

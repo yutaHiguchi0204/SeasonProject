@@ -22,6 +22,8 @@ private:
 	cocos2d::Sprite* m_pItemUIspr;						// アイテムＵＩの画像
 	cocos2d::Label* m_pItemUInum;						// アイテムＵＩのアイテム所持数
 
+	cocos2d::ui::Button* m_pSaveButton;					// セーブボタン
+
 public:
 	CREATE_FUNC(StageSelectScene);
 	virtual bool init();
