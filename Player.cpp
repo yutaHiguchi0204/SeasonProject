@@ -15,6 +15,7 @@ USING_NS_CC;
 
 // 静的メンバの定義
 bool Player::m_isJump;
+bool Player::m_isDive;
 
 // メンバ関数の定義
 
@@ -49,7 +50,7 @@ bool Player::init()
 ===================================================================== */
 void Player::update(float delta)
 {
-	if (!Stage::m_isPause)
+	if (!Stage::m_isPause && !Stage::m_isShowObject)
 	{
 		// 移動
 		setPosition(getPosition() + Vec2(m_spdX, m_spdY));
@@ -132,7 +133,7 @@ void Player::Fall(int mapInfo, int season)
 			m_isDive = true;
 
 			// 泳ぐボタンに変わる
-			PlayScene::m_pButton[static_cast<int>(BUTTON::ACTION)]->ChangeButtonTexture(ACTION::SWIM);
+			//PlayScene::m_pButton[static_cast<int>(BUTTON::ACTION)]->ChangeButtonTexture(ACTION::SWIM);
 		}
 	}
 }
@@ -158,9 +159,9 @@ void Player::Jump()
 	{
 		m_spdY = JUMP_WATER_PLAYER;
 
-		//泳ぐ音の生成
-		SoundManager& sm = SoundManager::getInstance();
-		sm.PlayGameSound(static_cast<int>(SOUND::SE_SWIM),false);
+		// 泳ぐ音の生成
+		//SoundManager& sm = SoundManager::getInstance();
+		//sm.PlayGameSound(static_cast<int>(SOUND::SE_SWIM),false);
 	}
 	else
 	{
@@ -168,10 +169,10 @@ void Player::Jump()
 		m_isJump = true;
 		m_isStand = false;
 
-		//ジャンプ音の生成
+		// ジャンプ音の生成
 		SoundManager& sm = SoundManager::getInstance();
 		sm.PlayGameSound(static_cast<int>(SOUND::SE_JUMP), false);
-		sm.UncacheGameSound(SOUND::SE_SWIM);
+		//sm.UncacheGameSound(SOUND::SE_SWIM);
 
 	}
 }

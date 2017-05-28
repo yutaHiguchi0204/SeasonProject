@@ -22,7 +22,6 @@ private:
 	float m_spdY;		// 移動速度y
 
 	bool m_isStand;		// 地面にたっているかどうか
-	bool m_isDive;		// 水中にいるかどうか
 
 	int m_time;			// 時間計測
 
@@ -45,4 +44,5 @@ public:
 
 	// 静的メンバ変数
 	static bool m_isJump;											// ジャンプをしているか
+	static bool m_isDive;											// 水中にいるかどうか
 };
