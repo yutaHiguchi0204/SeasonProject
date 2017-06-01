@@ -335,6 +335,7 @@ void Stage::SetTileInfoWithProperty(ValueMap map, int row, int col, KIND_TILE ti
 
 		// アイテム設定
 		if		(map["item"].asString() == "page")			id = static_cast<int>(TILE::ITEM);
+		else												id = static_cast<int>(TILE::NONE);
 
 		// アイテムIDの設定
 		m_itemInfo.push_back(StageInfo{ id, pos });

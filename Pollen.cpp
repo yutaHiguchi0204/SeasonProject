@@ -51,35 +51,38 @@ bool Pollen::init()
 ===================================================================== */
 void Pollen::update(float delta)
 {
-	if (m_time / NUM_SECOND < TIME_POLLEN)
+	if (!Stage::m_isPause)
 	{
-		// フェードイン
-		if (getOpacity() < 0xff)
+		if (m_time / NUM_SECOND < TIME_POLLEN)
 		{
-			setOpacity(getOpacity() + 0x01);
-		}
-	}
-	else
-	{
-		// フェードアウト
-		if (getOpacity() > 0x00)
-		{
-			setOpacity(getOpacity() - 0x01);
+			// フェードイン
+			if (getOpacity() < 0xff)
+			{
+				setOpacity(getOpacity() + 0x01);
+			}
 		}
 		else
 		{
-			m_isPollenFlg = false;
-			removeFromParent();
+			// フェードアウト
+			if (getOpacity() > 0x00)
+			{
+				setOpacity(getOpacity() - 0x01);
+			}
+			else
+			{
+				m_isPollenFlg = false;
+				removeFromParent();
+			}
+
+			//春以外は花粉の音を消す
+			if (Stage::m_season != static_cast<int>(SEASON::SPRING))
+			{
+				SoundManager& sm = SoundManager::getInstance();
+				sm.UncacheGameSound(SOUND::SE_KAFUN);
+			}
 		}
 
-		//春以外は花粉の音を消す
-		if (Stage::m_season != static_cast<int>(SEASON::SPRING))
-		{
-			SoundManager& sm = SoundManager::getInstance();
-			sm.UncacheGameSound(SOUND::SE_KAFUN);
-		}
+		// 時間計測
+		m_time++;
 	}
-	
-	// 時間計測
-	m_time++;
 }
