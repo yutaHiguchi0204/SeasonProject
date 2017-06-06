@@ -21,7 +21,7 @@ private:
 	int m_playerGrpX;									// 画像のx座標
 	int m_time;											// 時間計測
 
-	cocos2d::ui::Button* selectButton[STAGEMAX_NUM];
+	cocos2d::ui::Button* selectButton[STAGEMAX_NUM];	// ステージボタン
 	cocos2d::Sequence* m_move_action_sequence;			// Sequenceアクション
 
 	cocos2d::Sprite* m_pItemUIspr;						// アイテムＵＩの画像

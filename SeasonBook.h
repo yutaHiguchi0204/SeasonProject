@@ -20,9 +20,14 @@ private:
 	cocos2d::ui::Button* m_pButtonArrowLeft;	// 左矢印
 	cocos2d::ui::Button* m_pButtonArrowRight;	// 右矢印
 
+	int m_time;									// 時間計測
+
 public:
 	CREATE_FUNC(SeasonBook);
 	virtual bool init();
 
+	void update(float delta);					// 更新処理
+
 	void Change(int num);						// 季節変え
+	void OpacityAnimation();					// 季節記の透明度アニメーション
 };

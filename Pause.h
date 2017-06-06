@@ -1,6 +1,6 @@
 /* =====================================================================
 //! @param		「Pause」クラスのヘッダファイル
-//! @create		木下　浩輝
+//! @create		樋口　裕太
 //! @date		17/05/01
 ===================================================================== */
 #pragma once
@@ -18,6 +18,9 @@ private:
 	cocos2d::ui::Button* m_pPauseButtonSelect;			// ステージ選択画面に戻るボタン
 
 	cocos2d::Sprite* m_pBookmarkIcon[NUM_SEASON];		// しおりアイコン
+
+	cocos2d::Sprite* m_pItemUIspr;						// アイテムＵＩの画像
+	cocos2d::Label* m_pItemUInum;						// アイテムＵＩのアイテム所持数
 
 public:
 	CREATE_FUNC(Pause);

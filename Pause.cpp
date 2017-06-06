@@ -1,6 +1,6 @@
 /* =====================================================================
 //! @param		「Pause」クラスのソースファイル
-//! @create		木下　浩輝
+//! @create		樋口　裕太
 //! @date		17/05/01
 ===================================================================== */
 
@@ -35,19 +35,37 @@ bool Pause::init()
 	m_pPauseMain->setPosition(Vec2(WINDOW_WIDTH_HERF, WINDOW_HEIGHT_HERF));
 	this->addChild(m_pPauseMain);
 
+	// アイテムＵＩ設定
+	GameManager& gm = GameManager::GetInstance();
+	m_pItemUIspr = Sprite::create("object/item_page.png");
+	m_pItemUInum = Label::create("0 /100", "HGP行書体", 60);
+
+	std::stringstream strNum;
+	strNum << gm.GetPageNum() << " /100";
+	m_pItemUInum->setString(strNum.str());
+
+	m_pItemUIspr->setPosition(WINDOW_WIDTH_HERF - 96.0f, WINDOW_HEIGHT_HERF + 16.0f);
+	m_pItemUInum->setPosition(WINDOW_WIDTH_HERF + 48.0f, WINDOW_HEIGHT_HERF + 16.0f);
+	m_pItemUIspr->setScale(1.0f);
+	m_pItemUInum->setScale(0.75f);
+	m_pItemUInum->setColor(Color3B(255, 255, 255));
+	this->addChild(m_pItemUIspr);
+	this->addChild(m_pItemUInum);
+	m_pItemUIspr->runAction(RepeatForever::create(RotateBy::create(4.0f, Vec3(0.0f, 360.0f, 0.0f))));
+
 	// ゲームに戻るボタンの生成
 	m_pPauseButtonBack = cocos2d::ui::Button::create("pause/button_backGame.png");
-	m_pPauseButtonBack->setPosition(Vec2(WINDOW_WIDTH_HERF, WINDOW_HEIGHT_HERF - 32.0f));
+	m_pPauseButtonBack->setPosition(Vec2(WINDOW_WIDTH_HERF, WINDOW_HEIGHT_HERF - 64.0f));
 	this->addChild(m_pPauseButtonBack);
 
 	// タイトルに戻るボタンの生成
 	m_pPauseButtonTitle = cocos2d::ui::Button::create("pause/button_backTitle.png");
-	m_pPauseButtonTitle->setPosition(Vec2(WINDOW_WIDTH_HERF - 192.0f, WINDOW_HEIGHT_HERF - 96.0f));
+	m_pPauseButtonTitle->setPosition(Vec2(WINDOW_WIDTH_HERF - 192.0f, WINDOW_HEIGHT_HERF - 128.0f));
 	this->addChild(m_pPauseButtonTitle);
 
 	// ステージ選択画面に戻るボタンの生成
 	m_pPauseButtonSelect = cocos2d::ui::Button::create("pause/button_backSelect.png");
-	m_pPauseButtonSelect->setPosition(Vec2(WINDOW_WIDTH_HERF + 128.0f, WINDOW_HEIGHT_HERF - 96.0f));
+	m_pPauseButtonSelect->setPosition(Vec2(WINDOW_WIDTH_HERF + 128.0f, WINDOW_HEIGHT_HERF - 128.0f));
 	this->addChild(m_pPauseButtonSelect);
 
 	return true;
