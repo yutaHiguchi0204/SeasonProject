@@ -43,7 +43,7 @@ bool SeasonBook::init()
 
 	// •Â‚¶‚éƒ{ƒ^ƒ“
 	m_pButtonClose = cocos2d::ui::Button::create("object/button_close.png");
-	m_pButtonClose->setPositionY(-176.0f);
+	m_pButtonClose->setPositionY(-144.0f);
 	this->addChild(m_pButtonClose);
 
 	// –îˆó¶¬

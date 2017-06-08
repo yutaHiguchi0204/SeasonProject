@@ -47,18 +47,18 @@ bool OperationButton::init(BUTTON button)
 	{
 	case BUTTON::LEFT:
 		loadTextureNormal("object/button_arrow.png");
-		setPosition(Vec2(96.0f, 80.0f));
+		setPosition(Vec2(80.0f, 80.0f));
 		break;
 
 	case BUTTON::RIGHT:
 		loadTextureNormal("object/button_arrow.png");
-		setPosition(Vec2(288.0f, 80.0f));
+		setPosition(Vec2(208.0f, 80.0f));
 		setFlippedX(true);
 		break;
 
 	case BUTTON::ACTION:
 		loadTextureNormal("object/button_action.png");
-		setPosition(Vec2(WINDOW_WIDTH - 96.0f, 80.0f));
+		setPosition(Vec2(WINDOW_WIDTH - 80.0f, 80.0f));
 		break;
 
 	case BUTTON::PAUSE:
@@ -68,7 +68,7 @@ bool OperationButton::init(BUTTON button)
 
 	case BUTTON::SEASON_BOOK:
 		loadTextureNormal("object/buttonSeasonBook.png");
-		setPosition(Vec2(WINDOW_WIDTH - 208.0f, 56.0f));
+		setPosition(Vec2(WINDOW_WIDTH_HERF, 64.0f));
 		break;
 	}
 
