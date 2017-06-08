@@ -6,7 +6,7 @@
 
 // ヘッダファイルのインクルード
 #include "LogoScene.h"
-#include "TitleScene.h"
+#include "OpeningScene.h"
 
 // 名前空間
 USING_NS_CC;
@@ -55,7 +55,7 @@ bool LogoScene::init()
 		FadeOut::create(2.0f),
 		CallFunc::create([&]() {
 			// 次のシーンを作成する
-			Scene* nextScene = TitleScene::create();
+			Scene* nextScene = OpeningScene::create();
 			// 次のシーンに移行
 			_director->replaceScene(nextScene);
 		}),

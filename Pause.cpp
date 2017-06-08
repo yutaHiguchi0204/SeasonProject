@@ -81,8 +81,7 @@ void Pause::update(float delta)
 	// ゲームに戻るボタンが押されたら
 	if (m_pPauseButtonBack->isHighlighted())
 	{
-
-		//ポーズを閉じる音の生成
+		// ポーズを閉じる音の生成
 		SoundManager& sm = SoundManager::getInstance();
 		sm.PlayGameSound(static_cast<int>(SOUND::SE_CLOSE), false);
 
@@ -93,7 +92,7 @@ void Pause::update(float delta)
 	// タイトルに戻るボタンが押されたら
 	else if (m_pPauseButtonTitle->isHighlighted())
 	{
-		//タイトルに戻る音の生成
+		// タイトルに戻る音の生成
 		SoundManager& sm = SoundManager::getInstance();
 		sm.UncacheGameSoundAll();
 		sm.PlayGameSound(static_cast<int>(SOUND::BGM_TITLE), false);
@@ -110,7 +109,7 @@ void Pause::update(float delta)
 	else if (m_pPauseButtonSelect->isHighlighted())
 	{
 
-		//ポーズを閉じる音の生成
+		// ポーズを閉じる音の生成
 		SoundManager& sm = SoundManager::getInstance();
 		sm.UncacheGameSoundAll();
 		sm.PlayGameSound(static_cast<int>(SOUND::SE_DECISION), false);
