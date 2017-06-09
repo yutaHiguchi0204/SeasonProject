@@ -90,6 +90,7 @@ bool TitleScene::init()
 	// ƒ^ƒCƒgƒ‹‚ÌBGM¶¬
 	SoundManager& sm = SoundManager::getInstance();
 	sm.PlayGameSound(static_cast<int>(SOUND::BGM_TITLE), false);
+	sm.UncacheGameSound(SOUND::BGM_OP);
 	
 	return true;
 }

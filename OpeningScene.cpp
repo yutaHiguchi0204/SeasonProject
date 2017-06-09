@@ -67,6 +67,10 @@ bool OpeningScene::init()
 	m_pButtonSkip->setOpacity(0x80);
 	this->addChild(m_pButtonSkip);
 
+	// タイトルのBGM生成
+	SoundManager& sm = SoundManager::getInstance();
+	sm.PlayGameSound(static_cast<int>(SOUND::BGM_OP), false);
+
 	// セリフを表示
 	DrawLines();
 

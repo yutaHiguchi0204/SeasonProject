@@ -11,7 +11,7 @@
 
 // 定数
 /* サウンドを追加したい場合は用途とファイル名をここに登録してください */
-const int NUM_SOUND =15;
+const int NUM_SOUND =16;
 
 enum class SOUND
 {
@@ -21,6 +21,7 @@ enum class SOUND
 	BGM_WIND,
 	BGM_MOON,
 	BGM_CLEAR,
+	BGM_OP,
 
 	SE_DECISION,
 	SE_SELECT,
@@ -40,6 +41,7 @@ const std::string SOUND_NAME[NUM_SOUND] = {
 	"wind_stage",
 	"moon_stage",
 	"clear",
+	"op",
 
 	"decision",
 	"select",
