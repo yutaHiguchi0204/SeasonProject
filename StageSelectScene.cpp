@@ -103,15 +103,18 @@ bool StageSelectScene::init()
 	// データの保存
 	m_pSaveButton->addClickEventListener([&](Ref* ref) {
 
-		// 保存
-		gm.ExportPageInfo();
+		if (!MessageWindow::m_isSaveCheck)
+		{
+			// 保存
+			gm.ExportPageInfo();
 
-		// ウインドウ表示
-		MessageWindow* window = MessageWindow::create();
-		window->setPosition(WINDOW_MIDDLE);
-		window->setScale(0.0f);
-		this->addChild(window);
-		window->runAction(ScaleTo::create(0.5f, 1.0f));
+			// ウインドウ表示
+			MessageWindow* window = MessageWindow::create();
+			window->setPosition(WINDOW_MIDDLE);
+			window->setScale(0.0f);
+			this->addChild(window);
+			window->runAction(ScaleTo::create(0.5f, 1.0f));
+		}
 
 	});
 
