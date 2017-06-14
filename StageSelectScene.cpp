@@ -9,6 +9,7 @@
 #include "ClearScene.h"
 #include "MessageWindow.h"
 #include "PlayScene.h"
+#include "TitleScene.h"
 
 // 名前空間
 USING_NS_CC;
@@ -99,6 +100,26 @@ bool StageSelectScene::init()
 	m_pSaveButton = cocos2d::ui::Button::create("object/button_dataSave.png");
 	m_pSaveButton->setPosition(Vec2(WINDOW_WIDTH - 80.0f, 48.0f));
 	this->addChild(m_pSaveButton);
+
+	// タイトルに戻るボタン
+	m_pBackButton = cocos2d::ui::Button::create("object/button_backTitleStageSelect.png");
+	m_pBackButton->setPosition(Vec2(WINDOW_WIDTH - 94.0f, WINDOW_HEIGHT - 32.0f));
+	this->addChild(m_pBackButton);
+
+	//タイトルに戻る
+	m_pBackButton->addClickEventListener([&](Ref* ref) {
+
+		// ポーズを閉じる音の生成
+		SoundManager& sm = SoundManager::getInstance();
+		sm.PlayGameSound(static_cast<int>(SOUND::SE_CLOSE), false);
+
+		// 次のシーンを作成する
+		Scene* nextScene = TitleScene::createScene();
+
+		// 次のシーンに移行
+		_director->replaceScene(nextScene);
+
+	});
 
 	// データの保存
 	m_pSaveButton->addClickEventListener([&](Ref* ref) {

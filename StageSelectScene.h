@@ -28,6 +28,7 @@ private:
 	cocos2d::Label* m_pItemUInum;						// アイテムＵＩのアイテム所持数
 
 	cocos2d::ui::Button* m_pSaveButton;					// セーブボタン
+	cocos2d::ui::Button* m_pBackButton;					//タイトルに戻るボタン
 
 public:
 	CREATE_FUNC(StageSelectScene);
