@@ -56,12 +56,23 @@ bool StageSelectScene::init()
 	this->addChild(back);
 
 	// ボタン画像
-	for (int i = 0; i < STAGEMAX_NUM; i++)
+	GameManager& gm = GameManager::GetInstance();
+	for (int i = 0; i < NUM_STAGE; i++)
 	{
-		selectButton[i]= cocos2d::ui::Button::create("object/selectButton.png");
+		// すでにアイテムを２５枚獲得していたらボタンを変える
+		if (gm.GetPageStageNum(i) == NUM_STAGE_ITEM)
+			selectButton[i] = cocos2d::ui::Button::create("object/allPageButton.png");
+		else
+			selectButton[i] = cocos2d::ui::Button::create("object/selectButton.png");
+
 		selectButton[i]->setPosition(Vec2(i % 2 * 704.0f + 128.0f, i * 112.0f + 96.0f));
 		addChild(selectButton[i]);
 	}
+
+	// ステージ名
+	m_pStageName = Sprite::create("object/stageName_flower.png");
+	m_pStageName->setPosition(WINDOW_WIDTH_HERF, 48.0f);
+	this->addChild(m_pStageName);
 	
 	// プレイヤー
 	m_pSprPlayer = Sprite::create("object/player.png");
@@ -69,7 +80,6 @@ bool StageSelectScene::init()
 	this->addChild(m_pSprPlayer);
 
 	// アイテムＵＩ設定
-	GameManager& gm = GameManager::GetInstance();
 	m_pItemUIspr = Sprite::create("object/item_page.png");
 	m_pItemUInum = Label::create("0 /100", "HGP行書体", 60);
 
@@ -147,6 +157,11 @@ void StageSelectScene::update(float delta)
 	// 画像の変更
 	m_pSprPlayer->setTextureRect(Rect(m_playerGrpX, 0, SIZE_PLAYER, SIZE_PLAYER));
 
+	// ステージ名の変更
+	std::stringstream sStageName;
+	sStageName << "object/stageName_" << STAGE_NAME[m_touchID] << ".png";
+	m_pStageName->setTexture(sStageName.str());
+
 	// 時間計測
 	m_time++;
 }
@@ -185,12 +200,12 @@ void StageSelectScene::CharactorMove()
 			return;
 		}
 
-		//MoveTo* move_action[STAGEMAX_NUM - 1];
-		Spawn* move_action[STAGEMAX_NUM - 1];
+		//MoveTo* move_action[NUM_STAGE - 1];
+		Spawn* move_action[NUM_STAGE - 1];
 
 		int move_distance = m_touchID - m_stageID;
 
-		for (int i = 0; i < STAGEMAX_NUM - 1; i++)
+		for (int i = 0; i < NUM_STAGE - 1; i++)
 		{
 			move_action[i] = nullptr;
 		}

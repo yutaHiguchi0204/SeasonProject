@@ -65,17 +65,17 @@ public:
 
 		// ç∂âEÇÃìñÇΩÇËîªíË
 		if ((playerVec.y - SIZE_PLAYER_HERF <= tileVec.y + SIZE_TILE / 2) &&
-			(playerVec.y + SIZE_PLAYER_HERF >= tileVec.y))
+			(playerVec.y + SIZE_PLAYER_HERF >= tileVec.y + SIZE_COLLIDER / 2))
 		{
 			// âEÇÃìñÇΩÇËîªíË
 			if ((playerVec.x + SIZE_PLAYER_COLLISION_HERF + SPEED_MOVE_PLAYER >= tileVec.x) &&
-				(playerVec.x - SIZE_PLAYER_COLLISION_HERF <= tileVec.x + SIZE_TILE / 2))
+				(playerVec.x - SIZE_PLAYER_COLLISION_HERF <= tileVec.x + SIZE_TILE / 2/* + SIZE_COLLIDER*/))
 			{
 				return COLLISION::RIGHT;
 			}
 
 			// ç∂ÇÃìñÇΩÇËîªíË
-			if ((playerVec.x - SIZE_PLAYER_COLLISION_HERF - SPEED_MOVE_PLAYER<= tileVec.x + SIZE_TILE) &&
+			if ((playerVec.x - SIZE_PLAYER_COLLISION_HERF - SPEED_MOVE_PLAYER<= tileVec.x + SIZE_TILE / 2 + SIZE_COLLIDER) &&
 				(playerVec.x + SIZE_PLAYER_COLLISION_HERF >= tileVec.x))
 			{
 				return COLLISION::LEFT;

@@ -46,6 +46,9 @@ bool Stage::init()
 	m_numTiles = 0;										// タイル数
 	m_numItems = 0;										// アイテム数
 	m_numGimmicks = 0;									// ギミック数
+	m_Leftnum	  = 0;
+	m_Rightnum	  = 0;
+	m_Topnum	  = 0;
 
 	// 各ステージの音の生成
 	SoundManager& sm = SoundManager::getInstance();
@@ -493,13 +496,65 @@ void Stage::CheckCollision()
 		}
 
 		// 各当たり判定
-		if		(gm.CheckCollision(m_tileInfo[i].pos, m_pPlayer->getPosition()) == COLLISION::LEFT && m_tileInfo[i].ID != static_cast<int>(TILE::WATER))			m_isLeftCollision = true;
-		else if (gm.CheckCollision(m_tileInfo[i].pos, m_pPlayer->getPosition()) == COLLISION::RIGHT && m_tileInfo[i].ID != static_cast<int>(TILE::WATER))		m_isRightCollision = true;
+		if (gm.CheckCollision(m_tileInfo[i].pos, m_pPlayer->getPosition()) == COLLISION::LEFT && m_tileInfo[i].ID != static_cast<int>(TILE::WATER))
+		{
+			m_Leftnum = static_cast<int>(COLLISION::LEFT);
+			m_isLeftCollision = true;
+		}
+		else if (gm.CheckCollision(m_tileInfo[i].pos, m_pPlayer->getPosition()) == COLLISION::RIGHT && m_tileInfo[i].ID != static_cast<int>(TILE::WATER))
+		{
+			m_Rightnum = static_cast<int>(COLLISION::RIGHT);
+			m_isRightCollision = true;
+		}
 		else if (gm.CheckCollision(m_tileInfo[i].pos, m_pPlayer->getPosition()) == COLLISION::UP && m_tileInfo[i].ID != static_cast<int>(TILE::WATER))
 		{
+			m_Topnum = static_cast<int>(COLLISION::UP);
 			m_pPlayer->SetSpdY(-1.0f);
 			m_isTopCollision = true;
 		}
+		else
+		{
+			m_Leftnum = static_cast<int>(COLLISION::NONE);
+			m_Rightnum = static_cast<int>(COLLISION::NONE);
+			m_Topnum = static_cast<int>(COLLISION::NONE);
+		}
+
+		// めり込み判定
+		if (m_tileInfo[i].ID != static_cast<int>(TILE::WATER))
+		{
+			if ((m_Leftnum == static_cast<int>(COLLISION::LEFT)) &&
+				(m_Rightnum == static_cast<int>(COLLISION::RIGHT)) &&
+				(m_Topnum == static_cast<int>(COLLISION::UP)))
+			{
+				if (!Player::m_isJump)
+				{
+					m_pPlayer->SetSpdY(0.0f);
+					m_isLeftCollision = true;
+					m_isRightCollision = true;
+				}
+			}
+			else if ((m_Rightnum == static_cast<int>(COLLISION::RIGHT)) &&
+					(m_Topnum == static_cast<int>(COLLISION::UP)))
+			{
+				if (!Player::m_isJump)
+				{
+					m_pPlayer->SetSpdY(0.0f);
+					m_isLeftCollision = true;
+					m_isRightCollision = true;
+				}
+			}
+			else if ((m_Leftnum == static_cast<int>(COLLISION::LEFT)) &&
+				(m_Topnum == static_cast<int>(COLLISION::UP)))
+			{
+				if (!Player::m_isJump)
+				{
+					m_pPlayer->SetSpdY(0.0f);
+					m_isLeftCollision = true;
+					m_isRightCollision = true;
+				}
+			}
+		}
+
 	}
 
 	if (m_season == m_seasonBefore)

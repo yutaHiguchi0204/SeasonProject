@@ -40,6 +40,9 @@ private:
 	int m_numTiles;										// 総タイル数
 	int m_numItems;										// 総アイテム数
 	int m_numGimmicks;									// 総ギミック数
+	int m_Leftnum;
+	int m_Rightnum;
+	int m_Topnum;
 
 	Background* m_pBack;								// 背景
 	Particle* m_pParticle;								// パーティクル
