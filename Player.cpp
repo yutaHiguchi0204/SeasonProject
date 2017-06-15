@@ -192,7 +192,7 @@ void Player::Action(int tileID, Vec2 tileVec, int season)
 		{
 			// Т▓Ро
 			setPositionY(tileVec.y + SIZE_TILE + SIZE_PLAYER_HERF);
-		
+
 			m_spdY = 0.0f;
 			m_isJump = false;
 			m_isStand = true;

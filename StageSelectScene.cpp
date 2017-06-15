@@ -106,7 +106,7 @@ bool StageSelectScene::init()
 	m_pBackButton->setPosition(Vec2(WINDOW_WIDTH - 94.0f, WINDOW_HEIGHT - 32.0f));
 	this->addChild(m_pBackButton);
 
-	//タイトルに戻る
+	// タイトルに戻る
 	m_pBackButton->addClickEventListener([&](Ref* ref) {
 
 		// ポーズを閉じる音の生成
