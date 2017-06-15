@@ -68,7 +68,7 @@ bool OperationButton::init(BUTTON button)
 
 	case BUTTON::SEASON_BOOK:
 		loadTextureNormal("object/buttonSeasonBook.png");
-		setPosition(Vec2(WINDOW_WIDTH_HERF, 64.0f));
+		setPosition(Vec2(WINDOW_WIDTH - 184.0f, 64.0f));
 		break;
 	}
 
