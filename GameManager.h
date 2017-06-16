@@ -64,7 +64,7 @@ public:
 		}
 
 		// ¶‰E‚Ì“–‚½‚è”»’è
-		if ((playerVec.y - SIZE_PLAYER_HERF <= tileVec.y + SIZE_TILE / 2) &&
+		if ((playerVec.y - SIZE_PLAYER_HERF <= tileVec.y + SIZE_TILE / 2 + SIZE_COLLIDER + SIZE_COLLIDER / 2) &&
 			(playerVec.y + SIZE_PLAYER_HERF >= tileVec.y + SIZE_COLLIDER / 2))
 		{
 			// ‰E‚Ì“–‚½‚è”»’è
@@ -75,7 +75,7 @@ public:
 			}
 
 			// ¶‚Ì“–‚½‚è”»’è
-			if ((playerVec.x - SIZE_PLAYER_COLLISION_HERF - SPEED_MOVE_PLAYER<= tileVec.x + SIZE_TILE / 2 + SIZE_COLLIDER) &&
+			if ((playerVec.x - SIZE_PLAYER_COLLISION_HERF - SPEED_MOVE_PLAYER <= tileVec.x + SIZE_TILE /*/ 2 + SIZE_COLLIDER*/) &&
 				(playerVec.x + SIZE_PLAYER_COLLISION_HERF >= tileVec.x))
 			{
 				return COLLISION::LEFT;

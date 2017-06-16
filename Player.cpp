@@ -59,6 +59,9 @@ void Player::update(float delta)
 		// d—Í
 		if (!m_isStand) Gravity(m_isDive);
 
+		// ~‚èƒWƒƒƒ“–h~
+		if (!m_isStand) m_isJump = true;
+
 		// ‰æ–ÊŠO–h~
 		if (getPositionY() <= SIZE_PLAYER_HERF)
 		{
@@ -155,26 +158,26 @@ void Player::Move(float speed)
 ===================================================================== */
 void Player::Jump()
 {
-	if (m_isDive)
-	{
-		m_spdY = JUMP_WATER_PLAYER;
+	
+	m_spdY = JUMP_PLAYER;
+	m_isJump = true;
+	m_isStand = false;
 
-		// ‰j‚®‰¹‚Ì¶¬
-		//SoundManager& sm = SoundManager::getInstance();
-		//sm.PlayGameSound(static_cast<int>(SOUND::SE_SWIM),false);
-	}
-	else
-	{
-		m_spdY = JUMP_PLAYER;
-		m_isJump = true;
-		m_isStand = false;
+	// ƒWƒƒƒ“ƒv‰¹‚Ì¶¬
+	SoundManager& sm = SoundManager::getInstance();
+	sm.PlayGameSound(static_cast<int>(SOUND::SE_JUMP), false);
+	//sm.UncacheGameSound(SOUND::SE_SWIM);
 
-		// ƒWƒƒƒ“ƒv‰¹‚Ì¶¬
-		SoundManager& sm = SoundManager::getInstance();
-		sm.PlayGameSound(static_cast<int>(SOUND::SE_JUMP), false);
-		//sm.UncacheGameSound(SOUND::SE_SWIM);
+	
+}
 
-	}
+void Player::Swim()
+{
+	m_spdY = JUMP_WATER_PLAYER;
+
+	// ‰j‚®‰¹‚Ì¶¬
+	SoundManager& sm = SoundManager::getInstance();
+	sm.PlayGameSound(static_cast<int>(SOUND::SE_SWIM),false);
 }
 
 /* =====================================================================

@@ -42,6 +42,7 @@ bool Stage::init()
 	m_isTopCollision = false;							// 上判定フラグ
 	m_isShowObject = false;								// オブジェクトを参照しているかどうか
 	m_isPause = false;									// ポーズ中かどうか
+	m_DiveFlag = false;									// 水の中か
 	Pollen::m_isPollenFlg = false;						// 花粉フラグをおろしておく
 	m_numTiles = 0;										// タイル数
 	m_numItems = 0;										// アイテム数
@@ -49,6 +50,7 @@ bool Stage::init()
 	m_Leftnum	  = 0;
 	m_Rightnum	  = 0;
 	m_Topnum	  = 0;
+
 
 	// 各ステージの音の生成
 	SoundManager& sm = SoundManager::getInstance();
@@ -481,12 +483,17 @@ void Stage::CheckCollision()
 	Stage::m_isLeftCollision = false;
 	Stage::m_isRightCollision = false;
 	Stage::m_isTopCollision = false;
+	m_DiveFlag = false;
 
 	GameManager& gm = GameManager::GetInstance();
 
 	// タイルとの当たり判定
 	for (int i = 0; i < m_numTiles; i++)
 	{
+		if (gm.isCollision(m_tileInfo[i].pos, m_pPlayer->getPosition()) && m_tileInfo[i].ID == static_cast<int>(TILE::WATER))
+		{
+			m_DiveFlag = true;
+		}
 		// 着地判定
 		if (gm.CheckCollision(m_tileInfo[i].pos, m_pPlayer->getPosition()) == COLLISION::DOWN)
 		{
@@ -498,59 +505,61 @@ void Stage::CheckCollision()
 		// 各当たり判定
 		if (gm.CheckCollision(m_tileInfo[i].pos, m_pPlayer->getPosition()) == COLLISION::LEFT && m_tileInfo[i].ID != static_cast<int>(TILE::WATER))
 		{
-			m_Leftnum = static_cast<int>(COLLISION::LEFT);
 			m_isLeftCollision = true;
 		}
 		else if (gm.CheckCollision(m_tileInfo[i].pos, m_pPlayer->getPosition()) == COLLISION::RIGHT && m_tileInfo[i].ID != static_cast<int>(TILE::WATER))
 		{
-			m_Rightnum = static_cast<int>(COLLISION::RIGHT);
 			m_isRightCollision = true;
 		}
 		else if (gm.CheckCollision(m_tileInfo[i].pos, m_pPlayer->getPosition()) == COLLISION::UP && m_tileInfo[i].ID != static_cast<int>(TILE::WATER))
 		{
-			m_Topnum = static_cast<int>(COLLISION::UP);
 			m_pPlayer->SetSpdY(-1.0f);
 			m_isTopCollision = true;
 		}
-		else
-		{
-			m_Leftnum = static_cast<int>(COLLISION::NONE);
-			m_Rightnum = static_cast<int>(COLLISION::NONE);
-			m_Topnum = static_cast<int>(COLLISION::NONE);
-		}
 
 		// めり込み判定
-		if (m_tileInfo[i].ID != static_cast<int>(TILE::WATER))
+		if (m_tileInfo[i].ID != static_cast<int>(TILE::WATER) && !m_DiveFlag)
 		{
-			if ((m_Leftnum == static_cast<int>(COLLISION::LEFT)) &&
-				(m_Rightnum == static_cast<int>(COLLISION::RIGHT)) &&
-				(m_Topnum == static_cast<int>(COLLISION::UP)))
+			if (!Player::m_isJump)
 			{
-				if (!Player::m_isJump)
+				if (m_isLeftCollision &&
+					(m_isRightCollision) &&
+					(m_isTopCollision))
+				{
+
+					m_pPlayer->SetSpdY(0.0f);
+					m_isLeftCollision = true;
+					m_isRightCollision = true;
+					Player::m_isJump = true;
+
+				}
+				else if (m_isRightCollision &&
+					(m_isTopCollision))
 				{
 					m_pPlayer->SetSpdY(0.0f);
 					m_isLeftCollision = true;
 					m_isRightCollision = true;
+					Player::m_isJump = true;
+
+				}
+				else  if (m_isLeftCollision &&
+					(m_isRightCollision))
+				{
+					m_pPlayer->SetSpdY(0.0f);
+					m_isLeftCollision = true;
+					m_isRightCollision = true;
+					Player::m_isJump = true;
 				}
 			}
-			else if ((m_Rightnum == static_cast<int>(COLLISION::RIGHT)) &&
-					(m_Topnum == static_cast<int>(COLLISION::UP)))
+		}
+
+		if (m_pPlayer->getPositionY() >= WINDOW_HEIGHT)
+		{
+			if (m_tileInfo[i].ID == static_cast<int>(TILE::WATER))
 			{
-				if (!Player::m_isJump)
+				if (m_DiveFlag)
 				{
-					m_pPlayer->SetSpdY(0.0f);
-					m_isLeftCollision = true;
-					m_isRightCollision = true;
-				}
-			}
-			else if ((m_Leftnum == static_cast<int>(COLLISION::LEFT)) &&
-				(m_Topnum == static_cast<int>(COLLISION::UP)))
-			{
-				if (!Player::m_isJump)
-				{
-					m_pPlayer->SetSpdY(0.0f);
-					m_isLeftCollision = true;
-					m_isRightCollision = true;
+					m_pPlayer->SetSpdY(-5.0f);
 				}
 			}
 		}
@@ -663,8 +672,16 @@ void Stage::CheckButtonHighlighted(BUTTON button)
 			// ジャンプしてないときに処理
 			if (!Player::m_isJump && !m_isTopCollision)
 			{
-				m_pPlayer->Jump();
+				if (Player::m_isDive && m_DiveFlag)
+				{
+					m_pPlayer->Swim();
+				}
+				else
+				{
+					m_pPlayer->Jump();
+				}
 				PlayScene::m_pButton[static_cast<int>(BUTTON::ACTION)]->SetFullBright(false);
+				
 			}
 		}
 		// 季節記ボタン

@@ -35,6 +35,7 @@ public:
 	void Fall(int mapInfo, int season);								// 落下処理
 	void Move(float speed);											// 左右に移動
 	void Jump();													// ジャンプ処理
+	void Swim();
 
 	void Action(int tile, cocos2d::Vec2 tileVec, int season);		// タイルに対しての行動
 

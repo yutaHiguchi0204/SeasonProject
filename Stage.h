@@ -43,6 +43,7 @@ private:
 	int m_Leftnum;
 	int m_Rightnum;
 	int m_Topnum;
+	bool m_DiveFlag;
 
 	Background* m_pBack;								// 背景
 	Particle* m_pParticle;								// パーティクル
