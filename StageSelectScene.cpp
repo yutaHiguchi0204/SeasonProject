@@ -72,7 +72,7 @@ bool StageSelectScene::init()
 
 	// ステージ名
 	m_pStageName = Sprite::create("object/stageName_flower.png");
-	m_pStageName->setPosition(WINDOW_WIDTH_HERF, 48.0f);
+	m_pStageName->setPosition(WINDOW_WIDTH_HERF, WINDOW_HEIGHT - 48.0f);
 	this->addChild(m_pStageName);
 	
 	// プレイヤー
